@@ -1,5 +1,7 @@
 <?php
 
+use App\Enum\AccountRegistrationStep;
+use App\Enum\Gender;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +17,27 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamps('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            //User columns
+            $table->enum('gender', Gender::asValuesArray())->nullable();
+            $table->string('number')->nullable();
+            $table->string('dial_code')->nullable();
+            $table->enum('account_registration_step', AccountRegistrationStep::asValuesArray())
+                ->nullable();
+            $table->string('code')->nullable();
+            $table->string('temp_number')->nullable();
+            $table->string('temp_dial_code')->nullable();
+            $table->string('temp_code')->nullable();
+
+            //Driver columns
+            $table->double('lat')->nullable();
+            $table->double('lon')->nullable();
+
+
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $name
@@ -34,6 +34,36 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @property string|null $gender
+ * @property string|null $number
+ * @property string|null $dial_code
+ * @property string|null $account_registration_step
+ * @property string|null $code
+ * @property string|null $temp_number
+ * @property string|null $temp_dial_code
+ * @property string|null $temp_code
+ * @property float|null $lat
+ * @property float|null $lon
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read int|null $orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @property-read int|null $roles_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAccountRegistrationStep($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDialCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTempCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTempDialCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTempNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutPermission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutRole($roles, $guard = null)
  * @mixin \Eloquent
  */
 class User extends Authenticatable

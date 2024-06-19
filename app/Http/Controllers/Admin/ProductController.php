@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Data\Admin\Category\PathParameters\CategoryIdPathParameterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Log;
 
 class ProductController extends Controller
 {
@@ -39,13 +41,13 @@ class ProductController extends Controller
         return [];
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
+//    /**
+//     * Display the specified resource.
+//     */
+//    public function show(CategoryIdPathParameterData $id)
+//    {
+//        Log::info('id {id}', ['id' => $id->id]);
+//    }
 
     /**
      * Show the form for editing the specified resource.

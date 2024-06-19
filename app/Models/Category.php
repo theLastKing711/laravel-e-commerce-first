@@ -32,10 +32,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ * @property string|null $image
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereImage($value)
  * @mixin \Eloquent
  */
 class Category extends Model
 {
+    use HasFactory;
 
     protected $guarded = ['id'];
 
@@ -50,9 +55,13 @@ class Category extends Model
     }
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'category_product', 'category_id', 'product_id');
+        return $this->belongsToMany(
+            Product::class,
+            'category_product',
+            'category_id',
+            'product_id'
+        );
     }
 
 
-    use HasFactory;
 }

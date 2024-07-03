@@ -14,22 +14,22 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')
-                    ->nullable();
+                ->nullable();
             $table->string('image')
-                    ->nullable();
+                ->nullable();
             $table->string('hash')
-                    ->nullable();
+                ->nullable();
             $table->boolean('is_special')
-                    ->nullable()
-                    ->default('false');
+                ->nullable()
+                ->default(false);
             $table->unsignedBigInteger('parent_id')
-                    ->nullable();
+                ->nullable();
             $table->timestamps();
 
             $table->foreign('parent_id')
-                    ->references('id')
-                    ->on('categories')
-                    ->onDelete('cascade');
+                ->references('id')
+                ->on('categories')
+                ->onDelete('cascade');
         });
     }
 

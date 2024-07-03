@@ -2,13 +2,14 @@
 
 namespace App\Enum;
 
+use App\Trait\EnumHelper;
+use OpenApi\Attributes as OAT;
+
+#[OAT\Schema(type: 'integer', description: '[0 => Male, 1 => Female]')]
 enum Gender: int
 {
+    case Male = 0;
     case Female = 1;
-    case Male = 2;
 
-    public static function asValuesArray(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
+    use EnumHelper;
 }

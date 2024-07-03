@@ -12,8 +12,8 @@
                 ],
                 "operationId": "4f4954eaefabb4b722c23de0bb0c9c4e",
                 "responses": {
-                    "204": {
-                        "description": "The Category was successfully updated",
+                    "200": {
+                        "description": "category fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -70,11 +70,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "The Category was successfully created",
+                        "description": "saldkfjalskdjf",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminCategory"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminCategory"
+                                    }
                                 }
                             }
                         }
@@ -118,6 +121,14 @@
                     }
                 },
                 "type": "object"
+            },
+            "Gender": {
+                "description": "[0 => Male, 1 => Female]",
+                "type": "integer",
+                "enum": [
+                    0,
+                    1
+                ]
             }
         },
         "parameters": {

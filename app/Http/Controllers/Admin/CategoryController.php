@@ -6,7 +6,6 @@ use App\Data\Admin\Category\CategoryData;
 use App\Data\Admin\Category\CreateCategoryData;
 use App\Data\Admin\Category\PathParameters\CategoryIdPathParameterData;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Services\FileService;
@@ -14,17 +13,16 @@ use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
 use Storage;
 
-
 #[
     OAT\Info(version: '1', title: 'Categories Controller'),
     OAT\OpenApi(x: ['tagGroups' => ['name' => 'testing',  'tags' => 'categories']]),
     OAT\PathItem(
-        path: "/admin/categories/{id}",
+        path: '/admin/categories/{id}',
         parameters: [
             new OAT\PathParameter(
                 ref: '#/components/parameters/adminCategoryIdPathParameter',
-            )
-        ]
+            ),
+        ],
     )
 ]
 class CategoryController extends Controller
@@ -32,39 +30,40 @@ class CategoryController extends Controller
     #[OAT\Get(
         path: '/admin/categories',
         tags: ['categories'],
-//        parameters: [
-//            new OAT\QueryParameter(
-//                required: false,
-//                ref: "#/components/parameters/categorySearch",
-//            ),
-//            new OAT\QueryParameter(
-//                required: false,
-//                ref: "#/components/parameters/categoryOrderBy",
-//            ),
-//            new OAT\QueryParameter(
-//                required: false,
-//                ref: "#/components/parameters/categoryDirection"
-//            ),
-//            new OAT\QueryParameter(
-//                required: false,
-//                ref: "#/components/parameters/categoryPerPage"
-//            ),
-//            new OAT\QueryParameter(
-//                required: false,
-//                ref: "#/components/parameters/categoryPage"
-//            ),
-//        ],
+        //        parameters: [
+        //            new OAT\QueryParameter(
+        //                required: false,
+        //                ref: "#/components/parameters/categorySearch",
+        //            ),
+        //            new OAT\QueryParameter(
+        //                required: false,
+        //                ref: "#/components/parameters/categoryOrderBy",
+        //            ),
+        //            new OAT\QueryParameter(
+        //                required: false,
+        //                ref: "#/components/parameters/categoryDirection"
+        //            ),
+        //            new OAT\QueryParameter(
+        //                required: false,
+        //                ref: "#/components/parameters/categoryPerPage"
+        //            ),
+        //            new OAT\QueryParameter(
+        //                required: false,
+        //                ref: "#/components/parameters/categoryPage"
+        //            ),
+        //        ],
         responses: [
             new OAT\Response(
                 response: 200,
                 description: 'The Category was successfully created',
-//                content: new OAT\JsonContent(ref: '#/components/schemas/paginatedCategory'),
+                //                content: new OAT\JsonContent(ref: '#/components/schemas/paginatedCategory'),
                 content: new OAT\JsonContent(
                     type: 'array',
                     items: new OAT\Items(
-                    ref: '#/components/schemas/adminCategory'
-                )),
-            )
+                        ref: '#/components/schemas/adminCategory',
+                    ),
+                ),
+            ),
         ],
     )]
     public function index(FileService $fileService)
@@ -77,10 +76,10 @@ class CategoryController extends Controller
                     image: $fileService->getWebLocation('category', $category->image),
                     created_at: $category->created_at,
                 );
-        });
+            },
+        );
 
         return $categoriesData;
-
     }
 
     /**
@@ -88,85 +87,101 @@ class CategoryController extends Controller
      */
     #[OAT\Post(
         path: '/admin/categories',
+        tags: ['categories'],
         requestBody: new OAT\RequestBody(
             required: true,
             content: new OAT\MediaType(
-                mediaType: "multipart/form-data",
+                mediaType: 'multipart/form-data',
                 schema: new OAT\Schema(
-                    ref: '#/components/schemas/adminCreateCategory',
+                    type: CreateCategoryData::class,
                 ),
             ),
         ),
-        tags: ['categories'],
+        parameters: [
+
+        ],
         responses: [
+            // new OAT\Response(
+            //     response: 200,
+            //     description: 'Category Created Successfully',
+            //     content: new OAT\JsonContent(type: CategoryData::class),
+            // ),
             new OAT\Response(
                 response: 200,
-                description: 'The Category was successfully created',
-                content: new OAT\JsonContent(ref: '#/components/schemas/adminCategory'),
-            )
+                description: 'saldkfjalskdjf',
+                content: new OAT\JsonContent(
+                    type: 'array',
+                    items: new OAT\Items(
+                        type: CategoryData::class,
+                    ),
+                ),
+            ),
         ],
     )]
     public function store(
         CreateCategoryData $createCategoryData,
-        FileService $fileService
-    )
-    {
-        Log::info('Processing Admin Store Category Controller');
-        Log::info('Request category {category}', ['category' => $createCategoryData]);
+        FileService $fileService,
+    ) {
 
-        $categoryImage = $createCategoryData->image;
-        Log::info('category image {image}', ['image' => $categoryImage], );
+        Log::info('categoryData {data}', ['data' => $createCategoryData->all()]);
 
-        $uploadedFileUrl = $fileService
-                                ->upload('category', $categoryImage);
+        //     Log::info('Request category {category}', ['category' => $createCategoryData]);
 
-        $category = Category::create([
-            'name' => $createCategoryData->name,
-            'image' => $uploadedFileUrl,
-        ]);
+        //     $categoryImage = $createCategoryData->image;
+        //     Log::info('category image {image}', ['image' => $categoryImage]);
 
-        Log::info('created {category}', ['category' => $category]);
+        //     Log::info('executed');
 
-        Log::info('hello world {world}', ['world' => $createCategoryData]);
+        //     $uploadedFileUrl = $fileService->upload('category', $categoryImage);
 
-        return CategoryData::from($category);
+        //     $category = Category::create([
+        //         'name' => $createCategoryData->name,
+        //         'image' => $uploadedFileUrl,
+        //     ]);
+
+        //     Log::info('created {category}', ['category' => $category]);
+
+        //     Log::info('hello world {world}', ['world' => $createCategoryData]);
+
+        //     return CategoryData::from($category);
     }
 
     #[OAT\Get(
         path: '/admin/categories/{id}',
         tags: ['categories'],
+        parameters: [
+
+        ],
         responses: [
             new OAT\Response(
-                response: 204,
-                description: 'The Category was successfully updated',
-                content: new OAT\JsonContent(
-                    ref: '#/components/schemas/adminCategory'
-                ),
-            )
+                response: 200,
+                description: 'category fetched successfully',
+                content: new OAT\JsonContent(type: CategoryData::class),
+            ),
         ],
     )]
     public function show(CategoryIdPathParameterData $request, FileService $fileService)
     {
-        Log::info('category id {id}', ['id' => $request->id]);
 
-        $category = Category::find($request->id);
+        // Log::info('category id {id}', ['id' => $request->id]);
 
-        Log::info('category {category}', ['category' => $category]);
+        // $category = Category::find($request->id);
 
-        $categoryImageWebLocation = $fileService
-                                        ->getWebLocation('category', $category->image);
+        // Log::info(
+        //     'category {category}',
+        //     ['category' => $category]
+        // );
 
-        Log::info(
-            'image web location {image}',
-            ['image' => $categoryImageWebLocation]
-        );
+        // $categoryImageWebLocation = $fileService->getWebLocation('category', $category->image);
 
-        return CategoryData::from([
-            'id' => $category->id,
-            'name' => $category->name,
-            'image' => $categoryImageWebLocation,
-            'created_at' => $category->created_at,
-        ]);
+        // Log::info('image web location {image}', ['image' => $categoryImageWebLocation]);
+
+        // return CategoryData::from([
+        //     'id' => $category->id,
+        //     'name' => $category->name,
+        //     'image' => $categoryImageWebLocation,
+        //     'created_at' => $category->created_at,
+        // ]);
     }
 
     /**
@@ -174,7 +189,6 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
     }
 
     /**
@@ -182,7 +196,6 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
     }
 
     /**
@@ -190,6 +203,5 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
     }
 }

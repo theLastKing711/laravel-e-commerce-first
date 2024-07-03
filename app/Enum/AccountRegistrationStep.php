@@ -2,6 +2,8 @@
 
 namespace App\Enum;
 
+use App\Trait\EnumHelper;
+
 enum AccountRegistrationStep: int
 {
     case Created = 0;
@@ -9,9 +11,5 @@ enum AccountRegistrationStep: int
     case NeedLocation = 2;
     case Verified = 3;
 
-    public static function asValuesArray(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
-
+    use EnumHelper;
 }

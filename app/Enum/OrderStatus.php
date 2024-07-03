@@ -2,6 +2,8 @@
 
 namespace App\Enum;
 
+use App\Trait\EnumHelper;
+
 enum OrderStatus: int
 {
     case Pending = 1;
@@ -9,10 +11,7 @@ enum OrderStatus: int
     case DriverAccept = 3;
     case OnTheWay = 4;
     case Rejected = 5;
-    case Completed= 6;
+    case Completed = 6;
 
-    public static function asValuesArray(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
+    use EnumHelper;
 }

@@ -2,6 +2,8 @@
 
 namespace App\Enum;
 
+use App\Trait\EnumHelper;
+
 enum Unit: int
 {
     case Kg = 1;
@@ -10,8 +12,5 @@ enum Unit: int
     case Ml = 4;
     case Stock = 5;
 
-    public static function asValuesArray(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
+    use EnumHelper;
 }

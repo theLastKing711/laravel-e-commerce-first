@@ -16,7 +16,8 @@ Route::prefix('admin')->middleware('api')->group(function () {
         Route::get('', [ProductController::class, 'index']);
         Route::get('{id}', [ProductController::class, 'show']);
         Route::post('', [ProductController::class, 'store']);
+        Route::delete('{id}', [ProductController::class, 'store']);
+
     });
 
 });
-

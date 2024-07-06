@@ -3,7 +3,6 @@
 namespace App\Data\Admin\Category;
 
 use OpenApi\Attributes as OAT;
-use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 
 #[Oat\Schema(schema: 'adminCategory')]
@@ -11,7 +10,7 @@ class CategoryData extends Data
 {
     public function __construct(
         #[OAT\Property(type: 'string'),
-            Required()]
+        ]
         public string $id,
         #[OAT\Property(type: 'string')]
         public string $name,

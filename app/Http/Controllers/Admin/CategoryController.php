@@ -11,7 +11,6 @@ use App\Models\Category;
 use App\Services\FileService;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
-use Storage;
 
 #[
     OAT\Info(version: '1', title: 'Categories Controller'),
@@ -60,7 +59,7 @@ class CategoryController extends Controller
                 content: new OAT\JsonContent(
                     type: 'array',
                     items: new OAT\Items(
-                        ref: '#/components/schemas/adminCategory',
+                        type: CategoryData::class
                     ),
                 ),
             ),
@@ -68,18 +67,20 @@ class CategoryController extends Controller
     )]
     public function index(FileService $fileService)
     {
-        $categoriesData = Category::all()->map(
-            function (Category $category) use ($fileService) {
-                return new CategoryData(
-                    id: $category->id,
-                    name: $category->name,
-                    image: $fileService->getWebLocation('category', $category->image),
-                    created_at: $category->created_at,
-                );
-            },
-        );
 
-        return $categoriesData;
+
+        // $categoriesData = Category::all()->map(
+        //     function (Category $category) use ($fileService) {
+        //         return new CategoryData(
+        //             id: $category->id,
+        //             name: $category->name,
+        //             image: $fileService->getWebLocation('category', $category->image),
+        //             created_at: $category->created_at,
+        //         );
+        //     },
+        // );
+
+        // return $categoriesData;
     }
 
     /**
@@ -123,8 +124,6 @@ class CategoryController extends Controller
         FileService $fileService,
     ) {
 
-        Log::info('categoryData {data}', ['data' => $createCategoryData->all()]);
-
         //     Log::info('Request category {category}', ['category' => $createCategoryData]);
 
         //     $categoryImage = $createCategoryData->image;
@@ -162,6 +161,15 @@ class CategoryController extends Controller
     )]
     public function show(CategoryIdPathParameterData $request, FileService $fileService)
     {
+
+        Category::create([
+            'name' => 'samer',
+            'email' => 'email',
+            'password' => 'password',
+            'hash' => 'string',
+            'is_special' => true,
+            'parent_id' => null,
+        ]);
 
         // Log::info('category id {id}', ['id' => $request->id]);
 

@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Eloquent\Factories\Sequence;
+use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class CategorySeeder extends Seeder
 {
@@ -16,17 +16,54 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory()
-                    ->count(16)
-                    ->state(new Sequence(
-                            ['parent_id' => null],
-                            ['parent_id' =>
-                                    Category
-                                        ::whereParentId(null)
-                                        ->get()
-                                        ->random()
-                            ],
-                    ))
-                    ->create();
+        $itemCount = 10;
+
+        $this->generateParentCategories($itemCount);
+
+        $this->generateChildCategories($itemCount);
+    }
+
+    /**
+     * create Categories with no parent id aka Parent Categories
+     * has Child Categories, and no child Products
+     */
+    public function generateParentCategories(int $count): void
+    {
+        $seededParentCategories = Category::factory()
+            ->count($count)
+            ->parent()
+            ->create();
+        //
+        //        Log::info(
+        //            'parent categories seeded {seededCategories} ',
+        //            ['seededCategories' => $seededParentCategories]
+        //        );
+
+    }
+
+    /**
+     *has Multiple parent Cateogires, and child Products
+     */
+    public function generateChildCategories(int $count): void
+    {
+
+        //        Log::info('all Categories {categories} ', ['categories' => Category::all()]);
+
+        $seededChildCategories = Category::factory()
+            ->has(
+                Product::factory()->count($count)
+                    ->state(function (array $attributes, Category $category) {
+                        return ['category_id' => $category->id];
+                    })
+            )
+            ->child()
+            ->count($count)
+            ->create();
+
+
+        //        Log::info(
+        //            'child categories seeded {seededCategories} ',
+        //            ['seededCategories' => $seededChildCategories]
+        //        );
     }
 }

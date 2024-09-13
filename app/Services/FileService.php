@@ -7,28 +7,59 @@ use Storage;
 
 class FileService
 {
-    public function upload(string $directory, ?UploadedFile $file): ?string {
+    public static function upload(string $directory, ?UploadedFile $file): ?string
+    {
 
-        if($file === null)
-        {
+        if ($file === null) {
             return null;
         }
 
-        $categoryDirectory = 'category';
+        if (! Storage::exists($directory)) {
+            Storage::makeDirectory($directory, 0777, true, true);
+        }
+        Storage::put($directory, $file);
 
-        Storage::put($categoryDirectory, $file);
+        $imageHashName = $file->hashName();
 
-        $categoryImageName = $file->hashName();
-
-        return  $categoryImageName;
+        return $imageHashName;
     }
 
-    public function getWebLocation(string $directory, ?string $fileName): ?string
+    //    public function update(string $directory, string? $fileName): ?string {
+    //
+    //        $storedImagePath = 'storage/' . $directory . '/' . $fileName;
+    //
+    //        if(Storage::exists($storedImagePath) && $fileName !== null)
+    //        {
+    //
+    //        }
+    //
+    //        if($file === null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        Storage::put($directory, $file);
+    //
+    //        $imageHashName = $file->hashName();
+    //
+    //        return  $imageHashName;
+    //    }
+
+    public static function delete(string $directory, string $filename): bool
     {
-        if($fileName === null) return null;
-//        return Storage::url($directory . '/' . $fileName);
-        $imageStoragePath = 'storage' . '/' . $directory . '/' . $fileName;
+        $imagePath = 'storage'.'/'.$directory.'/'.$filename;
+
+        return Storage::delete($imagePath);
+    }
+
+    public static function getWebLocation(string $directory, ?string $fileName): ?string
+    {
+        if ($fileName === null) {
+            return null;
+        }
+        //        return Storage::url($directory . '/' . $fileName);
+        $imageStoragePath = 'storage'.'/'.$directory.'/'.$fileName;
+
         return asset($imageStoragePath);
     }
-
 }

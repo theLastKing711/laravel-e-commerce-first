@@ -11,7 +11,7 @@ class OrderPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function index(User $user): bool
     {
         //
     }
@@ -19,9 +19,9 @@ class OrderPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Order $order): bool
+    public function show(User $user, Order $order): bool
     {
-        //
+        return $user->id === $order->user_id;
     }
 
     /**

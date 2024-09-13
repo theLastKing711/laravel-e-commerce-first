@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enum\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,13 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
+            'price' => $this->faker->randomFloat(2, 10, 100),
+            'is_most_buy' => $this->faker->boolean(),
+            'is_active' => $this->faker->boolean(),
+            'unit' => $this->faker->randomElement(Unit::cases()),
+            'unit_value' => $this->faker->randomFloat(2, 0, 100),
         ];
     }
 }

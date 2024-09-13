@@ -13,7 +13,7 @@
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -40,10 +40,11 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property string|null $name
+ * @property string|null $image
  * @property string|null $hash
  * @property int|null $is_special
  * @property int|null $parent_id
@@ -52,6 +53,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $children
  * @property-read int|null $children_count
  * @property-read Category|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read int|null $products_count
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
@@ -59,14 +62,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereHash($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSpecial($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
- * @property string|null $image
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereImage($value)
+ * @method static Builder|Category child()
+ * @method static Builder|Category latest()
+ * @method static Builder|Category isChild()
+ * @method static Builder|Category hasParents(array $ids)
  * @mixin \Eloquent
  */
 	class Category extends \Eloquent {}
@@ -74,7 +78,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -124,7 +128,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -155,26 +159,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Database\Factories\OrderItemFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|OrderItem newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|OrderItem newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|OrderItem query()
- * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereUpdatedAt($value)
- * @mixin \Eloquent
- */
-	class OrderItem extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -185,10 +170,9 @@ namespace App\Models{
  * @property string|null $hash
  * @property string|null $description
  * @property string|null $price_offer
- * @property int $category_id
  * @property int $is_most_buy
  * @property int $is_active
- * @property string|null $unit
+ * @property Unit $unit
  * @property int|null $unit_value
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Brand> $brands
  * @property-read int|null $brands_count
@@ -197,23 +181,23 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product query()
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereIsMostBuy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePriceOffer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnitValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
+ * @method static Builder|Product hasName(?string $name)
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDescription($value)
+ * @method static Builder|Product whereHash($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereImage($value)
+ * @method static Builder|Product whereIsActive($value)
+ * @method static Builder|Product whereIsMostBuy($value)
+ * @method static Builder|Product whereName($value)
+ * @method static Builder|Product wherePrice($value)
+ * @method static Builder|Product wherePriceOffer($value)
+ * @method static Builder|Product whereUnit($value)
+ * @method static Builder|Product whereUnitValue($value)
+ * @method static Builder|Product whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 	class Product extends \Eloquent {}
@@ -221,61 +205,65 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
- * @property string $name
- * @property string $email
+ * @property string|null $name
+ * @property string|null $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property mixed $password
+ * @property mixed|null $password
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
- * @property-read int|null $notifications_count
- * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @property string|null $gender
+ * @property Gender $gender
  * @property string|null $number
  * @property string|null $dial_code
- * @property string|null $account_registration_step
+ * @property int|null $account_registration_step
  * @property string|null $code
  * @property string|null $temp_number
  * @property string|null $temp_dial_code
  * @property string|null $temp_code
  * @property float|null $lat
  * @property float|null $lon
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
  * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAccountRegistrationStep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDialCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTempCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTempDialCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTempNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User withoutPermission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|User withoutRole($roles, $guard = null)
+ * @property string|null $userName
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserName($value)
  * @mixin \Eloquent
+ * @property string|null $username
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  */
 	class User extends \Eloquent {}
 }

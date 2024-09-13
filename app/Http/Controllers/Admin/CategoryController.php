@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\Category\CategoryData;
 use App\Data\Admin\Category\CreateCategoryData;
+use App\Data\Admin\Category\ParentCategoryIdsData;
 use App\Data\Admin\Category\PathParameters\CategoryIdPathParameterData;
+use App\Data\Admin\Category\UpdateCategoryData;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Services\FileService;
 use Illuminate\Support\Facades\Log;
@@ -14,9 +15,27 @@ use OpenApi\Attributes as OAT;
 
 #[
     OAT\Info(version: '1', title: 'Categories Controller'),
-    OAT\OpenApi(x: ['tagGroups' => ['name' => 'testing',  'tags' => 'categories']]),
+    // set global security header parameter in swagger ui,
+    // we must choose it (ref_to_be_used_below_csrf) in bellow attribute
+    OAT\SecurityScheme(
+        securityScheme: 'ref_to_be_used_below_csrf',
+        type: 'apiKey',
+        name: 'X-XSRF-TOKEN',
+        in: 'header',
+    ),
+    OAT\OpenApi(security: [
+        ['ref_to_be_used_below_csrf' => []],
+    ]),
     OAT\PathItem(
         path: '/admin/categories/{id}',
+        parameters: [
+            new OAT\PathParameter(
+                ref: '#/components/parameters/adminCategoryIdPathParameter',
+            ),
+        ],
+    ),
+    OAT\PathItem(
+        path: '/admin/categories/getSubCategories/{id}',
         parameters: [
             new OAT\PathParameter(
                 ref: '#/components/parameters/adminCategoryIdPathParameter',
@@ -26,6 +45,11 @@ use OpenApi\Attributes as OAT;
 ]
 class CategoryController extends Controller
 {
+    private string $mainRoute = '/admin/categories';
+
+    /**
+     * Get All Categories
+     */
     #[OAT\Get(
         path: '/admin/categories',
         tags: ['categories'],
@@ -65,22 +89,29 @@ class CategoryController extends Controller
             ),
         ],
     )]
-    public function index(FileService $fileService)
+    public function index()
     {
 
+        //        Log::info('accessing CategoryController index method');
+        //
+        //                Log::info('categories parent_ids {categories} ', ['categories' => Category::pluck('parent_id')]);
 
-        // $categoriesData = Category::all()->map(
-        //     function (Category $category) use ($fileService) {
-        //         return new CategoryData(
-        //             id: $category->id,
-        //             name: $category->name,
-        //             image: $fileService->getWebLocation('category', $category->image),
-        //             created_at: $category->created_at,
-        //         );
-        //     },
-        // );
+        $categoriesData = CategoryData::collect(
+            Category::all()->select([
+                'id',
+                'parent_id',
+                'name',
+                'image',
+                'created_at',
+            ])
+        );
 
-        // return $categoriesData;
+        Log::info(
+            'Fetched categories {categories}',
+            ['categories' => $categoriesData]
+        );
+
+        return $categoriesData;
     }
 
     /**
@@ -88,7 +119,6 @@ class CategoryController extends Controller
      */
     #[OAT\Post(
         path: '/admin/categories',
-        tags: ['categories'],
         requestBody: new OAT\RequestBody(
             required: true,
             content: new OAT\MediaType(
@@ -98,6 +128,7 @@ class CategoryController extends Controller
                 ),
             ),
         ),
+        tags: ['categories'],
         parameters: [
 
         ],
@@ -109,7 +140,7 @@ class CategoryController extends Controller
             // ),
             new OAT\Response(
                 response: 200,
-                description: 'saldkfjalskdjf',
+                description: 'Category was created successfully',
                 content: new OAT\JsonContent(
                     type: 'array',
                     items: new OAT\Items(
@@ -121,28 +152,23 @@ class CategoryController extends Controller
     )]
     public function store(
         CreateCategoryData $createCategoryData,
-        FileService $fileService,
-    ) {
+    ): CategoryData {
 
-        //     Log::info('Request category {category}', ['category' => $createCategoryData]);
+        Log::info('Accessing CategoryController store method');
 
-        //     $categoryImage = $createCategoryData->image;
-        //     Log::info('category image {image}', ['image' => $categoryImage]);
+        $categoryImage = $createCategoryData->image;
 
-        //     Log::info('executed');
+        $uploadedFileUrl = FileService::upload('category', $categoryImage);
 
-        //     $uploadedFileUrl = $fileService->upload('category', $categoryImage);
+        $category = Category::create([
+            'name' => $createCategoryData->name,
+            'parent_id' => $createCategoryData->parent_id,
+            'image' => $uploadedFileUrl,
+        ]);
 
-        //     $category = Category::create([
-        //         'name' => $createCategoryData->name,
-        //         'image' => $uploadedFileUrl,
-        //     ]);
+        Log::info('Category was created {category}', ['category' => $category]);
 
-        //     Log::info('created {category}', ['category' => $category]);
-
-        //     Log::info('hello world {world}', ['world' => $createCategoryData]);
-
-        //     return CategoryData::from($category);
+        return CategoryData::from($category);
     }
 
     #[OAT\Get(
@@ -159,57 +185,164 @@ class CategoryController extends Controller
             ),
         ],
     )]
-    public function show(CategoryIdPathParameterData $request, FileService $fileService)
+    public function show(CategoryIdPathParameterData $request)
     {
 
-        Category::create([
-            'name' => 'samer',
-            'email' => 'email',
-            'password' => 'password',
-            'hash' => 'string',
-            'is_special' => true,
-            'parent_id' => null,
-        ]);
+        Log::info(
+            'accessing Category Controller show method with path id {id}',
+            ['id' => $request->id]
+        );
 
-        // Log::info('category id {id}', ['id' => $request->id]);
+        $category = Category::find($request->id);
 
-        // $category = Category::find($request->id);
+        Log::info(
+            'Fetched category {category}',
+            ['category' => $category]
+        );
 
-        // Log::info(
-        //     'category {category}',
-        //     ['category' => $category]
-        // );
-
-        // $categoryImageWebLocation = $fileService->getWebLocation('category', $category->image);
-
-        // Log::info('image web location {image}', ['image' => $categoryImageWebLocation]);
-
-        // return CategoryData::from([
-        //     'id' => $category->id,
-        //     'name' => $category->name,
-        //     'image' => $categoryImageWebLocation,
-        //     'created_at' => $category->created_at,
-        // ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
+        return CategoryData::from($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
-    {
+    #[OAT\Patch(
+        path: '/admin/categories/{id}',
+        requestBody: new OAT\RequestBody(
+            required: true,
+            content: new OAT\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OAT\Schema(
+                    type: UpdateCategoryData::class,
+                ),
+            ),
+        ),
+        tags: ['categories'],
+        parameters: [
+
+        ],
+        responses: [
+            new OAT\Response(
+                response: 200,
+                description: 'Category was updated successfully',
+                content: new OAT\JsonContent(
+                    type: 'array',
+                    items: new OAT\Items(
+                        type: CategoryData::class,
+                    ),
+                ),
+            ),
+        ],
+    )]
+    public function update(
+        CategoryIdPathParameterData $request,
+        UpdateCategoryData $updatedCategoryData,
+    ) {
+        $category = Category::find($request->id);
+
+        $isCategoryUpdated = $category->update([
+            'name' => $request->name,
+            'image' => $request->image,
+        ]);
+
+        if ($isCategoryUpdated) {
+            FileService::delete('category', $category->image);
+        }
+
+        return CategoryData::from($category);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    #[OAT\Delete(
+        path: '/admin/categories/{id}',
+        tags: ['categories'],
+        responses: [
+            new OAT\Response(
+                response: 204,
+                description: 'The Category was successfully deleted',
+            ),
+        ],
+    )]
+    public function destroy(CategoryIdPathParameterData $request): bool
     {
+        $categoryToDelete = Category::find($request->id);
+
+        $isCategoryDeleted = $categoryToDelete->delete();
+
+        return $isCategoryDeleted;
+
+    }
+
+    /** Get sub Categories by the id of the category */
+    #[OAT\Get(
+        path: '/admin/categories/getSubCategories/{id}',
+        tags: ['categories'],
+        parameters: [
+
+        ],
+        responses: [
+            new OAT\Response(
+                response: 200,
+                description: 'category fetched successfully',
+                content: new OAT\JsonContent(type: CategoryData::class),
+            ),
+        ],
+    )]
+    public function getSubCategories(CategoryIdPathParameterData $request)
+    {
+        Log::info(
+            'accessing Category Controller, getSubCategories method with path id {id}',
+            ['id' => $request->id]
+        );
+
+        $categoryChilds =
+            Category::whereParentId($request->id)
+                ->select(['id', 'parent_id', 'name', 'image', 'created_at'])
+                ->orderByDesc('created_at')
+                ->get();
+
+        return CategoryData::collect($categoryChilds);
+    }
+
+    /** Get child Categories by parent Ids List */
+    #[OAT\Post(
+        path: '/admin/categories/GetSubCategoriesByParents',
+        requestBody: new OAT\RequestBody(
+            required: true,
+            content: new OAT\JsonContent(type: ParentCategoryIdsData::class),
+        ),
+        tags: ['categories'],
+        responses: [
+            new OAT\Response(
+                response: 200,
+                description: 'Fetched Categories successfully',
+                content: new OAT\JsonContent(
+                    type: 'array',
+                    items: new OAT\Items(
+                        type: CategoryData::class,
+                    ),
+                ),
+            ),
+        ],
+    )]
+    public function GetSubCategoriesByParents(ParentCategoryIdsData $request)
+    {
+
+        $parentIds = $request->ids;
+
+        Log::info(
+            'accessing CategoryController, GetSubCategoriesByParents Method with ids  {ids}',
+            ['ids' => $request->ids]
+        );
+
+        $childCategories =
+            Category::isChild()
+                ->hasParents($parentIds)
+                ->get();
+
+        return CategoryData::collect($childCategories);
     }
 }

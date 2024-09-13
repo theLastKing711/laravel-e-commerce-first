@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,17 @@ class OrderDetailsFactory extends Factory
      */
     public function definition(): array
     {
+        $randomProduct = $this->getRandomProduct();
+
         return [
-            //
+            'product_id' => $randomProduct->id,
+            'unit_price' => $randomProduct->price,
+            'quantity' => fake()->numberBetween(1, 25),
         ];
+    }
+
+    public function getRandomProduct()
+    {
+        return Product::all()->random();
     }
 }

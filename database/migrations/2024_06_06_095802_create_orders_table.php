@@ -16,8 +16,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->decimal('total');
-            $table->enum('status', OrderStatus::asValuesArray())
-                  ->default(OrderStatus::Pending);
+            $table->integer('status');
             $table->string('rejection_reason')->nullable();
             $table->dateTime('required_time');
             $table->string('notice')->nullable();
@@ -30,11 +29,11 @@ return new class extends Migration
             $table->decimal('delivery_price');
 
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('coupon_id')->nullable()->constrained();
             $table->unsignedBigInteger('driver_id')->nullable();
-
             $table->foreign('driver_id')
-                  ->references('id')
-                  ->on('users');
+                ->references('id')
+                ->on('users');
         });
     }
 

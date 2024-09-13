@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
- * 
+ *
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int $order_id
  * @property int $product_id
  * @property string|null $unit_price
@@ -31,14 +33,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPriceOffer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class OrderDetails extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function order(): BelongsTo
     {
+
         return $this->belongsTo(Order::class);
     }
 

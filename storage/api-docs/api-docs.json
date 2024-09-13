@@ -24,17 +24,786 @@
                     }
                 }
             },
+            "delete": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "0ee11e2aa6e87c46d4a4a8c156605743",
+                "responses": {
+                    "204": {
+                        "description": "The Category was successfully deleted"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "d32f97a59546b1d34f81c71495288da9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminUpdateCategory"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminCategory"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "parameters": [
                 {
                     "$ref": "#/components/parameters/adminCategoryIdPathParameter"
                 }
             ]
         },
+        "/admin/categories/getSubCategories/{id}": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get sub Categories by the id of the category",
+                "operationId": "c15b619d638f689886880d599f2f6b2e",
+                "responses": {
+                    "200": {
+                        "description": "category fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminCategory"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminCategoryIdPathParameter"
+                }
+            ]
+        },
+        "/admin/admin/{id}": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "operationId": "257e54370507ab40e501335f821a22aa",
+                "responses": {
+                    "204": {
+                        "description": "Fetched Admin Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminAdmin"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminAdminIdPathParameter"
+                },
+                {
+                    "$ref": "#/components/parameters/localeQueryParameter"
+                }
+            ]
+        },
+        "/admin/admin": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "operationId": "dd30c01f8240a30adb9cc602a11ef70f",
+                "responses": {
+                    "200": {
+                        "description": "The Admin was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminAdmin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "operationId": "cd6ed37e4c6e2f688ae9865d9dfd41c9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminAdmin"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/localeQueryParameter"
+                }
+            ]
+        },
+        "/admin/coupons/{id}": {
+            "get": {
+                "tags": [
+                    "coupons"
+                ],
+                "operationId": "73a3b0477255de64025d58b328e800a4",
+                "responses": {
+                    "200": {
+                        "description": "product fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminCoupon"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "coupons"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "27bba561cc9b8f63f2ecabf6db0d7be5",
+                "responses": {
+                    "204": {
+                        "description": "The Coupon was successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "coupons"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "5c7da04233de229db03258455a733dcf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminUpdateCoupon"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Coupon created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminCouponIdPathParameter"
+                }
+            ]
+        },
+        "/admin/drivers/{id}": {
+            "get": {
+                "tags": [
+                    "drivers"
+                ],
+                "operationId": "23991b377afeae29ae24b70cabd53aa8",
+                "responses": {
+                    "204": {
+                        "description": "Fetched Driver Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminDriverData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "drivers"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "988bff1b3534097d6ba1daa2f1f8f081",
+                "responses": {
+                    "204": {
+                        "description": "The Driver was successfully deleted"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "drivers"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "0dc77c9fda7e61f464f6783353ece330",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminUpdateDriverData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Driver created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminDriverData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminDriverIdPathParameter"
+                }
+            ]
+        },
+        "/admin/groups/{id}": {
+            "get": {
+                "tags": [
+                    "groups"
+                ],
+                "operationId": "021c328f28588b06efb6ee2ff53fc1ab",
+                "responses": {
+                    "204": {
+                        "description": "Fetched Group Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminGroup"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "groups"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "dd0b4de268ddb96b71d83abbb8f698bd",
+                "responses": {
+                    "204": {
+                        "description": "The Group was successfully deleted"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "groups"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "c4cddb49dad395ce22690d2fcc9ad32b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminUpdateGroup"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Group created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminGroup"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminGroupIdPathParameter"
+                }
+            ]
+        },
+        "/admin/notifications/{id}": {
+            "delete": {
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "60bc6513b668f2bbd6fa689a0de6d486",
+                "responses": {
+                    "204": {
+                        "description": "The Notification was successfully deleted"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminNotificationIdPathParameter"
+                }
+            ]
+        },
+        "/admin/orders/{id}": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "operationId": "9d2ba4f1289be6df02f81d2d88fe700f",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/adminOrderSearch"
+                    },
+                    {
+                        "$ref": "#/components/parameters/adminOrderStatus"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Order was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminOrder"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminOrderIdPathParameter"
+                }
+            ]
+        },
+        "/admin/orders/{id}/changeStatus": {
+            "patch": {
+                "tags": [
+                    "orders"
+                ],
+                "operationId": "7a7abdc8418520616bcadb8af3995521",
+                "responses": {
+                    "200": {
+                        "description": "Order Status Changed Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminOrder"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminOrderIdPathParameter"
+                }
+            ]
+        },
+        "/admin/products/{id}": {
+            "get": {
+                "tags": [
+                    "products"
+                ],
+                "operationId": "d3b2e17f118203ba1ae8955cbebb733b",
+                "responses": {
+                    "200": {
+                        "description": "product fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminProduct"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "541884d6a9ac68d92989c2e4a328900d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminUpdateProduct"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminProduct"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminProductIdPathParameter"
+                }
+            ]
+        },
+        "/admin/products/{id}/activate": {
+            "patch": {
+                "tags": [
+                    "products"
+                ],
+                "operationId": "06a67b6cb55a8221505a0652b2557050",
+                "responses": {
+                    "204": {
+                        "description": "Fetched Product Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminProductList"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminProductIdPathParameter"
+                }
+            ]
+        },
+        "/admin/products/{id}/deActivate": {
+            "patch": {
+                "tags": [
+                    "products"
+                ],
+                "operationId": "585976e57474020fea56e3255fa088d8",
+                "responses": {
+                    "204": {
+                        "description": "Fetched Product Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminProductList"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminProductIdPathParameter"
+                }
+            ]
+        },
+        "/admin/users/{id}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "operationId": "92c7b82f0128f5fb2749b6a6122268f9",
+                "responses": {
+                    "200": {
+                        "description": "Fetched User Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminUser"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "3eeef084edb4cab4be7b76a63a00d492",
+                "responses": {
+                    "201": {
+                        "description": "The User was successfully deleted"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "b31315a11e31c57cb37b41edeb97b4c6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminUpdateUser"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminUser"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/adminAdminIdPathParameter"
+                }
+            ]
+        },
+        "/store/orders/{id}/accept": {
+            "patch": {
+                "tags": [
+                    "storeOrders"
+                ],
+                "operationId": "0c7a5c4324b30ad923fdb1f14704e13f",
+                "responses": {
+                    "200": {
+                        "description": "Order Status Changed Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/storeOrderIdPathParameter"
+                }
+            ]
+        },
+        "/store/orders/{id}/reject": {
+            "patch": {
+                "tags": [
+                    "storeOrders"
+                ],
+                "operationId": "9b207b7520d9c59d2ccb1ee175e89765",
+                "responses": {
+                    "200": {
+                        "description": "Order Status Changed Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/storeOrderIdPathParameter"
+                }
+            ]
+        },
+        "/user/orders/{id}": {
+            "get": {
+                "tags": [
+                    "userOrders"
+                ],
+                "operationId": "54d2aafd9f4df22cad016e4860e406c5",
+                "responses": {
+                    "200": {
+                        "description": "category fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userShowOrder"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/userOrderIdPathParameter"
+                }
+            ]
+        },
+        "/sanctum/csrf-cookie": {
+            "get": {
+                "tags": [
+                    "sanctum"
+                ],
+                "summary": "Get Token",
+                "operationId": "bdcf16ea76658023991a1a7b0d87f89d",
+                "responses": {
+                    "200": {
+                        "description": "csrf cookie set",
+                        "headers": {
+                            "Set-Cookie": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "6a79aabfd077d1c18f803074e3c11afb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminLogin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminLoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User name and password or incorrect",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/auth/logout": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "6121f7e28a200ed5d837b4e609524ba2",
+                "responses": {
+                    "200": {
+                        "description": "The User was successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/admin/categories": {
             "get": {
                 "tags": [
                     "categories"
                 ],
+                "summary": "Get All Categories",
                 "operationId": "0cf6e89e69cabba5e72db6323e787007",
                 "responses": {
                     "200": {
@@ -70,7 +839,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "saldkfjalskdjf",
+                        "description": "Category was created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -84,14 +853,673 @@
                     }
                 }
             }
+        },
+        "/admin/categories/GetSubCategoriesByParents": {
+            "post": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get child Categories by parent Ids List",
+                "operationId": "90b30036d4d13874375a0aa58f897f72",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCategoryIds"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Fetched Categories successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminCategory"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupons": {
+            "get": {
+                "tags": [
+                    "coupons"
+                ],
+                "operationId": "428fbed59bb70eecc4149bd9e21957ae",
+                "responses": {
+                    "200": {
+                        "description": "The Coupon was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminCoupon"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "coupons"
+                ],
+                "operationId": "4063250b7b17361fffddb51cd1891c4d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateCoupon"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Coupon created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/drivers": {
+            "get": {
+                "tags": [
+                    "drivers"
+                ],
+                "summary": "Get All Drivers",
+                "operationId": "3782754d223fdbf4799a436af6eface0",
+                "responses": {
+                    "200": {
+                        "description": "The Driver was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminDriverData"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "drivers"
+                ],
+                "summary": "Create a new Driver.",
+                "operationId": "594841f04d3a8caac8ad17112c921189",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateDriverData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Driver created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminDriverData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/groups": {
+            "get": {
+                "tags": [
+                    "groups"
+                ],
+                "summary": "Get All Groups",
+                "operationId": "88b2113eba763d404ae87d088c031a8d",
+                "responses": {
+                    "200": {
+                        "description": "The Group was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminGroup"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "groups"
+                ],
+                "summary": "Create a new Group.",
+                "operationId": "40ad095510ebd19a420248bddef24c63",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateGroup"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Group created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminGroup"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/notifications": {
+            "get": {
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Get All Notifications",
+                "operationId": "c4dee25bb8e6abd77e7f7d1d32334b3d",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/adminNotificationType"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Notification was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminNotification"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Create a new Notification.",
+                "operationId": "04745ede39459d97b2f8f8edfe05914b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateNotification"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Notification created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminNotification"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orders": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "operationId": "1b5c652c58353dc894c6bf03404444dd",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/adminOrderSearch"
+                    },
+                    {
+                        "$ref": "#/components/parameters/adminOrderStatus"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Order was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminOrder"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/products": {
+            "get": {
+                "tags": [
+                    "products"
+                ],
+                "operationId": "20ecf04d8244289b7896b1a6e7c380d1",
+                "responses": {
+                    "200": {
+                        "description": "The Product was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminProduct"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "products"
+                ],
+                "operationId": "3fc4718ebf0611de6131a6d4da005058",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateProduct"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Fetched Product Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminProductList"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/products/getProductsByName": {
+            "post": {
+                "tags": [
+                    "products"
+                ],
+                "operationId": "fb1c59ca555c3bb16d18e6f2ab848fce",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/adminProductName"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Fetched Product Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminProductList"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get All Users",
+                "operationId": "1a238c2c3a338cff776f8344159de6c6",
+                "responses": {
+                    "200": {
+                        "description": "The User was successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminUser"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create a new User.",
+                "operationId": "0032ea2ed6cae6dbbb2f30a236bc8c93",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminCreateUser"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminUser"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/store/auth/login": {
+            "post": {
+                "tags": [
+                    "storeAuth"
+                ],
+                "operationId": "7b9803f43b76fb1a9411c7d5c4ad194a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/adminLogin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminLoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User name and password or incorrect",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/store/auth/logout": {
+            "post": {
+                "tags": [
+                    "storeAuth"
+                ],
+                "operationId": "16d8edae21d8b05eb4695a56ca662770",
+                "responses": {
+                    "200": {
+                        "description": "The User was successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/login": {
+            "post": {
+                "tags": [
+                    "userAuth"
+                ],
+                "operationId": "f8b7cd770f6b03a9de0d2841238b7d8b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/adminLoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "credentials are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/logout": {
+            "post": {
+                "tags": [
+                    "userAuth"
+                ],
+                "operationId": "6117f2da9c5a7269ba5fbd54f7b310e3",
+                "responses": {
+                    "200": {
+                        "description": "The User was successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/orders": {
+            "get": {
+                "tags": [
+                    "userOrders"
+                ],
+                "summary": "Get All Orders.",
+                "operationId": "94e305ab2d49084e4b9b8a00cfe906bd",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/userOrderProcessed"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order Data Fetched Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/userOrderData"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "userOrders"
+                ],
+                "summary": "Create a new Order.",
+                "operationId": "b8a970ccf9c6696c6c3a304cb5aacd8b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userCreateOrder"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "adminAdmin": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateAdmin": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    }
+                },
+                "type": "object"
+            },
+            "adminAdminPathClass": {},
+            "adminLogin": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "default": "admin"
+                    },
+                    "password": {
+                        "type": "string",
+                        "default": "admin"
+                    }
+                },
+                "type": "object"
+            },
+            "adminLoginResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "adminCategory": {
                 "properties": {
                     "id": {
-                        "type": "string"
+                        "type": "integer"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "nullable": true
                     },
                     "name": {
                         "type": "string"
@@ -105,11 +1533,49 @@
                         "format": "datetime",
                         "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
+                    },
+                    "parent": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/adminCategory"
+                            }
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"
             },
             "adminCreateCategory": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminCategoryIds": {
+                "properties": {
+                    "ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminCategoryPathClass": {},
+            "adminUpdateCategory": {
                 "properties": {
                     "name": {
                         "type": "string"
@@ -122,6 +1588,908 @@
                 },
                 "type": "object"
             },
+            "adminCoupon": {
+                "properties": {
+                    "id": {
+                        "description": "CouponUserData>",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "CouponUserData>",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "CouponUserData>",
+                        "type": "string"
+                    },
+                    "percent": {
+                        "description": "CouponUserData>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "value": {
+                        "description": "CouponUserData>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "start_at": {
+                        "description": "CouponUserData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-08-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "end_at": {
+                        "description": "CouponUserData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2014-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "created_at": {
+                        "description": "CouponUserData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "users": {
+                        "description": "CouponUserData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/adminCouponUser"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminCouponUser": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "number": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateCoupon": {
+                "properties": {
+                    "name": {
+                        "description": "int>",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "int>",
+                        "type": "string"
+                    },
+                    "percent": {
+                        "description": "int>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "value": {
+                        "description": "int>",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "start_at": {
+                        "description": "int>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-08-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "end_at": {
+                        "description": "int>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "user_ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "group_ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminCouponPathClass": {},
+            "adminUpdateCoupon": {
+                "properties": {
+                    "name": {
+                        "description": "int>",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "int>",
+                        "type": "string"
+                    },
+                    "percent": {
+                        "description": "int>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "value": {
+                        "description": "int>",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "start_at": {
+                        "description": "int>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-08-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "end_at": {
+                        "description": "int>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "user_ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "group_ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateDriverData": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "number": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminDriverData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "username": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "number": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    }
+                },
+                "type": "object"
+            },
+            "adminDriverIdPathParameter": {},
+            "adminUpdateDriverData": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "number": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateGroup": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminGroup": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    }
+                },
+                "type": "object"
+            },
+            "adminUpdateGroup": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateNotification": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "order_id": {
+                        "type": "integer"
+                    },
+                    "order_status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/NotificationType"
+                    }
+                },
+                "type": "object"
+            },
+            "adminNotification": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "order_id": {
+                        "type": "integer"
+                    },
+                    "order_status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/NotificationType"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    }
+                },
+                "type": "object"
+            },
+            "adminNotificationPathClass": {},
+            "adminUpdateNotification": {
+                "properties": {
+                    "name": {
+                        "description": "int>",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "int>",
+                        "type": "string"
+                    },
+                    "percent": {
+                        "description": "int>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "value": {
+                        "description": "int>",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "start_at": {
+                        "description": "int>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-08-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "end_at": {
+                        "description": "int>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "user_ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "group_ids": {
+                        "description": "int>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminOrder": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "customer_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "driver_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "total": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    }
+                },
+                "type": "object"
+            },
+            "adminOrderDetails": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    },
+                    "unit_price": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminOrderShow": {
+                "properties": {
+                    "id": {
+                        "description": "OrderDetailsData>",
+                        "type": "integer"
+                    },
+                    "total": {
+                        "description": "OrderDetailsData>",
+                        "type": "string"
+                    },
+                    "required_time": {
+                        "description": "OrderDetailsData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "lat": {
+                        "description": "OrderDetailsData>",
+                        "type": "string"
+                    },
+                    "lon": {
+                        "description": "OrderDetailsData>",
+                        "type": "string"
+                    },
+                    "delivery_price": {
+                        "description": "OrderDetailsData>",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "OrderDetailsData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "items": {
+                        "description": "OrderDetailsData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/adminOrderDetails"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateProduct": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string",
+                        "example": "00.00"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "is_most_buy": {
+                        "type": "boolean"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "unit": {
+                        "$ref": "#/components/schemas/Unit"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminProduct": {
+                "properties": {
+                    "id": {
+                        "description": "CategoryData>",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "CategoryData>",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "CategoryData>",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "CategoryData>",
+                        "type": "string"
+                    },
+                    "price_offer": {
+                        "description": "CategoryData>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_most_buy": {
+                        "description": "CategoryData>",
+                        "type": "boolean"
+                    },
+                    "is_active": {
+                        "description": "CategoryData>",
+                        "type": "boolean"
+                    },
+                    "unit": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Unit"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "unit_value": {
+                        "description": "CategoryData>",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "image": {
+                        "description": "CategoryData>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "CategoryData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "childCategories": {
+                        "description": "CategoryData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/adminCategory"
+                        }
+                    },
+                    "parentCategories": {
+                        "description": "CategoryData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/adminCategory"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "adminProductList": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "adminUpdateProduct": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string",
+                        "example": "00.00"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "is_most_buy": {
+                        "type": "boolean"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "unit": {
+                        "$ref": "#/components/schemas/Unit"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminCreateUser": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dial_code": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "$ref": "#/components/schemas/Gender"
+                    },
+                    "number": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminUpdateUser": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dial_code": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "$ref": "#/components/schemas/Gender"
+                    },
+                    "number": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "adminUser": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dial_code": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "$ref": "#/components/schemas/Gender"
+                    },
+                    "number": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "LoginResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "storeAcceptOrder": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "storeRejectOrder": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "userLogin": {
+                "properties": {
+                    "dial_code": {
+                        "type": "string",
+                        "default": "963"
+                    },
+                    "number": {
+                        "type": "string",
+                        "default": "0968259851"
+                    },
+                    "code": {
+                        "type": "string",
+                        "default": "123456"
+                    }
+                },
+                "type": "object"
+            },
+            "userLoginResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "userRegister": {
+                "properties": {
+                    "dial_code": {
+                        "type": "string",
+                        "default": "user"
+                    },
+                    "number": {
+                        "type": "string",
+                        "default": "user"
+                    }
+                },
+                "type": "object"
+            },
+            "userCreateOrder": {
+                "properties": {
+                    "notice": {
+                        "description": "CreateOrderDetailsData>",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "required_time": {
+                        "description": "CreateOrderDetailsData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-09-11 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "code": {
+                        "description": "CreateOrderDetailsData>",
+                        "type": "string",
+                        "default": "123456"
+                    },
+                    "order_details": {
+                        "description": "CreateOrderDetailsData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/userCreateOrderDetails"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "userCreateOrderDetails": {
+                "properties": {
+                    "quantity": {
+                        "type": "integer",
+                        "default": 1
+                    },
+                    "unit_price": {
+                        "type": "string",
+                        "default": "25",
+                        "nullable": true
+                    },
+                    "unit_price_offer": {
+                        "type": "string",
+                        "default": "",
+                        "nullable": true
+                    },
+                    "product_id": {
+                        "type": "integer",
+                        "default": 1
+                    }
+                },
+                "type": "object"
+            },
+            "userOrderData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "order_status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "total": {
+                        "type": "number"
+                    },
+                    "items_count": {
+                        "type": "integer"
+                    },
+                    "required_time": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    }
+                },
+                "type": "object"
+            },
+            "userShowOrder": {
+                "properties": {
+                    "id": {
+                        "description": "OrderShowItemData>",
+                        "type": "integer"
+                    },
+                    "required_time": {
+                        "description": "OrderShowItemData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
+                    },
+                    "receiver_name": {
+                        "description": "OrderShowItemData>",
+                        "type": "string"
+                    },
+                    "total": {
+                        "description": "OrderShowItemData>",
+                        "type": "number"
+                    },
+                    "discount": {
+                        "description": "OrderShowItemData>",
+                        "type": "number"
+                    },
+                    "delivery_price": {
+                        "description": "OrderShowItemData>",
+                        "type": "number"
+                    },
+                    "driver_lat": {
+                        "description": "OrderShowItemData>",
+                        "type": "number"
+                    },
+                    "driver_lon": {
+                        "description": "OrderShowItemData>",
+                        "type": "number"
+                    },
+                    "items": {
+                        "description": "OrderShowItemData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/userShowOrderDetails"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "userShowOrderDetails": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Day": {
+                "description": "[\n     0 => Saturday,\n     1 => Sunday,\n     2 => Monday,\n     3 => Tuesday,\n     4 => Wednesday,\n     5 => Thursday,\n     6 => Friday\n     ]",
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            },
             "Gender": {
                 "description": "[0 => Male, 1 => Female]",
                 "type": "integer",
@@ -129,9 +2497,50 @@
                     0,
                     1
                 ]
+            },
+            "NotificationType": {
+                "description": "[0 => User, 1 => Driver, 2 => Store, 3 => All]",
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "OrderStatus": {
+                "description": "[1 => Pending, 2 => Accept, 3 => DriverAccept, 4 => Rejected, 5 => Completed]",
+                "type": "integer",
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            },
+            "Unit": {
+                "description": "[1 => Kg, 2 => K, 3 => L, 4 => Ml, 5 => Stock]",
+                "type": "integer",
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
             }
         },
         "parameters": {
+            "adminAdminIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "adminCategoryIdPathParameter": {
                 "name": "id",
                 "in": "path",
@@ -139,11 +2548,133 @@
                 "schema": {
                     "type": "integer"
                 }
+            },
+            "adminCouponIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "adminDriverIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "adminGroupIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "adminNotificationIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "adminNotificationType": {
+                "name": "notification_type",
+                "in": "query",
+                "required": true,
+                "schema": {}
+            },
+            "adminOrderIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "adminOrderSearch": {
+                "name": "search",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "$ref": "string"
+                }
+            },
+            "adminOrderStatus": {
+                "name": "order_status",
+                "in": "query",
+                "required": false,
+                "schema": {}
+            },
+            "adminProductIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "adminProductName": {
+                "name": "name",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "userUserIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "localeQueryParameter": {
+                "name": "locale",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "storeOrderIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "userOrderIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "userOrderProcessed": {
+                "name": "is_order_processed",
+                "in": "query",
+                "required": true,
+                "schema": {}
+            }
+        },
+        "securitySchemes": {
+            "ref_to_be_used_below_csrf": {
+                "type": "apiKey",
+                "name": "X-XSRF-TOKEN",
+                "in": "header"
             }
         }
     },
-    "x-tagGroups": {
-        "name": "testing",
-        "tags": "categories"
-    }
+    "security": [
+        {
+            "ref_to_be_used_below_csrf": []
+        }
+    ]
 }

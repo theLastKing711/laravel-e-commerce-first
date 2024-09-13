@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 /**
- *
+ * 
  *
  * @property int $id
  * @property string|null $name
@@ -25,17 +27,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSpecial($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ * @method static Builder|Category hasParents(array $ids)
+ * @method static Builder|Category isChild()
+ * @method static Builder|Category latest()
+ * @method static Builder|Category newModelQuery()
+ * @method static Builder|Category newQuery()
+ * @method static Builder|Category query()
+ * @method static Builder|Category whereCreatedAt($value)
+ * @method static Builder|Category whereHash($value)
+ * @method static Builder|Category whereId($value)
+ * @method static Builder|Category whereImage($value)
+ * @method static Builder|Category whereIsSpecial($value)
+ * @method static Builder|Category whereName($value)
+ * @method static Builder|Category whereParentId($value)
+ * @method static Builder|Category whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Category extends Model
@@ -46,15 +51,13 @@ class Category extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(__CLASS__, 'parent_id');
     }
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'parent_id');
+        return $this->belongsTo(__CLASS__, 'parent_id');
     }
-
-    belong
 
     public function products(): BelongsToMany
     {
@@ -64,5 +67,20 @@ class Category extends Model
             'category_id',
             'product_id'
         );
+    }
+
+    public function scopeIsChild(Builder $query): void
+    {
+        $query->whereNot('parent_id', null);
+    }
+
+    public function scopeHasParents(Builder $query, array $ids): void
+    {
+        $query->whereIn('parent_id', $ids);
+    }
+
+    public function scopeLatest(Builder $query): void
+    {
+        $query->orderByDesc('created_at');
     }
 }

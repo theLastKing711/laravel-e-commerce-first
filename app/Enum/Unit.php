@@ -4,6 +4,12 @@ namespace App\Enum;
 
 use App\Trait\EnumHelper;
 
+use OpenApi\Attributes as OAT;
+
+#[OAT\Schema(
+    description: '[1 => Kg, 2 => K, 3 => L, 4 => Ml, 5 => Stock]',
+    type: 'integer'
+)]
 enum Unit: int
 {
     case Kg = 1;

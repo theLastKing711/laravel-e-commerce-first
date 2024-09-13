@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('name')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
             //User columns
-            $table->enum('gender', Gender::asValuesArray())->nullable();
+            $table->integer('gender')->nullable(); //Gender enum
             $table->string('number')->nullable();
             $table->string('dial_code')->nullable();
             $table->enum('account_registration_step', AccountRegistrationStep::asValuesArray())
@@ -34,9 +34,9 @@ return new class extends Migration
             $table->string('temp_code')->nullable();
 
             //Driver columns
+            $table->string('username')->nullable();
             $table->double('lat')->nullable();
             $table->double('lon')->nullable();
-
 
         });
 

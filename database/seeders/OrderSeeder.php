@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Order;
+use App\Models\OrderDetails;
 use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder
@@ -12,6 +13,13 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $orders = Order::factory()
+            ->has(
+                OrderDetails::factory()
+                    ->count(10)
+            )
+            ->count(10)
+            ->updateTotalUsingItems()
+            ->create();
     }
 }

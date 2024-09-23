@@ -19,17 +19,15 @@ use Spatie\LaravelData\Data;
 class UpdateNotificationData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $name,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             Digits(6)
         ]
         public string $code,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             Min(5),
             Max(90),
             Numeric,
@@ -37,7 +35,7 @@ class UpdateNotificationData extends Data
         ]
         public ?string $percent,
         #[
-            OAT\Property(type: 'integer'),
+            OAT\Property(),
             RequiredWithout('percent')
         ]
         public ?int $value,

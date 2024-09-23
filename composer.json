@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.9",
         "spatie/laravel-data": "^4.6",
         "spatie/laravel-permission": "^6.7",
-        "spatie/laravel-translation-loader": "^2.8"
+        "spatie/laravel-translation-loader": "^2.8",
+        "spatie/laravel-typescript-transformer": "^2.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.0",

@@ -2,29 +2,25 @@
 
 namespace App\Data\Admin\Driver;
 
+use App\Data\Shared\Swagger\Property\DateProperty;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'adminDriverData')]
+#[Oat\Schema()]
 class DriverData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $name,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $username,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
         ]
         public ?string $number,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $created_at,
     ) {
     }

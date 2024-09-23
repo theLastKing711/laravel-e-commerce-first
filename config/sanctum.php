@@ -15,7 +15,12 @@ return [
     |
     */
 
-    'stateful' => ['http://localhost', 'http://localhost:8080', 'http://localhost:5174'],
+    'stateful' => [
+        'http://localhost',
+        'http://localhost:8080',
+        'http://localhost:5173',
+        'http://localhost:5174',
+    ],
 
 //
 //    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(

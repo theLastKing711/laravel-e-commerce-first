@@ -12,11 +12,11 @@ use Spatie\LaravelData\Data;
 class LoginData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'string', default: '963')]
+        #[OAT\Property(default: '963')]
         public string $dial_code,
-        #[OAT\Property(type: 'string', default: '0968259851')]
+        #[OAT\Property(default: '0968259851')]
         public string $number,
-        #[OAT\Property(type: 'string', default: '123456')]
+        #[OAT\Property(default: '123456')]
         public string $code,
     ) {
     }

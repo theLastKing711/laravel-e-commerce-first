@@ -2,50 +2,41 @@
 
 namespace App\Data\User\Order\Index;
 
+use App\Data\Shared\Swagger\Property\DateProperty;
 use App\Enum\OrderStatus;
 use App\Models\Order;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'userOrderData')]
+#[Oat\Schema()]
 class OrderData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
         #[OAT\Property()]
         public OrderStatus $order_status,
-        #[OAT\Property(type: 'number')]
+        #[OAT\Property()]
         public float $total,
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public float $items_count,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $required_time,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $created_at,
     ) {
     }
 
     public static function fromModel(Order $order): self
     {
-        $total = $order->getTotalWithShipmentAndDiscount();
+        $total_with_delivery_and_discount = $order->getTotalWithShipmentAndDiscount();
 
         $items_count = $order->orderDetails->count();
 
         return new self(
             id: $order->id,
             order_status: OrderStatus::from($order->status),
-            total: $total,
+            total: $total_with_delivery_and_discount,
             items_count: $items_count,
             required_time: $order->required_time,
             created_at: $order->created_at,

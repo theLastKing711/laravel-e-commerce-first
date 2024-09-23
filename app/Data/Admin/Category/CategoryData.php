@@ -2,37 +2,35 @@
 
 namespace App\Data\Admin\Category;
 
-use App\Services\FileService;
+use App\Data\Shared\Swagger\Property\DateProperty;
 use App\Transformers\ToWebStoragePathTransformer;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-#[Oat\Schema(schema: 'adminCategory')]
+#[TypeScript]
+#[Oat\Schema()]
 class CategoryData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public ?int $parent_id,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
+        public ?string $parent_name,
+        #[OAT\Property()]
         public string $name,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             WithTransformer(ToWebStoragePathTransformer::class, folder: 'category')
         ]
         public ?string $image,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $created_at,
-        #[OAT\Property(type: CategoryData::class)]
-        public ?CategoryData $parent,
+//        #[OAT\Property(default: 'type of containing type')]
+//        public ?CategoryData $parent,
     ) {
     }
-
 }

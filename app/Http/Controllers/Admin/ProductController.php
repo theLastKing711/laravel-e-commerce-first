@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\Product\CreateProductData;
+use App\Data\Admin\Product\PaginatedProductData;
 use App\Data\Admin\Product\PathParameters\ProductIdPathParameterData;
 use App\Data\Admin\Product\ProductData;
 use App\Data\Admin\Product\ProductListData;
 use App\Data\Admin\Product\QueryParameters\ProductNameQueryParameterData;
 use App\Data\Admin\Product\UpdateProductData;
+use App\Data\Shared\Pagination\QueryParameters\PaginationQueryParameterData;
+use App\Data\Shared\Swagger\Property\QueryParameter;
+use App\Data\Shared\Swagger\Request\FormDataRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessItemResponse;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Services\FileService;
-use Illuminate\Http\Request;
 use Log;
 use OpenApi\Attributes as OAT;
 
@@ -43,68 +49,29 @@ use OpenApi\Attributes as OAT;
 ]
 class ProductController extends Controller
 {
-    #[OAT\Get(
-        path: '/admin/products',
-        tags: ['products'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Product was successfully created',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: ProductData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
-    public function index(Request $request)
-    {
+
+    #[OAT\Get(path: '/admin/products', tags: ['products'])]
+    #[QueryParameter('page', 'integer')]
+    #[QueryParameter('perPage', 'integer')]
+    #[SuccessItemResponse(PaginatedProductData::class)]
+    public function index(
+        PaginationQueryParameterData $query_parameters,
+    ) {
 
         Log::info('accessing ProductController index method');
 
+        Log::info('value {value}', ['value' => $query_parameters]);
+
         return ProductData::collect(
             Product::with('categories.parent')
-                ->get()
+                ->paginate(perPage: $query_parameters->perPage)
         );
-        //            ->map(
-        //                function (Product $product) {
-        //                    $productCategories = $product->categories;
-        //
-        //                    return ProductData::from([
-        //                        'id' => $product->id,
-        //                        'name' => $product->name,
-        //                        'price' => $product->price,
-        //                        'description' => $product->description,
-        //                        'unit' => $product->unit,
-        //                        'unit_value' => $product->unit_value,
-        //                        'price_offer' => $product->price_offer,
-        //                        'is_active' => $product->is_active,
-        //                        'is_most_buy' => $product->is_most_buy,
-        //                        'image' => $product->image,
-        //                        'childCategories' => CategoryData::collect($productCategories),
-        //                        'parentCategories' => CategoryData::collect(
-        //                            $productCategories->pluck('parent')->unique()
-        //                        ),
-        //                        'created_at' => $product->created_at,
-        //                    ]);
-        //                }
-        //            );
 
     }
 
-    #[OAT\Get(
-        path: '/admin/products/{id}',
-        tags: ['products'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'product fetched successfully',
-                content: new OAT\JsonContent(type: ProductData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/products/{id}', tags: ['products'])]
+    #[SuccessItemResponse(ProductData::class)]
     public function show(ProductIdPathParameterData $request)
     {
 
@@ -112,7 +79,7 @@ class ProductController extends Controller
             ->where('id', $request->id)
             ->first();
 
-        return ProductData::from(
+        return PaginatedProductData::from(
             $product
         );
 
@@ -121,31 +88,10 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[OAT\Patch(
-        path: '/admin/products/{id}',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\MediaType(
-                mediaType: 'multipart/form-data',
-                schema: new OAT\Schema(
-                    type: UpdateProductData::class,
-                ),
-            ),
-        ),
-        tags: ['products'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'Product was updated successfully',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: ProductData::class,
-                    ),
-                ),
-            ),
-        ],
-    )]
+
+    #[OAT\Patch(path: '/admin/products/{id}', tags: ['products'])]
+    #[FormDataRequestBody(UpdateProductData::class)]
+    #[SuccessNoContentResponse('Product successfully updated')]
     public function update(
         ProductIdPathParameterData $request,
         UpdateProductData $updatedProductData,
@@ -159,33 +105,18 @@ class ProductController extends Controller
             FileService::delete('product', $product->first()->image);
         }
 
-        return ProductData::from($product);
-
     }
 
-    #[OAT\Post(
-        path: '/admin/products/getProductsByName',
-        tags: ['products'],
-        parameters: [
-            new OAT\QueryParameter(
-                required: false,
-                ref: '#/components/parameters/adminProductName',
-            ),
-        ],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Fetched Product Successfully',
-                content: new OAT\JsonContent(type: ProductListData::class),
-            ),
-        ],
-    )]
-    public function getProductsByName(ProductNameQueryParameterData $request)
+
+    #[OAT\Get(path: '/admin/products/getProductsByName', tags: ['products'])]
+    #[QueryParameter('name')]
+    #[SuccessListResponse(ProductListData::class)]
+    public function getProductsByName(ProductNameQueryParameterData $query_parameters)
     {
         $productList = Product::select(['id', 'name']);
 
-        $products = $request->name ?
-            $productList->hasName($request->name)->get()
+        $products = $query_parameters->name ?
+            $productList->hasName($query_parameters->name)->get()
             :
             $productList->get();
 
@@ -193,26 +124,10 @@ class ProductController extends Controller
 
     }
 
-    #[OAT\Post(
-        path: '/admin/products',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\MediaType(
-                mediaType: 'multipart/form-data',
-                schema: new OAT\Schema(
-                    type: CreateProductData::class,
-                ),
-            ),
-        ),
-        tags: ['products'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Fetched Product Successfully',
-                content: new OAT\JsonContent(type: ProductListData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Post(path: '/admin/products', tags: ['products'])]
+    #[FormDataRequestBody(CreateProductData::class)]
+    #[SuccessNoContentResponse('Product successfully created')]
     public function store(CreateProductData $request)
     {
         Log::info('accessing ProductController store method');
@@ -223,22 +138,12 @@ class ProductController extends Controller
 
         $createdProduct = Product::create($request->all());
 
-        Log::info('type of unit is {unit} ', ['unit' => $createdProduct]);
-
-        return ProductData::from($createdProduct);
     }
 
-    #[OAT\Patch(
-        path: '/admin/products/{id}/activate',
-        tags: ['products'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Fetched Product Successfully',
-                content: new OAT\JsonContent(type: ProductListData::class),
-            ),
-        ],
-    )]
+
+
+    #[OAT\Patch(path: '/admin/products/{id}/activate', tags: ['products'])]
+    #[SuccessNoContentResponse('Fetched Product Successfully')]
     public function activate(ProductIdPathParameterData $request)
     {
         $product = Product::find($request->id);
@@ -247,21 +152,12 @@ class ProductController extends Controller
 
         $product->save();
 
-        return ProductData::from($product);
-
     }
 
-    #[OAT\Patch(
-        path: '/admin/products/{id}/deActivate',
-        tags: ['products'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Fetched Product Successfully',
-                content: new OAT\JsonContent(type: ProductListData::class),
-            ),
-        ],
-    )]
+
+
+    #[OAT\Patch(path: '/admin/products/{id}/deActivate', tags: ['products'])]
+    #[SuccessNoContentResponse('Product DeActivated Successfully')]
     public function deActivate(ProductIdPathParameterData $request)
     {
         $product = Product::find($request->id);
@@ -269,8 +165,6 @@ class ProductController extends Controller
         $product->is_active = false;
 
         $product->save();
-
-        return ProductData::from($product);
 
     }
 }

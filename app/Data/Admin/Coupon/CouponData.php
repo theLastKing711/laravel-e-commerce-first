@@ -2,67 +2,35 @@
 
 namespace App\Data\Admin\Coupon;
 
+use App\Data\Shared\Swagger\Property\ArrayProperty;
+use App\Data\Shared\Swagger\Property\DateProperty;
 use App\Models\Coupon;
 use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'adminCoupon')]
+#[Oat\Schema()]
 class CouponData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'integer'),
-        ]
+        #[OAT\Property()]
         public string $id,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $name,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $code,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public ?string $percent,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public ?string $value,
-        #[
-            OAT\Property(
-                type: 'string',
-                format: 'datetime',
-                default: '2024-08-02 18:31:45',
-                pattern: 'YYYY-MM-DD'
-            ),
-        ]
+        #[DateProperty(default: '2024-08-02 18:31:45')]
         public string $start_at,
-        #[
-            OAT\Property(
-                type: 'string',
-                format: 'datetime',
-                default: '2014-09-02 18:31:45',
-                pattern: 'YYYY-MM-DD'
-            ),
-        ]
+        #[DateProperty]
         public string $end_at,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $created_at,
         /** @var Collection<int, CouponUserData> */
-        #[OAT\Property(
-            type: 'array',
-            items: new OAT\Items(
-                type: CouponUserData::class,
-            )
-        )]
+        #[ArrayProperty]
         public Collection $users,
     ) {
     }

@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
-
+/**
+* @method static Builder whereAnyLike(array $columns,string $searchTeram)
+ * @method static Builder orderByDynamic(string $sort_field, string $sort_value)
+*/
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -16,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         // if ($this->app->isLocal()) {
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         // }
+        $this->app->register(BuilderMacrosServiceProvider::class);
     }
 
     /**
@@ -23,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+
     }
 }

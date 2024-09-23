@@ -7,28 +7,20 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'userShowOrderDetails')]
+#[Oat\Schema()]
 class OrderShowItemData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'integer'),
-        ]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(
-            type: 'integer',
-        )]
+        #[OAT\Property()]
         public int $quantity,
-        #[
-            OAT\Property(type: 'number'),
-        ]
+        #[OAT\Property()]
         public float $price,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $name,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             WithTransformer(ToWebStoragePathTransformer::class, folder: 'product')
         ]
         public ?string $image,

@@ -2,6 +2,7 @@
 
 namespace App\Data\Admin\Product;
 
+use App\Data\Shared\Swagger\Property\FileProperty;
 use App\Enum\Unit;
 use App\Transformers\ToBoolTransformer;
 use Illuminate\Http\UploadedFile;
@@ -9,36 +10,26 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 #[Oat\Schema(schema: 'adminCreateProduct')]
 class CreateProductData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $name,
-        #[
-            OAT\Property(type: 'string', example: '00.00'),
-        ]
+        #[OAT\Property(example: '00.00')]
         public string $price,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $description,
-        #[
-            OAT\Property(type: 'boolean'),
-        ]
+        #[OAT\Property()]
         public bool $is_most_buy,
-        #[
-            OAT\Property(type: 'boolean'),
-        ]
+        #[OAT\Property()]
         public bool $is_active,
         #[OAT\Property()]
         public Unit $unit,
-        #[
-            OAT\Property(type: 'string', format: 'binary'),
-        ]
+        #[FileProperty]
         public ?UploadedFile $image
     ) {
     }

@@ -13,7 +13,7 @@ use Spatie\LaravelData\Attributes\Validation\Numeric;
 use Spatie\LaravelData\Attributes\Validation\RequiredWithout;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'userCreateOrderDetails')]
+#[Oat\Schema()]
 class CreateOrderDetailsData extends Data
 {
     public function __construct(
@@ -23,21 +23,21 @@ class CreateOrderDetailsData extends Data
         ]
         public int $quantity,
         #[
-            OAT\Property(type: 'string', default: '25'),
+            OAT\Property(default: '25'),
             RequiredWithout('unit_price_offer'),
             Numeric,
             Min('0')
         ]
         public ?string $unit_price,
         #[
-            OAT\Property(type: 'string', default: ''),
+            OAT\Property(default: ''),
             RequiredWithout('unit_price'),
             Numeric,
             Min('0')
         ]
         public ?string $unit_price_offer,
         #[
-            OAT\Property(type: 'integer', default: 1),
+            OAT\Property(default: 1),
             Bail,
             Exists('products', 'id'),
             ActiveProduct

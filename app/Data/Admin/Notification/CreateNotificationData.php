@@ -21,25 +21,15 @@ use Spatie\LaravelData\Data;
 class CreateNotificationData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $name,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $body,
-        #[
-            OAT\Property(type: 'integer'),
-        ]
+        #[OAT\Property()]
         public int $order_id,
-        #[
-            OAT\Property(),
-        ]
+        #[OAT\Property()]
         public OrderStatus $order_status,
-        #[
-            OAT\Property(),
-        ]
+        #[OAT\Property()]
         public NotificationType $type,
 
     ) {

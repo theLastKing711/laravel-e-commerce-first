@@ -2,6 +2,8 @@
 
 namespace App\Data\Admin\Coupon;
 
+use App\Data\Shared\Swagger\Property\ArrayProperty;
+use App\Data\Shared\Swagger\Property\DateProperty;
 use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\After;
@@ -15,21 +17,21 @@ use Spatie\LaravelData\Attributes\Validation\RequiredWithout;
 use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'adminCreateCoupon')]
+#[Oat\Schema()]
 class CreateCouponData extends Data
 {
     public function __construct(
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
         ]
         public string $name,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             Digits(6)
         ]
         public string $code,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             Unique('coupons', 'code'),
             Min(5),
             Max(90),
@@ -38,46 +40,26 @@ class CreateCouponData extends Data
         ]
         public ?string $percent,
         #[
-            OAT\Property(type: 'integer'),
+            OAT\Property(),
             RequiredWithout('percent')
         ]
         public ?int $value,
         #[
-            OAT\Property(
-                type: 'string',
-                format: 'datetime',
-                default: '2024-08-02 18:31:45',
-                pattern: 'YYYY-MM-DD'
-            ),
-            AfterOrEqual('- 5 minutes'),
-            Date
+            DateProperty('2024-08-02 18:31:45'),
+            Date,
+            AfterOrEqual('- 5 minutes')
         ]
         public string $start_at,
         #[
-            OAT\Property(
-                type: 'string',
-                format: 'datetime',
-                default: '2024-09-02 18:31:45',
-                pattern: 'YYYY-MM-DD'
-            ),
-            After('start_at'),
-            Date
+            DateProperty('2024-09-02 18:31:45'),
+            Date,
+            After('start_at')
         ]
         public string $end_at,
-        #[OAT\Property(
-            type: 'array',
-            items: new OAT\Items(
-                type: 'integer',
-            )
-        )]
+        #[ArrayProperty]
         /** @var Collection<int, int> */
         public array $user_ids,
-        #[OAT\Property(
-            type: 'array',
-            items: new OAT\Items(
-                type: 'integer',
-            )
-        )]
+        #[ArrayProperty]
         /** @var Collection<int, int> */
         public array $group_ids,
     ) {

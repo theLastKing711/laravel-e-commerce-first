@@ -6,6 +6,10 @@ use App\Data\Admin\Driver\CreateDriverData;
 use App\Data\Admin\Driver\DriverData;
 use App\Data\Admin\Driver\PathParameters\DriverIdPathParameterData;
 use App\Data\Admin\Driver\UpdateDriverData;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessItemResponse;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Enum\Auth\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -30,23 +34,9 @@ class DriverController extends Controller
     /**
      * Get All Drivers
      */
-    #[OAT\Get(
-        path: '/admin/drivers',
-        tags: ['drivers'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Driver was successfully created',
-                //                content: new OAT\JsonContent(ref: '#/components/schemas/paginatedDriver'),
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: DriverData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/drivers', tags: ['drivers'])]
+    #[SuccessListResponse(DriverData::class, 'The Drivers were successfully fetched')]
     public function index()
     {
 
@@ -76,17 +66,9 @@ class DriverController extends Controller
         return $driversData;
     }
 
-    #[OAT\Get(
-        path: '/admin/drivers/{id}',
-        tags: ['drivers'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Fetched Driver Successfully',
-                content: new OAT\JsonContent(type: DriverData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/drivers/{id}', tags: ['drivers'])]
+    #[SuccessItemResponse('The Driver was successfully fetched')]
     public function show(DriverIdPathParameterData $request)
     {
         Log::info('driver id {id}', ['id' => $request]);
@@ -107,21 +89,10 @@ class DriverController extends Controller
     /**
      * Create a new Driver.
      */
-    #[OAT\Post(
-        path: '/admin/drivers',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: CreateDriverData::class),
-        ),
-        tags: ['drivers'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Driver created successfully',
-                content: new OAT\JsonContent(type: DriverData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Post(path: '/admin/drivers/{id}', tags: ['drivers'])]
+    #[JsonRequestBody(CreateDriverData::class)]
+    #[SuccessNoContentResponse('The Driver was created successfully')]
     public function store(
         CreateDriverData $createDriverData,
     ): DriverData {
@@ -144,21 +115,10 @@ class DriverController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[OAT\Patch(
-        path: '/admin/drivers/{id}',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: UpdateDriverData::class),
-        ),
-        tags: ['drivers'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Driver created successfully',
-                content: new OAT\JsonContent(type: DriverData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Patch(path: '/admin/drivers/{id}', tags: ['drivers'])]
+    #[JsonRequestBody(UpdateDriverData::class)]
+    #[SuccessNoContentResponse('The Driver was updated successfully')]
     public function update(DriverIdPathParameterData $request, UpdateDriverData $updateDriverData): DriverData
     {
         Log::info('Accessing DriverController update method');
@@ -180,16 +140,9 @@ class DriverController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    #[OAT\Delete(
-        path: '/admin/drivers/{id}',
-        tags: ['drivers'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'The Driver was successfully deleted',
-            ),
-        ],
-    )]
+
+    #[OAT\Delete(path: '/admin/drivers/{id}', tags: ['drivers'])]
+    #[SuccessNoContentResponse('The Driver was deleted successfully')]
     public function destroy(DriverIdPathParameterData $request): bool
     {
 

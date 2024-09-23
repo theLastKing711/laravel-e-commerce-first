@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * 
  *
+ * @method 
  * @property int $id
  * @property string|null $name
  * @property string|null $image
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @method static Builder|Category hasParents(array $ids)
  * @method static Builder|Category isChild()
+ * @method static Builder|Category isParent()
  * @method static Builder|Category latest()
  * @method static Builder|Category newModelQuery()
  * @method static Builder|Category newQuery()
@@ -67,6 +69,11 @@ class Category extends Model
             'category_id',
             'product_id'
         );
+    }
+
+    public function scopeIsParent(Builder $query): void
+    {
+        $query->where('parent_id', null);
     }
 
     public function scopeIsChild(Builder $query): void

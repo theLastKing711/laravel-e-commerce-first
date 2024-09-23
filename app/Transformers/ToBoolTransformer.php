@@ -11,8 +11,6 @@ class ToBoolTransformer implements Transformer
 {
     public function transform(DataProperty $property, mixed $value, TransformationContext $context): bool
     {
-        Log::info('transforming data');
-
 
         if ($value === 'true' || $value === 'TRUE') {
             return true;

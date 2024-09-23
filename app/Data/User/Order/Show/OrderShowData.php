@@ -2,59 +2,38 @@
 
 namespace App\Data\User\Order\Show;
 
+use App\Data\Shared\Swagger\Property\ArrayProperty;
+use App\Data\Shared\Swagger\Property\DateProperty;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'userShowOrder')]
+#[Oat\Schema()]
 class OrderShowData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'integer'),
-        ]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $required_time,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $receiver_name,
-        #[
-            OAT\Property(type: 'number'),
-        ]
+        #[OAT\Property()]
         public float $total,
-        #[
-            OAT\Property(type: 'number'),
-        ]
+        #[OAT\Property()]
         public float $discount,
-        #[
-            OAT\Property(type: 'number'),
-        ]
+        #[OAT\Property()]
         public float $delivery_price,
-        #[
-            OAT\Property(type: 'number'),
-        ]
+        #[OAT\Property()]
         public string $driver_lat,
-        #[
-            OAT\Property(type: 'number'),
-        ]
+        #[OAT\Property()]
         public string $driver_lon,
-        #[OAT\Property(
-            type: 'array',
-            items: new OAT\Items(
-                type: OrderShowItemData::class,
-            )
-        )]
+        #[ArrayProperty(OrderShowItemData::class)]
         /** @var Collection<int, OrderShowItemData> */
         public Collection $items,
+        #[DateProperty]
         public string $created_at,
     ) {
     }

@@ -10,11 +10,11 @@ use Spatie\LaravelData\Attributes\Validation\DigitsBetween;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
-#[Oat\Schema(schema: 'adminCreateGroup')]
+#[Oat\Schema()]
 class CreateGroupData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $name,
     ) {
     }

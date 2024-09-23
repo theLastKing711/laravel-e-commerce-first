@@ -2,9 +2,10 @@
 
 namespace App\Data\User\Order\Create;
 
+use App\Data\Shared\Swagger\Property\ArrayProperty;
 use App\Rules\Coupon\Code\UnUsedCoupon\UnusedCoupon;
 use App\Rules\Coupon\Code\UserOwnsCoupon\UserOwnsCoupon;
-use App\Rules\DuringWorkHours\ActiveProduct;
+use App\Rules\Product\ActiveProduct\ActiveProduct;
 use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\AfterOrEqual;
@@ -16,12 +17,12 @@ use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\Numeric;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'userCreateOrder')]
+#[Oat\Schema()]
 class CreateOrderData extends Data
 {
     public function __construct(
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
         ]
         public ?string $notice,
         #[OAT\Property(
@@ -36,10 +37,8 @@ class CreateOrderData extends Data
             ActiveProduct
         ]
         public string $required_time,
-        #[OAT\Property(
-            type: 'string',
-            default: '123456',
-        ),
+        #[
+            OAT\Property(default: '123456'),
             Bail,
             Numeric,
             Digits(6),
@@ -48,12 +47,7 @@ class CreateOrderData extends Data
             UnusedCoupon
         ]
         public string $code,
-        #[OAT\Property(
-            type: 'array',
-            items: new OAT\Items(
-                type: CreateOrderDetailsData::class,
-            )
-        )]
+        #[ArrayProperty]
         /** @var Collection<int, CreateOrderDetailsData> */
         public Collection $order_details,
     ) {

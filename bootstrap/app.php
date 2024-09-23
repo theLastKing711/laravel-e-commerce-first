@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\Locale;
+use App\Http\Middleware\ParseStringToBoolInQueryParameter;
+use App\Http\Middleware\ParseStringToBoolQuery;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         //        $middleware->validateCsrfTokens(except: ['*']);
         $middleware->statefulApi();
         $middleware->append(Locale::class);
+        //'true' or 'false' to true or false in query params
+        $middleware->append(ParseStringToBoolInQueryParameter::class);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,

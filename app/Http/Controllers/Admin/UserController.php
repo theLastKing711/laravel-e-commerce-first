@@ -6,6 +6,10 @@ use App\Data\Admin\User\CreateUserData;
 use App\Data\Admin\User\PathParameters\UserIdPathParameterData;
 use App\Data\Admin\User\UpdateUserData;
 use App\Data\Admin\User\UserData;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessItemResponse;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Enum\Auth\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -29,26 +33,13 @@ class UserController extends Controller
     /**
      * Get All Users
      */
-    #[OAT\Get(
-        path: '/admin/users',
-        tags: ['users'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The User was successfully created',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: UserData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/users', tags: ['users'])]
+    #[SuccessListResponse(UserData::class)]
     public function index()
     {
 
-        Log::info('accessing UserController index method');
+        Log::info('accessing Admin UserController index method');
 
         $users = User::role($this->userRole)->select([
             'id',
@@ -68,21 +59,13 @@ class UserController extends Controller
         return UserData::collect($users);
     }
 
-    #[OAT\Get(
-        path: '/admin/users/{id}',
-        tags: ['users'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'Fetched User Successfully',
-                content: new OAT\JsonContent(type: UserData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/users/{id}', tags: ['users'])]
+    #[SuccessItemResponse(UserData::class)]
     public function show(UserIdPathParameterData $request)
     {
 
-        Log::info('accessing UserController show method with id {id}', ['id' => $request->id]);
+        Log::info('accessing Admin UserController show method with id {id}', ['id' => $request->id]);
 
         $user = User::role($this->userRole)
             ->select([
@@ -104,26 +87,15 @@ class UserController extends Controller
     /**
      * Create a new User.
      */
-    #[OAT\Post(
-        path: '/admin/users',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: CreateUserData::class),
-        ),
-        tags: ['users'],
-        responses: [
-            new OAT\Response(
-                response: 201,
-                description: 'User created successfully',
-                content: new OAT\JsonContent(type: UserData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Post(path: '/admin/users', tags: ['users'])]
+    #[JsonRequestBody(CreateUserData::class)]
+    #[SuccessNoContentResponse()]
     public function store(
         CreateUserData $createUserData,
     ) {
 
-        Log::info('Accessing UserController store method');
+        Log::info('Accessing Admin UserController store method');
 
         $user = User::create([
             'name' => $createUserData->name,
@@ -142,24 +114,13 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[OAT\Patch(
-        path: '/admin/users/{id}',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: UpdateUserData::class),
-        ),
-        tags: ['users'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'User created successfully',
-                content: new OAT\JsonContent(type: UserData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Patch(path: '/admin/users/{id}', tags: ['users'])]
+    #[JsonRequestBody(UpdateUserData::class)]
+    #[SuccessNoContentResponse()]
     public function update(UserIdPathParameterData $request, UpdateUserData $updateUserData)
     {
-        Log::info('Accessing UserController update method with {id}', ['id' => $request->id]);
+        Log::info('Accessing Admin UserController update method with {id}', ['id' => $request->id]);
 
         $user = User::find($request->id);
 
@@ -179,20 +140,13 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    #[OAT\Delete(
-        path: '/admin/users/{id}',
-        tags: ['users'],
-        responses: [
-            new OAT\Response(
-                response: 201,
-                description: 'The User was successfully deleted',
-            ),
-        ],
-    )]
+
+    #[OAT\Delete(path: '/admin/users/{id}', tags: ['users'])]
+    #[SuccessNoContentResponse('Item Deleted Successfully')]
     public function destroy(UserIdPathParameterData $request): bool
     {
 
-        Log::info('Accessing UserController destroy method with {id}', ['id' => $request->id]);
+        Log::info('Accessing Admin UserController destroy method with {id}', ['id' => $request->id]);
 
         $userToDelete = User::find($request->id);
 

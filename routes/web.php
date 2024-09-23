@@ -24,14 +24,18 @@ Route::prefix('admin')
 
         Route::middleware(['auth:sanctum', "role:{$adminRole}"])
             //auth:sanctum check if user is logged in (middleware('auth')),
-            // plus sanctum csrf token check
             ->group(function () {
 
                 Route::prefix('admin')
                     ->group(function () {
                         Route::get('', [AdminController::class, 'index']);
                         Route::get('{id}', [AdminController::class, 'show']);
+
                         Route::post('', [AdminController::class, 'store']);
+
+                        Route::delete('{id}', [AdminController::class, 'destroy']);
+                        Route::patch('{id}', [AdminController::class, 'update']);
+
                     });
                 Route::prefix('users')
                     ->group(function () {
@@ -82,12 +86,16 @@ Route::prefix('admin')
                 });
 
                 Route::prefix('categories')->group(function () {
+                    Route::get('parentList', [CategoryController::class, 'getParentCategoriesList']);
+                    Route::get('list', [CategoryController::class, 'list']);
                     Route::get('', [CategoryController::class, 'index']);
                     Route::get('getSubCategories/{id}', [CategoryController::class, 'getSubCategories']);
+                    Route::get('GetSubCategoriesByParents', [CategoryController::class, 'GetSubCategoriesByParents']);
                     Route::get('{id}', [CategoryController::class, 'show']);
 
                     Route::post('', [CategoryController::class, 'store']);
-                    Route::post('GetSubCategoriesByParents', [CategoryController::class, 'GetSubCategoriesByParents']);
+
+                    Route::patch('{id}', [CategoryController::class, 'update']);
 
                     Route::delete('{id}', [CategoryController::class, 'destroy']);
 
@@ -126,8 +134,8 @@ Route::prefix('admin')
             });
 
         Route::prefix('auth')->group(function () {
-            Route::patch('login', [AuthController::class, 'login']);
-            Route::patch('logout', [AuthController::class, 'logout']);
+            Route::post('login', [AuthController::class, 'login']);
+            Route::post('logout', [AuthController::class, 'logout']);
         });
 
     });

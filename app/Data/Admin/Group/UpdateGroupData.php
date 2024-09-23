@@ -7,11 +7,11 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\DigitsBetween;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'adminUpdateGroup')]
+#[Oat\Schema()]
 class UpdateGroupData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $name,
     ) {
     }

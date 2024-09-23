@@ -12,14 +12,14 @@ use Spatie\LaravelData\Data;
 class OrderDetailsData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $quantity,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public string $unit_price,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             WithTransformer(ToWebStoragePathTransformer::class, folder: 'product')
         ]
         public ?string $image,

@@ -12,15 +12,8 @@
                 ],
                 "operationId": "4f4954eaefabb4b722c23de0bb0c9c4e",
                 "responses": {
-                    "200": {
-                        "description": "category fetched successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminCategory"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Fetched category successfully"
                     }
                 }
             },
@@ -32,7 +25,7 @@
                 "operationId": "0ee11e2aa6e87c46d4a4a8c156605743",
                 "responses": {
                     "204": {
-                        "description": "The Category was successfully deleted"
+                        "description": "Item Deleted Successfully"
                     }
                 }
             },
@@ -47,24 +40,14 @@
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminUpdateCategory"
+                                "$ref": "#/components/schemas/UpdateCategoryData"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Category was updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/adminCategory"
-                                    }
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Category was updated successfully"
                     }
                 }
             },
@@ -79,15 +62,15 @@
                 "tags": [
                     "categories"
                 ],
-                "summary": "Get sub Categories by the id of the category",
+                "summary": "Get Child Categories List",
                 "operationId": "c15b619d638f689886880d599f2f6b2e",
                 "responses": {
                     "200": {
-                        "description": "category fetched successfully",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminCategory"
+                                    "$ref": "#/components/schemas/CategoryData"
                                 }
                             }
                         }
@@ -108,14 +91,40 @@
                 "operationId": "257e54370507ab40e501335f821a22aa",
                 "responses": {
                     "204": {
-                        "description": "Fetched Admin Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminAdmin"
-                                }
+                        "description": "App\\Data\\Admin\\Admin\\AdminData"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "5a18d08a7ce1702461d37a70e62cddf9",
+                "responses": {
+                    "204": {
+                        "description": "Admin Deleted Successfully"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "admin"
+                ],
+                "operationId": "52e651f9ac7e4fbe5e266af950e3c467",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAdminData"
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": " Admin Updated Successfully"
                     }
                 }
             },
@@ -136,13 +145,13 @@
                 "operationId": "dd30c01f8240a30adb9cc602a11ef70f",
                 "responses": {
                     "200": {
-                        "description": "The Admin was successfully created",
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/adminAdmin"
+                                        "$ref": "#/components/schemas/AdminData"
                                     }
                                 }
                             }
@@ -158,23 +167,16 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminCreateAdmin"
+                                "$ref": "#/components/schemas/CreateAdminData"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "User created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminAdmin"
-                                }
-                            }
-                        }
+                        "description": "User created successfully"
                     }
                 }
             },
@@ -192,14 +194,35 @@
                 "operationId": "73a3b0477255de64025d58b328e800a4",
                 "responses": {
                     "200": {
-                        "description": "product fetched successfully",
+                        "description": "The Coupon was successfully fetched",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminCoupon"
+                                    "$ref": "#/components/schemas/CouponData"
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "coupons"
+                ],
+                "operationId": "425a7aa3781566c692382970af34559e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCouponData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "The Coupon was created successfully"
                     }
                 }
             },
@@ -211,14 +234,7 @@
                 "operationId": "27bba561cc9b8f63f2ecabf6db0d7be5",
                 "responses": {
                     "204": {
-                        "description": "The Coupon was successfully deleted",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
+                        "description": "The Coupon was deleted successfully"
                     }
                 }
             },
@@ -233,21 +249,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminUpdateCoupon"
+                                "$ref": "#/components/schemas/UpdateCouponData"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Coupon created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
+                        "description": "The Coupon was updated successfully"
                     }
                 }
             },
@@ -264,15 +273,37 @@
                 ],
                 "operationId": "23991b377afeae29ae24b70cabd53aa8",
                 "responses": {
-                    "204": {
-                        "description": "Fetched Driver Successfully",
+                    "200": {
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminDriverData"
+                                    "type": "The Driver was successfully fetched"
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "drivers"
+                ],
+                "summary": "Create a new Driver.",
+                "operationId": "ba035a7d3ca8dd193a38864739998e6b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDriverData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "The Driver was created successfully"
                     }
                 }
             },
@@ -284,7 +315,7 @@
                 "operationId": "988bff1b3534097d6ba1daa2f1f8f081",
                 "responses": {
                     "204": {
-                        "description": "The Driver was successfully deleted"
+                        "description": "The Driver was deleted successfully"
                     }
                 }
             },
@@ -299,21 +330,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminUpdateDriverData"
+                                "$ref": "#/components/schemas/UpdateDriverData"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Driver created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminDriverData"
-                                }
-                            }
-                        }
+                        "description": "The Driver was updated successfully"
                     }
                 }
             },
@@ -330,12 +354,12 @@
                 ],
                 "operationId": "021c328f28588b06efb6ee2ff53fc1ab",
                 "responses": {
-                    "204": {
-                        "description": "Fetched Group Successfully",
+                    "200": {
+                        "description": "The Group was successfully fetched",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminGroup"
+                                    "$ref": "#/components/schemas/GroupData"
                                 }
                             }
                         }
@@ -350,7 +374,7 @@
                 "operationId": "dd0b4de268ddb96b71d83abbb8f698bd",
                 "responses": {
                     "204": {
-                        "description": "The Group was successfully deleted"
+                        "description": "The Group was deleted successfully"
                     }
                 }
             },
@@ -365,21 +389,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminUpdateGroup"
+                                "$ref": "#/components/schemas/UpdateGroupData"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Group created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminGroup"
-                                }
-                            }
-                        }
+                        "description": "The Group was updated successfully"
                     }
                 }
             },
@@ -414,24 +431,13 @@
                     "orders"
                 ],
                 "operationId": "9d2ba4f1289be6df02f81d2d88fe700f",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/adminOrderSearch"
-                    },
-                    {
-                        "$ref": "#/components/parameters/adminOrderStatus"
-                    }
-                ],
                 "responses": {
                     "200": {
-                        "description": "The Order was successfully created",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/adminOrder"
-                                    }
+                                    "$ref": "#/components/schemas/adminOrderShow"
                                 }
                             }
                         }
@@ -451,15 +457,8 @@
                 ],
                 "operationId": "7a7abdc8418520616bcadb8af3995521",
                 "responses": {
-                    "200": {
-                        "description": "Order Status Changed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminOrder"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Order status changed successfully"
                     }
                 }
             },
@@ -477,7 +476,7 @@
                 "operationId": "d3b2e17f118203ba1ae8955cbebb733b",
                 "responses": {
                     "200": {
-                        "description": "product fetched successfully",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -505,18 +504,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Product was updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/adminProduct"
-                                    }
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Product successfully updated"
                     }
                 }
             },
@@ -534,14 +523,7 @@
                 "operationId": "06a67b6cb55a8221505a0652b2557050",
                 "responses": {
                     "204": {
-                        "description": "Fetched Product Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminProductList"
-                                }
-                            }
-                        }
+                        "description": "Fetched Product Successfully"
                     }
                 }
             },
@@ -559,14 +541,7 @@
                 "operationId": "585976e57474020fea56e3255fa088d8",
                 "responses": {
                     "204": {
-                        "description": "Fetched Product Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminProductList"
-                                }
-                            }
-                        }
+                        "description": "Product DeActivated Successfully"
                     }
                 }
             },
@@ -584,7 +559,7 @@
                 "operationId": "92c7b82f0128f5fb2749b6a6122268f9",
                 "responses": {
                     "200": {
-                        "description": "Fetched User Successfully",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -602,8 +577,8 @@
                 "summary": "Remove the specified resource from storage.",
                 "operationId": "3eeef084edb4cab4be7b76a63a00d492",
                 "responses": {
-                    "201": {
-                        "description": "The User was successfully deleted"
+                    "204": {
+                        "description": "Item Deleted Successfully"
                     }
                 }
             },
@@ -624,15 +599,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "User created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminUser"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": ""
                     }
                 }
             },
@@ -649,15 +617,8 @@
                 ],
                 "operationId": "0c7a5c4324b30ad923fdb1f14704e13f",
                 "responses": {
-                    "200": {
-                        "description": "Order Status Changed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Order Status Changed Successfully"
                     }
                 }
             },
@@ -674,15 +635,8 @@
                 ],
                 "operationId": "9b207b7520d9c59d2ccb1ee175e89765",
                 "responses": {
-                    "200": {
-                        "description": "Order Status Changed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Order Status Changed Successfully"
                     }
                 }
             },
@@ -700,11 +654,11 @@
                 "operationId": "54d2aafd9f4df22cad016e4860e406c5",
                 "responses": {
                     "200": {
-                        "description": "category fetched successfully",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/userShowOrder"
+                                    "$ref": "#/components/schemas/OrderShowData"
                                 }
                             }
                         }
@@ -770,7 +724,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/LoginResponse"
+                                    "$ref": "#/components/schemas/LoginFailedResponse"
                                 }
                             }
                         }
@@ -805,16 +759,46 @@
                 ],
                 "summary": "Get All Categories",
                 "operationId": "0cf6e89e69cabba5e72db6323e787007",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ids[]",
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "The Category was successfully created",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/adminCategory"
-                                    }
+                                    "$ref": "#/components/schemas/PaginatedCategoryData"
                                 }
                             }
                         }
@@ -832,20 +816,48 @@
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminCreateCategory"
+                                "$ref": "#/components/schemas/CreateCategoryData"
                             }
                         }
                     }
                 },
                 "responses": {
+                    "204": {
+                        "description": "Category created successfully"
+                    }
+                }
+            }
+        },
+        "/admin/categories/list": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get sub Categories by the id of the category",
+                "operationId": "ef7342e8ebd84e1018e7ba46b6bdd8c7",
+                "responses": {
+                    "204": {
+                        "description": "Category list fetched successfully"
+                    }
+                }
+            }
+        },
+        "/admin/categories/parentList": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get Parent Categories List",
+                "operationId": "039dd1dd2a553545f086996a6cd99320",
+                "responses": {
                     "200": {
-                        "description": "Category was created successfully",
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/adminCategory"
+                                        "$ref": "#/components/schemas/ListData"
                                     }
                                 }
                             }
@@ -855,31 +867,40 @@
             }
         },
         "/admin/categories/GetSubCategoriesByParents": {
-            "post": {
+            "get": {
                 "tags": [
                     "categories"
                 ],
                 "summary": "Get child Categories by parent Ids List",
-                "operationId": "90b30036d4d13874375a0aa58f897f72",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/adminCategoryIds"
+                "operationId": "7a2fb8b701be4e4565cb6e3e9937114d",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ids[]",
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
                             }
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
-                        "description": "Fetched Categories successfully",
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/adminCategory"
+                                        "$ref": "#/components/schemas/CategoryData"
                                     }
                                 }
                             }
@@ -896,42 +917,14 @@
                 "operationId": "428fbed59bb70eecc4149bd9e21957ae",
                 "responses": {
                     "200": {
-                        "description": "The Coupon was successfully created",
+                        "description": "The Coupons were successfully fetched",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/adminCoupon"
+                                        "$ref": "#/components/schemas/CouponData"
                                     }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "coupons"
-                ],
-                "operationId": "4063250b7b17361fffddb51cd1891c4d",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/adminCreateCoupon"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "Coupon created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "boolean"
                                 }
                             }
                         }
@@ -948,43 +941,14 @@
                 "operationId": "3782754d223fdbf4799a436af6eface0",
                 "responses": {
                     "200": {
-                        "description": "The Driver was successfully created",
+                        "description": "The Drivers were successfully fetched",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/adminDriverData"
+                                        "$ref": "#/components/schemas/DriverData"
                                     }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "drivers"
-                ],
-                "summary": "Create a new Driver.",
-                "operationId": "594841f04d3a8caac8ad17112c921189",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/adminCreateDriverData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "Driver created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminDriverData"
                                 }
                             }
                         }
@@ -1001,13 +965,13 @@
                 "operationId": "88b2113eba763d404ae87d088c031a8d",
                 "responses": {
                     "200": {
-                        "description": "The Group was successfully created",
+                        "description": "The Groups were successfully fetched",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/adminGroup"
+                                        "$ref": "#/components/schemas/GroupData"
                                     }
                                 }
                             }
@@ -1026,21 +990,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/adminCreateGroup"
+                                "$ref": "#/components/schemas/CreateGroupData"
                             }
                         }
                     }
                 },
                 "responses": {
                     "204": {
-                        "description": "Group created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminGroup"
-                                }
-                            }
-                        }
+                        "description": "Group created successfully"
                     }
                 }
             }
@@ -1054,12 +1011,16 @@
                 "operationId": "c4dee25bb8e6abd77e7f7d1d32334b3d",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/adminNotificationType"
+                        "name": "notification_type",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "#/components/schemas/NotificationType"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "The Notification was successfully created",
+                        "description": "The Notifications were successfully fetched",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1091,14 +1052,7 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Notification created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminNotification"
-                                }
-                            }
-                        }
+                        "description": "Notification created successfully"
                     }
                 }
             }
@@ -1111,15 +1065,23 @@
                 "operationId": "1b5c652c58353dc894c6bf03404444dd",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/adminOrderSearch"
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     {
-                        "$ref": "#/components/parameters/adminOrderStatus"
+                        "name": "order_status",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "#/components/schemas/OrderStatus"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "The Order was successfully created",
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1140,16 +1102,29 @@
                     "products"
                 ],
                 "operationId": "20ecf04d8244289b7896b1a6e7c380d1",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "The Product was successfully created",
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/adminProduct"
-                                    }
+                                    "$ref": "#/components/schemas/PaginatedProductData"
                                 }
                             }
                         }
@@ -1173,36 +1148,36 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Fetched Product Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminProductList"
-                                }
-                            }
-                        }
+                        "description": "Product successfully created"
                     }
                 }
             }
         },
         "/admin/products/getProductsByName": {
-            "post": {
+            "get": {
                 "tags": [
                     "products"
                 ],
-                "operationId": "fb1c59ca555c3bb16d18e6f2ab848fce",
+                "operationId": "1a2f4754ce00e5988f063a7a67c91e7b",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/adminProductName"
+                        "name": "name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Fetched Product Successfully",
+                    "200": {
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminProductList"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/adminProductList"
+                                    }
                                 }
                             }
                         }
@@ -1219,7 +1194,7 @@
                 "operationId": "1a238c2c3a338cff776f8344159de6c6",
                 "responses": {
                     "200": {
-                        "description": "The User was successfully created",
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1250,15 +1225,8 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "User created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/adminUser"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": ""
                     }
                 }
             }
@@ -1295,7 +1263,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/LoginResponse"
+                                    "$ref": "#/components/schemas/LoginFailedResponse"
                                 }
                             }
                         }
@@ -1355,7 +1323,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/LoginResponse"
+                                    "$ref": "#/components/schemas/LoginFailedResponse"
                                 }
                             }
                         }
@@ -1392,18 +1360,22 @@
                 "operationId": "94e305ab2d49084e4b9b8a00cfe906bd",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/userOrderProcessed"
+                        "name": "is_order_processed",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Order Data Fetched Successfully",
+                        "description": "Items fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/userOrderData"
+                                        "$ref": "#/components/schemas/OrderData"
                                     }
                                 }
                             }
@@ -1422,14 +1394,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/userCreateOrder"
+                                "$ref": "#/components/schemas/CreateOrderData"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "User created successfully",
+                    "200": {
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1444,7 +1416,7 @@
     },
     "components": {
         "schemas": {
-            "adminAdmin": {
+            "AdminData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -1452,9 +1424,6 @@
                     "name": {
                         "type": "string"
                     },
-                    "email": {
-                        "type": "string"
-                    },
                     "created_at": {
                         "type": "string",
                         "format": "datetime",
@@ -1464,24 +1433,30 @@
                 },
                 "type": "object"
             },
-            "adminCreateAdmin": {
+            "CreateAdminData": {
                 "properties": {
                     "name": {
                         "type": "string"
                     },
-                    "email": {
+                    "password": {
                         "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
                     }
                 },
                 "type": "object"
             },
             "adminAdminPathClass": {},
+            "UpdateAdminData": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "adminLogin": {
                 "properties": {
                     "name": {
@@ -1512,7 +1487,7 @@
                 },
                 "type": "object"
             },
-            "adminCategory": {
+            "CategoryData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -1537,15 +1512,36 @@
                     "parent": {
                         "oneOf": [
                             {
-                                "$ref": "#/components/schemas/adminCategory"
+                                "$ref": "#/components/schemas/CategoryData"
                             }
                         ],
-                        "nullable": true
+                        "nullable": true,
+                        "default": "type of containing type"
                     }
                 },
                 "type": "object"
             },
-            "adminCreateCategory": {
+            "CategoryShowData": {
+                "properties": {
+                    "data": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/CategoryData"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "items": {
+                        "description": "ListData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ListData"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CreateCategoryData": {
                 "properties": {
                     "name": {
                         "type": "string"
@@ -1562,7 +1558,27 @@
                 },
                 "type": "object"
             },
-            "adminCategoryIds": {
+            "PaginatedCategoryData": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/adminPaginatedAbstract"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "description": "CategoryData>",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CategoryData"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "ParentCategoryIdsData": {
                 "properties": {
                     "ids": {
                         "description": "int>",
@@ -1575,10 +1591,13 @@
                 "type": "object"
             },
             "adminCategoryPathClass": {},
-            "adminUpdateCategory": {
+            "UpdateCategoryData": {
                 "properties": {
                     "name": {
                         "type": "string"
+                    },
+                    "parent_id": {
+                        "type": "integer"
                     },
                     "image": {
                         "type": "string",
@@ -1588,11 +1607,11 @@
                 },
                 "type": "object"
             },
-            "adminCoupon": {
+            "CouponData": {
                 "properties": {
                     "id": {
                         "description": "CouponUserData>",
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "description": "CouponUserData>",
@@ -1616,14 +1635,14 @@
                         "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-08-02 18:31:45",
+                        "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "end_at": {
                         "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2014-09-02 18:31:45",
+                        "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "created_at": {
@@ -1637,16 +1656,16 @@
                         "description": "CouponUserData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/adminCouponUser"
+                            "type": "integer"
                         }
                     }
                 },
                 "type": "object"
             },
-            "adminCouponUser": {
+            "CouponUserData": {
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"
@@ -1657,7 +1676,7 @@
                 },
                 "type": "object"
             },
-            "adminCreateCoupon": {
+            "CreateCouponData": {
                 "properties": {
                     "name": {
                         "description": "int>",
@@ -1681,14 +1700,14 @@
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-08-02 18:31:45",
+                        "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "end_at": {
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-09-02 18:31:45",
+                        "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "user_ids": {
@@ -1709,7 +1728,7 @@
                 "type": "object"
             },
             "adminCouponPathClass": {},
-            "adminUpdateCoupon": {
+            "UpdateCouponData": {
                 "properties": {
                     "name": {
                         "description": "int>",
@@ -1733,14 +1752,14 @@
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-08-02 18:31:45",
+                        "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "end_at": {
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-09-02 18:31:45",
+                        "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "user_ids": {
@@ -1760,7 +1779,7 @@
                 },
                 "type": "object"
             },
-            "adminCreateDriverData": {
+            "CreateDriverData": {
                 "properties": {
                     "name": {
                         "type": "string",
@@ -1780,7 +1799,7 @@
                 },
                 "type": "object"
             },
-            "adminDriverData": {
+            "DriverData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -1807,7 +1826,7 @@
                 "type": "object"
             },
             "adminDriverIdPathParameter": {},
-            "adminUpdateDriverData": {
+            "UpdateDriverData": {
                 "properties": {
                     "name": {
                         "type": "string",
@@ -1827,7 +1846,7 @@
                 },
                 "type": "object"
             },
-            "adminCreateGroup": {
+            "CreateGroupData": {
                 "properties": {
                     "name": {
                         "type": "string",
@@ -1836,7 +1855,7 @@
                 },
                 "type": "object"
             },
-            "adminGroup": {
+            "GroupData": {
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -1855,7 +1874,7 @@
                 },
                 "type": "object"
             },
-            "adminUpdateGroup": {
+            "UpdateGroupData": {
                 "properties": {
                     "name": {
                         "type": "string",
@@ -1887,7 +1906,7 @@
             "adminNotification": {
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"
@@ -2083,6 +2102,26 @@
                 },
                 "type": "object"
             },
+            "PaginatedProductData": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/adminPaginatedAbstract"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "description": "ProductData>",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/adminProduct"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "adminProduct": {
                 "properties": {
                     "id": {
@@ -2143,14 +2182,14 @@
                         "description": "CategoryData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/adminCategory"
+                            "$ref": "#/components/schemas/CategoryData"
                         }
                     },
                     "parentCategories": {
                         "description": "CategoryData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/adminCategory"
+                            "$ref": "#/components/schemas/CategoryData"
                         }
                     }
                 },
@@ -2257,7 +2296,18 @@
                 },
                 "type": "object"
             },
-            "LoginResponse": {
+            "ListData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginFailedResponse": {
                 "properties": {
                     "message": {
                         "type": "string"
@@ -2265,7 +2315,21 @@
                 },
                 "type": "object"
             },
-            "storeAcceptOrder": {
+            "adminPaginatedAbstract": {
+                "properties": {
+                    "current_page": {
+                        "type": "integer"
+                    },
+                    "per_page": {
+                        "type": "integer"
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "AcceptOrderData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -2273,7 +2337,7 @@
                 },
                 "type": "object"
             },
-            "storeRejectOrder": {
+            "RejectOrderData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -2315,7 +2379,7 @@
                 },
                 "type": "object"
             },
-            "userRegister": {
+            "RegisterData": {
                 "properties": {
                     "dial_code": {
                         "type": "string",
@@ -2328,7 +2392,7 @@
                 },
                 "type": "object"
             },
-            "userCreateOrder": {
+            "CreateOrderData": {
                 "properties": {
                     "notice": {
                         "description": "CreateOrderDetailsData>",
@@ -2351,13 +2415,13 @@
                         "description": "CreateOrderDetailsData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/userCreateOrderDetails"
+                            "type": "integer"
                         }
                     }
                 },
                 "type": "object"
             },
-            "userCreateOrderDetails": {
+            "CreateOrderDetailsData": {
                 "properties": {
                     "quantity": {
                         "type": "integer",
@@ -2380,7 +2444,7 @@
                 },
                 "type": "object"
             },
-            "userOrderData": {
+            "OrderData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -2389,10 +2453,12 @@
                         "$ref": "#/components/schemas/OrderStatus"
                     },
                     "total": {
-                        "type": "number"
+                        "type": "number",
+                        "format": "float"
                     },
                     "items_count": {
-                        "type": "integer"
+                        "type": "number",
+                        "format": "float"
                     },
                     "required_time": {
                         "type": "string",
@@ -2409,7 +2475,7 @@
                 },
                 "type": "object"
             },
-            "userShowOrder": {
+            "OrderShowData": {
                 "properties": {
                     "id": {
                         "description": "OrderShowItemData>",
@@ -2428,35 +2494,45 @@
                     },
                     "total": {
                         "description": "OrderShowItemData>",
-                        "type": "number"
+                        "type": "number",
+                        "format": "float"
                     },
                     "discount": {
                         "description": "OrderShowItemData>",
-                        "type": "number"
+                        "type": "number",
+                        "format": "float"
                     },
                     "delivery_price": {
                         "description": "OrderShowItemData>",
-                        "type": "number"
+                        "type": "number",
+                        "format": "float"
                     },
                     "driver_lat": {
                         "description": "OrderShowItemData>",
-                        "type": "number"
+                        "type": "string"
                     },
                     "driver_lon": {
                         "description": "OrderShowItemData>",
-                        "type": "number"
+                        "type": "string"
                     },
                     "items": {
                         "description": "OrderShowItemData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/userShowOrderDetails"
+                            "$ref": "#/components/schemas/OrderShowItemData"
                         }
+                    },
+                    "created_at": {
+                        "description": "OrderShowItemData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
                     }
                 },
                 "type": "object"
             },
-            "userShowOrderDetails": {
+            "OrderShowItemData": {
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -2465,7 +2541,8 @@
                         "type": "integer"
                     },
                     "price": {
-                        "type": "number"
+                        "type": "number",
+                        "format": "float"
                     },
                     "name": {
                         "type": "string"
@@ -2581,12 +2658,6 @@
                     "type": "integer"
                 }
             },
-            "adminNotificationType": {
-                "name": "notification_type",
-                "in": "query",
-                "required": true,
-                "schema": {}
-            },
             "adminOrderIdPathParameter": {
                 "name": "id",
                 "in": "path",
@@ -2595,34 +2666,12 @@
                     "type": "integer"
                 }
             },
-            "adminOrderSearch": {
-                "name": "search",
-                "in": "query",
-                "required": false,
-                "schema": {
-                    "$ref": "string"
-                }
-            },
-            "adminOrderStatus": {
-                "name": "order_status",
-                "in": "query",
-                "required": false,
-                "schema": {}
-            },
             "adminProductIdPathParameter": {
                 "name": "id",
                 "in": "path",
                 "required": true,
                 "schema": {
                     "type": "integer"
-                }
-            },
-            "adminProductName": {
-                "name": "name",
-                "in": "query",
-                "required": false,
-                "schema": {
-                    "type": "string"
                 }
             },
             "userUserIdPathParameter": {
@@ -2656,12 +2705,6 @@
                 "schema": {
                     "type": "integer"
                 }
-            },
-            "userOrderProcessed": {
-                "name": "is_order_processed",
-                "in": "query",
-                "required": true,
-                "schema": {}
             }
         },
         "securitySchemes": {
@@ -2675,6 +2718,11 @@
     "security": [
         {
             "ref_to_be_used_below_csrf": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "auth"
         }
     ]
 }

@@ -14,9 +14,9 @@ use Spatie\LaravelData\Data;
 class OrderShowData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public string $total,
         #[OAT\Property(
             type: 'string',
@@ -25,19 +25,13 @@ class OrderShowData extends Data
             pattern: 'YYYY-MM-DD'
         )]
         public string $required_time,
-        #[
-            OAT\Property(),
-        ]
+        #[OAT\Property()]
         public OrderStatus $status,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $lat,
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $lon,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public string $delivery_price,
         #[OAT\Property(
             type: 'string',

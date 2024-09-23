@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Data\Admin\Admin\AdminData;
 use App\Data\Admin\Admin\CreateAdminData;
 use App\Data\Admin\Admin\PathParameters\AdminIdPathParameterData;
+use App\Data\Admin\Admin\UpdateAdminData;
+use App\Data\Shared\Swagger\Request\FormDataRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Enum\Auth\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -36,27 +40,12 @@ class AdminController extends Controller
 {
     private string $adminRole = RolesEnum::ADMIN->value;
 
-    #[OAT\Get(
-        path: '/admin/admin',
-        tags: ['admin'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Admin was successfully created',
-                //                content: new OAT\JsonContent(ref: '#/components/schemas/paginatedCategory'),
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: AdminData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+    #[OAT\Get(path: '/admin/admin', tags: ['admin'])]
+    #[SuccessListResponse(AdminData::class)]
     public function index()
     {
 
-        Log::info('accessing AdminController index method');
+        Log::info('accessing Admin AdminController index method');
 
         $adminData = AdminData::collect(
             User::role($this->adminRole)
@@ -77,20 +66,11 @@ class AdminController extends Controller
         return $adminData;
     }
 
-    #[OAT\Get(
-        path: '/admin/admin/{id}',
-        tags: ['admin'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Fetched Admin Successfully',
-                content: new OAT\JsonContent(type: AdminData::class),
-            ),
-        ],
-    )]
+    #[OAT\Get(path: '/admin/admin/{id}', tags: ['admin'])]
+    #[SuccessNoContentResponse(AdminData::class)]
     public function show(AdminIdPathParameterData $request): AdminData
     {
-        Log::info('user id {id}', ['id' => $request]);
+        Log::info('accessing Admin AdminController show method with {id}', ['id' => $request->id]);
         $admin = User::role($this->adminRole)
             ->find($request->id);
 
@@ -98,31 +78,57 @@ class AdminController extends Controller
 
     }
 
-    #[OAT\Post(
-        path: '/admin/admin',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: CreateAdminData::class),
-        ),
-        tags: ['admin'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'User created successfully',
-                content: new OAT\JsonContent(type: AdminData::class),
-            ),
-        ],
-    )]
-    public function store(CreateAdminData $request): AdminData
+    #[OAT\Post(path: '/admin/admin', tags: ['admin'])]
+    #[FormDataRequestBody(CreateAdminData::class)]
+    #[SuccessNoContentResponse('User created successfully')]
+    public function store(CreateAdminData $request)
     {
-        Log::info('accessing AdminController store method');
+        Log::info('accessing Admin AdminController store method');
 
         $admin = User::create($request->all());
 
         $admin->assignRole($this->adminRole);
 
         $admin->save();
+    }
 
-        return AdminData::from($admin);
+    #[OAT\Patch(path: '/admin/admin/{id}', tags: ['admin'])]
+    #[FormDataRequestBody(UpdateAdminData::class)]
+    #[SuccessNoContentResponse(' Admin Updated Successfully')]
+    public function update(
+        AdminIdPathParameterData $request,
+        UpdateAdminData $updateAdminData,
+    ) {
+        $admin = User::find($request->id);
+
+        $user_updated_name = $updateAdminData->name;
+
+        $user_updated_password = (bool) $updateAdminData->password;
+
+        if ($user_updated_password) {
+
+            $admin->update($request->all());
+
+        } else {
+            $admin->update([
+                'name' => $updateAdminData->name,
+            ]);
+        }
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    #[OAT\Delete(path: '/admin/admin/{id}', tags: ['admin'])]
+    #[SuccessNoContentResponse('Admin Deleted Successfully')]
+    public function destroy(AdminIdPathParameterData $request): bool
+    {
+        $adminToDelete = User::find($request->id);
+
+        $isAdminDeleted = $adminToDelete->delete();
+
+        return $isAdminDeleted;
+
     }
 }

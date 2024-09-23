@@ -8,13 +8,13 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'userRegister')]
+#[Oat\Schema()]
 class RegisterData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'string', default: 'user')]
+        #[OAT\Property(default: 'user')]
         public string $dial_code,
-        #[OAT\Property(type: 'string', default: 'user')]
+        #[OAT\Property(default: 'user')]
         public string $number,
     ) {
     }

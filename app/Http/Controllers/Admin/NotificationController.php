@@ -6,6 +6,10 @@ use App\Data\Admin\Notification\CreateNotificationData;
 use App\Data\Admin\Notification\NotificationData;
 use App\Data\Admin\Notification\PathParameters\NotificationIdPathParameterData;
 use App\Data\Admin\Notification\QueryParameters\NotificationTypeQueryParameterData;
+use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Enum\Auth\RolesEnum;
 use App\Enum\NotificationType;
 use App\Http\Controllers\Controller;
@@ -31,29 +35,13 @@ class NotificationController extends Controller
     /**
      * Get All Notifications
      */
-    #[OAT\Get(
-        path: '/admin/notifications',
-        tags: ['notifications'],
-        parameters: [
-            new OAT\QueryParameter(
-                ref: '#/components/parameters/adminNotificationType',
-            ),
-        ],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Notification was successfully created',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: NotificationData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/notifications', tags: ['notifications'])]
+    #[QueryParameter('notification_type', NotificationType::class)]
+    #[SuccessListResponse(NotificationData::class, 'The Notifications were successfully fetched')]
     public function index(NotificationTypeQueryParameterData $query_param)
     {
+        Log::info($query_param);
 
         Log::info('accessing NotificationController index method');
 
@@ -73,29 +61,16 @@ class NotificationController extends Controller
             })
             ->get();
 
-
-
         return NotificationData::collect($notifications);
     }
 
     /**
      * Create a new Notification.
      */
-    #[OAT\Post(
-        path: '/admin/notifications',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: CreateNotificationData::class),
-        ),
-        tags: ['notifications'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Notification created successfully',
-                content: new OAT\JsonContent(type: NotificationData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Post(path: '/admin/notifications', tags: ['notifications'])]
+    #[JsonRequestBody(CreateNotificationData::class)]
+    #[SuccessNoContentResponse('Notification created successfully')]
     public function store(
         CreateNotificationData $createNotificationData,
     ): NotificationData {
@@ -117,23 +92,14 @@ class NotificationController extends Controller
         $notification->users()->attach($notificationUserIds);
 
         Log::info('Notification was created {notification}', ['notification' => $notification]);
-
-        return NotificationData::from($notification);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    #[OAT\Delete(
-        path: '/admin/notifications/{id}',
-        tags: ['notifications'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'The Notification was successfully deleted',
-            ),
-        ],
-    )]
+
+    #[OAT\Delete(path: '/admin/notifications/{id}', tags: ['notifications'])]
+    #[SuccessNoContentResponse('The Notification was successfully deleted')]
     public function destroy(NotificationIdPathParameterData $request): bool
     {
 

@@ -2,27 +2,21 @@
 
 namespace App\Data\Admin\Admin;
 
-use App\Models\User;
+use App\Data\Shared\Swagger\Property\DateProperty;
 use OpenApi\Attributes as OAT;
-use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-#[Oat\Schema(schema: 'adminAdmin')]
+#[TypeScript]
+#[Oat\Schema()]
 class AdminData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public string $name,
-        #[OAT\Property(type: 'string')]
-        public string $email,
-        #[OAT\Property(
-            type: 'string',
-            format: 'datetime',
-            default: '2017-02-02 18:31:45',
-            pattern: 'YYYY-MM-DD'
-        )]
+        #[DateProperty]
         public string $created_at,
     ) {
     }

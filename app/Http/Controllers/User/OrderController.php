@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Data\Shared\Swagger\Parameter\QueryParameter\BoolQueryParameter;
+use App\Data\Shared\Swagger\Property\QueryParameter;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessItemResponse;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\User\Order\Create\CreateOrderData;
 use App\Data\User\Order\Index\OrderData;
-use App\Data\User\Order\PathParameters\OrderIdPathParameterData;
 use App\Data\User\Order\QueryParameters\OrderProcessedQueryParameterData;
 use App\Data\User\Order\Show\OrderShowData;
 use App\Enum\OrderStatus;
@@ -27,28 +31,11 @@ use OpenApi\Attributes as OAT;
             ),
         ],
     ),
-    //    OAT\PathItem(
-    //        path: '/user/orders/{id}/changeStatus',
-    //        parameters: [
-    //            new OAT\PathParameter(
-    //                ref: '#/components/parameters/userOrderIdPathParameter',
-    //            ),
-    //        ],
-    //    ),
 ]
 class OrderController extends Controller
 {
-    #[OAT\Get(
-        path: '/user/orders/{id}',
-        tags: ['userOrders'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'category fetched successfully',
-                content: new OAT\JsonContent(type: OrderShowData::class),
-            ),
-        ],
-    )]
+    #[OAT\Get(path: '/user/orders/{id}', tags: ['userOrders'])]
+    #[SuccessItemResponse(OrderShowData::class)]
     public function show(Order $order)
     {
 
@@ -74,30 +61,11 @@ class OrderController extends Controller
     /**
      * Get All Orders.
      */
-    #[OAT\Get(
-        path: '/user/orders',
-        tags: ['userOrders'],
-        parameters: [
-            new OAT\QueryParameter(
-                ref: '#/components/parameters/userOrderProcessed',
-            ),
-        ],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'Order Data Fetched Successfully',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: OrderData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+    #[OAT\Get(path: '/user/orders', tags: ['userOrders'])]
+    #[QueryParameter('is_order_processed', 'boolean')]
+    #[SuccessListResponse(OrderData::class)]
     public function index(OrderProcessedQueryParameterData $query_param)
     {
-
         Log::info('accessing User OrderController index method');
 
         $authenticatedUser = auth()->user();
@@ -133,21 +101,9 @@ class OrderController extends Controller
     /**
      * Create a new Order.
      */
-    #[OAT\Post(
-        path: '/user/orders',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: CreateOrderData::class),
-        ),
-        tags: ['userOrders'],
-        responses: [
-            new OAT\Response(
-                response: 201,
-                description: 'User created successfully',
-                content: new OAT\JsonContent(type: 'boolean'),
-            ),
-        ],
-    )]
+    #[OAT\Post(path: '/user/orders', tags: ['userOrders'])]
+    #[JsonRequestBody(CreateOrderData::class)]
+    #[SuccessItemResponse('boolean')]
     public function store(
         CreateOrderData $createUserData,
     ) {

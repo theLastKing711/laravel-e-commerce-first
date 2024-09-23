@@ -11,16 +11,16 @@ use Spatie\LaravelData\Data;
 class UpdateUserData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $name,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public string $dial_code,
         #[
             OAT\Property(),
         ]
         public Gender $gender,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
             DigitsBetween(min: 10, max: 10)
         ]
         public ?string $number,

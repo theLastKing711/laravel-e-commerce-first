@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\Order\OrderData;
 use App\Data\Admin\Order\PathParameters\OrderIdPathParameterData;
-use App\Data\Admin\Order\QueryParameters\OrderSearchQueryParameterData;
-use App\Data\Admin\Order\QueryParameters\OrderStatusQueryParameterData;
+use App\Data\Admin\Order\QueryParameters\OrderIndexQueryParameter;
 use App\Data\Admin\Order\Show\OrderShowData;
+use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
+use App\Data\Shared\Swagger\Response\SuccessItemResponse;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
+use App\Enum\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,41 +37,18 @@ use OpenApi\Attributes as OAT;
 ]
 class OrderController extends Controller
 {
-    #[OAT\Get(
-        path: '/admin/orders',
-        tags: ['orders'],
-        parameters: [
-            new OAT\QueryParameter(
-                required: false,
-                ref: '#/components/parameters/adminOrderSearch',
-            ),
-            new OAT\QueryParameter(
-                required: false,
-                ref: '#/components/parameters/adminOrderStatus',
-            ),
-        ],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Order was successfully created',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: OrderData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
-    public function index(OrderSearchQueryParameterData $search_query, OrderStatusQueryParameterData $status_query)
+    #[OAT\Get(path: '/admin/orders', tags: ['orders'])]
+    #[QueryParameter('search')]
+    #[QueryParameter('order_status', OrderStatus::class)]
+    #[SuccessListResponse(OrderData::class)]
+    public function index(OrderIndexQueryParameter $query_parameters)
     {
 
+        Log::info('accessing Admin OrderController index method');
 
-        Log::info('accessing OrderController index method');
+        $order_status = $query_parameters->order_status?->value;
 
-        $order_status = $status_query->order_status?->value;
-
-        $search = $search_query->search;
+        $search = $query_parameters->search;
 
         $is_search_filter_available = (bool) $search;
 
@@ -103,42 +84,16 @@ class OrderController extends Controller
             })
             ->get();
 
-        Log::info($orders);
-
         return OrderData::collect($orders);
 
     }
 
-    #[OAT\Get(
-        path: '/admin/orders/{id}',
-        tags: ['orders'],
-        parameters: [
-            new OAT\QueryParameter(
-                required: false,
-                ref: '#/components/parameters/adminOrderSearch',
-            ),
-            new OAT\QueryParameter(
-                required: false,
-                ref: '#/components/parameters/adminOrderStatus',
-            ),
-        ],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Order was successfully created',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: OrderData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+    #[OAT\Get(path: '/admin/orders/{id}', tags: ['orders'])]
+    #[SuccessItemResponse(OrderShowData::class)]
     public function show(OrderIdPathParameterData $path)
     {
 
-        Log::info('accessing OrderController index method');
+        Log::info('accessing Admin OrderController, show method');
 
         $order_id = $path->id;
 
@@ -167,19 +122,11 @@ class OrderController extends Controller
 
     }
 
-    #[OAT\Patch(
-        path: '/admin/orders/{id}/changeStatus',
-        tags: ['orders'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'Order Status Changed Successfully',
-                content: new OAT\JsonContent(type: OrderData::class),
-            ),
-        ],
-    )]
+    #[OAT\Patch(path: '/admin/orders/{id}/changeStatus', tags: ['orders'])]
+    #[SuccessNoContentResponse('Order status changed successfully')]
     public function changeStatus(OrderIdPathParameterData $request)
     {
+        Log::info('accessing Admin OrderController, change status method');
 
         $order = Order::where('id', $request->id)
             ->first();
@@ -187,8 +134,6 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
-
-        return $order;
 
     }
 }

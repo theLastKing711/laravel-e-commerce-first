@@ -11,17 +11,15 @@ use Spatie\LaravelData\Data;
 class OrderData extends Data
 {
     public function __construct(
-        #[OAT\Property(type: 'integer')]
+        #[OAT\Property()]
         public int $id,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $customer_name,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public ?string $driver_name,
-        #[OAT\Property(type: 'string')]
+        #[OAT\Property()]
         public string $total,
-        #[
-            OAT\Property(),
-        ]
+        #[OAT\Property()]
         public OrderStatus $status,
     ) {
     }

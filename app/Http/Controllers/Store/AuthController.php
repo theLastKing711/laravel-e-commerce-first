@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Store;
 use App\Data\Admin\Auth\LoginData;
 use App\Data\Admin\Auth\LoginDataResponse;
 use App\Data\Shared\LoginFailedResponse;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Enum\Auth\RolesEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,10 +17,7 @@ class AuthController extends Controller
 {
     #[OAT\Post(
         path: '/store/auth/login',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: LoginData::class),
-        ),
+
         tags: ['storeAuth'],
         responses: [
             new OAT\Response(
@@ -35,6 +33,7 @@ class AuthController extends Controller
 
         ],
     )]
+    #[JsonRequestBody(LoginData::class)]
     public function login(Request $request, LoginData $data): mixed
     {
         Log::info(

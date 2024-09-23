@@ -6,6 +6,10 @@ use App\Data\Admin\Coupon\CreateCouponData;
 use App\Data\Admin\Coupon\CouponData;
 use App\Data\Admin\Coupon\PathParameters\CouponIdPathParameterData;
 use App\Data\Admin\Coupon\UpdateCouponData;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
+use App\Data\Shared\Swagger\Response\SuccessItemResponse;
+use App\Data\Shared\Swagger\Response\SuccessListResponse;
+use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use App\Models\Group;
@@ -26,26 +30,13 @@ use OpenApi\Attributes as OAT;
 ]
 class CouponController extends Controller
 {
-    #[OAT\Get(
-        path: '/admin/coupons',
-        tags: ['coupons'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'The Coupon was successfully created',
-                content: new OAT\JsonContent(
-                    type: 'array',
-                    items: new OAT\Items(
-                        type: CouponData::class
-                    ),
-                ),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/coupons', tags: ['coupons'])]
+    #[SuccessListResponse(CouponData::class, 'The Coupons were successfully fetched')]
     public function index()
     {
 
-        Log::info('accessing CouponController index method');
+        Log::info('accessing Admin CouponController index method');
 
         return CouponData::collect(
             Coupon::with('users:id,name,number')
@@ -63,17 +54,9 @@ class CouponController extends Controller
         );
     }
 
-    #[OAT\Get(
-        path: '/admin/coupons/{id}',
-        tags: ['coupons'],
-        responses: [
-            new OAT\Response(
-                response: 200,
-                description: 'product fetched successfully',
-                content: new OAT\JsonContent(type: CouponData::class),
-            ),
-        ],
-    )]
+
+    #[OAT\Get(path: '/admin/coupons/{id}', tags: ['coupons'])]
+    #[SuccessItemResponse(CouponData::class, 'The Coupon was successfully fetched')]
     public function show(CouponIdPathParameterData $request): CouponData
     {
 
@@ -100,21 +83,10 @@ class CouponController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[OAT\Patch(
-        path: '/admin/coupons/{id}',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: UpdateCouponData::class),
-        ),
-        tags: ['coupons'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Coupon created successfully',
-                content: new OAT\JsonContent(type: 'boolean'),
-            ),
-        ],
-    )]
+
+    #[OAT\Patch(path: '/admin/coupons/{id}', tags: ['coupons'])]
+    #[JsonRequestBody(UpdateCouponData::class)]
+    #[SuccessNoContentResponse('The Coupon was updated successfully')]
     public function update(
         Request $request,
         UpdateCouponData $updatedCouponData,
@@ -145,21 +117,10 @@ class CouponController extends Controller
         return true;
     }
 
-    #[OAT\Post(
-        path: '/admin/coupons',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: CreateCouponData::class),
-        ),
-        tags: ['coupons'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'Coupon created successfully',
-                content: new OAT\JsonContent(type: 'boolean'),
-            ),
-        ],
-    )]
+
+    #[OAT\Post(path: '/admin/coupons/{id}', tags: ['coupons'])]
+    #[JsonRequestBody(CreateCouponData::class)]
+    #[SuccessNoContentResponse('The Coupon was created successfully')]
     public function store(CreateCouponData $createCouponData): bool
     {
 
@@ -188,17 +149,9 @@ class CouponController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    #[OAT\Delete(
-        path: '/admin/coupons/{id}',
-        tags: ['coupons'],
-        responses: [
-            new OAT\Response(
-                response: 204,
-                description: 'The Coupon was successfully deleted',
-                content: new OAT\JsonContent(type: 'boolean'),
-            ),
-        ],
-    )]
+
+    #[OAT\Delete(path: '/admin/coupons/{id}', tags: ['coupons'])]
+    #[SuccessNoContentResponse('The Coupon was deleted successfully')]
     public function destroy(CouponIdPathParameterData $request): bool
     {
 

@@ -2,29 +2,26 @@
 
 namespace App\Data\Admin\Category;
 
+use App\Data\Shared\Swagger\Property\FileProperty;
 use Illuminate\Http\UploadedFile;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\Exists;
-use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-#[Oat\Schema(schema: 'adminCreateCategory')]
+#[TypeScript]
+#[Oat\Schema()]
 class CreateCategoryData extends Data
 {
     public function __construct(
-        #[
-            OAT\Property(type: 'string'),
-        ]
+        #[OAT\Property()]
         public string $name,
         #[
-            OAT\Property(type: 'integer'),
+            OAT\Property(),
             Exists('categories', 'id')
         ]
         public ?int $parent_id,
-        #[
-            OAT\Property(type: 'string', format: 'binary'),
-        ]
+        #[FileProperty()]
         public ?UploadedFile $image,
     ) {
     }

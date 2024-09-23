@@ -8,20 +8,20 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'adminCouponUser')]
+#[Oat\Schema()]
 class CouponUserData extends Data
 {
     public function __construct(
         #[
-            OAT\Property(type: 'integer'),
+            OAT\Property(),
         ]
         public string $id,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
         ]
         public string $name,
         #[
-            OAT\Property(type: 'string'),
+            OAT\Property(),
         ]
         public string $number,
     ) {

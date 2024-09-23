@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Data\Admin\Auth\LoginData;
 use App\Data\Admin\Auth\LoginDataResponse;
 use App\Data\Shared\LoginFailedResponse;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,12 +64,9 @@ class AuthController extends Controller
         return ['allah'];
     }
 
+    #[OAT\Tag('auth')]
     #[OAT\Post(
         path: '/admin/auth/login',
-        requestBody: new OAT\RequestBody(
-            required: true,
-            content: new OAT\JsonContent(type: LoginData::class),
-        ),
         tags: ['auth'],
         responses: [
             new OAT\Response(
@@ -84,6 +82,7 @@ class AuthController extends Controller
 
         ],
     )]
+    #[JsonRequestBody(LoginData::class)]
     public function login(Request $request, LoginData $data): mixed
     {
         if (Auth::attempt(['name' => $data->name, 'password' => $data->password])) {

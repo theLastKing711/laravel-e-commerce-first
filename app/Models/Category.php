@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Interfaces\Mediable;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,9 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 /**
- * 
  *
- * @method 
+ *
+ * @method
  * @property int $id
  * @property string|null $name
  * @property string|null $image
@@ -43,11 +45,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|Category whereName($value)
  * @method static Builder|Category whereParentId($value)
  * @method static Builder|Category whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
+ * @property-read int|null $medially_count
  * @mixin \Eloquent
  */
-class Category extends Model
+class Category extends Model implements Mediable
 {
-    use HasFactory;
+    use HasFactory, MediaAlly;
 
     protected $guarded = ['id'];
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enum\Unit;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Database\Factories\ProductFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -61,13 +62,16 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
+ * @property-read Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
+ * @property-read int|null $medially_count
  * @mixin Eloquent
  */
 class Product extends Model
 {
     protected $guarded = ['id'];
 
-    use HasFactory;
+    use HasFactory, MediaAlly;
+
 
     public function brands(): BelongsToMany
     {

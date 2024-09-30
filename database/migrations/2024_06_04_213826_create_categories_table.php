@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')
                 ->nullable();
-            $table->string('image')
-                ->nullable();
             $table->string('hash')
                 ->nullable();
             $table->boolean('is_special')

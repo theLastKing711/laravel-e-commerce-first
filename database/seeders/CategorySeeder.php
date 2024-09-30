@@ -11,15 +11,17 @@ class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     * number of categories with null parent is half the speciefied number
-     * number of categories with parent is half the speciefied number
+     * number of categories with null parent is half the specified number
+     * number of categories with parent is half the specified number
      */
     public function run(): void
     {
         $itemCount = 10;
 
+        //generate 10 parent categories
         $this->generateParentCategories($itemCount);
 
+        //generate 10 child categories
         $this->generateChildCategories($itemCount);
     }
 

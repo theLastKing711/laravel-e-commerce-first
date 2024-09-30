@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\Category\CategoryData;
+use App\Data\Admin\Category\CategoryShowData;
 use App\Data\Admin\Category\CreateCategoryData;
 use App\Data\Admin\Category\PaginatedCategoryData;
 use App\Data\Admin\Category\PathParameters\CategoryIdPathParameterData;
@@ -12,13 +13,13 @@ use App\Data\Admin\Category\UpdateCategoryData;
 use App\Data\Shared\ListData;
 use App\Data\Shared\Swagger\Parameter\QueryParameter\ListQueryParameter;
 use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
-use App\Data\Shared\Swagger\Request\FormDataRequestBody;
+use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Services\FileService;
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
@@ -65,6 +66,7 @@ class CategoryController extends Controller
     #[QueryParameter('perPage', 'integer')]
     #[QueryParameter('search')]
     #[ListQueryParameter]
+    #[ListQueryParameter('date_range')]
     #[QueryParameter('sort')]
     #[SuccessItemResponse(PaginatedCategoryData::class)]
     public function index(
@@ -83,6 +85,7 @@ class CategoryController extends Controller
 
         $sort = $query_parameters->sort;
 
+        $created_at_date_range_filter_array = $query_parameters->date_range;
         Log::info($per_page);
 
         $categories = Category::query()
@@ -95,7 +98,11 @@ class CategoryController extends Controller
             // in subsequent elequent methods
             ->when($search_filter, function (Builder $query) use ($search_filter) {
                 return $query->whereAnyLike(
-                    ['categories.id', 'categories.name', 'categories.created_at'],
+                    [
+                        'categories.id',
+                        'categories.name',
+                        'categories.created_at',
+                    ],
                     $search_filter
                 );
             })
@@ -112,6 +119,18 @@ class CategoryController extends Controller
 
                 return $query->orderByDynamic($sort_field, $sort_value);
             })
+            ->when($created_at_date_range_filter_array, function (Builder $query) use ($created_at_date_range_filter_array) {
+
+                [$startDate, $endDate] = $created_at_date_range_filter_array;
+
+                return $query->whereBetween(
+                    'categories.created_at',
+                    [
+                        date('Y/m/d', $startDate / 1000),
+                        date('Y/m/d', $endDate / 1000),
+                    ]
+                );
+            })
             ->select([
                 'categories.id',
                 'categories.parent_id',
@@ -124,11 +143,7 @@ class CategoryController extends Controller
 
         //        Log::info($categories);
 
-        return $categories;
-
         $categoriesData = CategoryData::collect($categories);
-
-        Log::info($categoriesData);
 
         return $categoriesData;
     }
@@ -137,7 +152,7 @@ class CategoryController extends Controller
      * Create a new Category.
      */
     #[OAT\Post(path: '/admin/categories', tags: ['categories'])]
-    #[FormDataRequestBody(CreateCategoryData::class)]
+    #[JsonRequestBody(CreateCategoryData::class)]
     #[SuccessNoContentResponse('Category created successfully')]
     public function store(
         CreateCategoryData $createCategoryData,
@@ -145,17 +160,20 @@ class CategoryController extends Controller
 
         Log::info('Accessing CategoryController store method');
 
-        $categoryImage = $createCategoryData->image;
+        Log::info($createCategoryData);
 
-        $uploadedFileUrl = FileService::upload('category', $categoryImage);
+        $category_cloudinary_public_ids = $createCategoryData
+            ->image_urls
+            ->pluck(['public_id']);
+
+        Log::info($category_cloudinary_public_ids);
 
         $category = Category::create([
             'name' => $createCategoryData->name,
             'parent_id' => $createCategoryData->parent_id,
-            'image' => $uploadedFileUrl,
         ]);
 
-        Log::info('Category was created {category}', ['category' => $category]);
+        MediaService::createMediaForModel($category, $category_cloudinary_public_ids);
 
     }
 
@@ -177,7 +195,7 @@ class CategoryController extends Controller
     }
 
     #[OAT\Get(path: '/admin/categories/{id}', tags: ['categories'])]
-    #[SuccessNoContentResponse('Fetched category successfully')]
+    #[SuccessItemResponse(CategoryData::class, 'Fetched category successfully')]
     public function show(CategoryIdPathParameterData $request)
     {
 
@@ -186,23 +204,27 @@ class CategoryController extends Controller
             ['id' => $request->id]
         );
 
-        $category = Category::find($request->id);
+        $category = Category::query()
+            ->find($request->id);
 
-        return CategoryData::from($category);
+        return CategoryShowData::from($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
     #[OAT\Patch(path: '/admin/categories/{id}', tags: ['categories'])]
-    #[FormDataRequestBody(UpdateCategoryData::class)]
+    #[JsonRequestBody(UpdateCategoryData::class)]
     #[SuccessNoContentResponse('Category was updated successfully')]
     public function update(
         CategoryIdPathParameterData $request,
         UpdateCategoryData $updatedCategoryData,
     ) {
 
-        Log::info('accessing Admin CategoryController update method');
+        Log::info(
+            'accessing Admin CategoryController update method with id {id}',
+            ['id' => $request->id]
+        );
 
         Log::info($updatedCategoryData);
 
@@ -211,11 +233,13 @@ class CategoryController extends Controller
         $isCategoryUpdated = $category->update([
             'name' => $updatedCategoryData->name,
             'parent_id' => $updatedCategoryData->parent_id,
-            'image' => $updatedCategoryData->image,
         ]);
 
-        if ($isCategoryUpdated && $category->image) {
-            FileService::delete('category', $category->image);
+        if ($isCategoryUpdated) {
+
+            $request_image_list = $updatedCategoryData->image_urls;
+
+            MediaService::updateMediaForModel($category, $request_image_list);
         }
 
     }
@@ -228,6 +252,8 @@ class CategoryController extends Controller
     public function destroy(CategoryIdPathParameterData $path_parameters): bool
     {
         $categoryToDelete = Category::find($path_parameters->id);
+
+        MediaService::removeAssocciatedMediaForModel($categoryToDelete);
 
         $isCategoryDeleted = $categoryToDelete->delete();
 
@@ -288,7 +314,8 @@ class CategoryController extends Controller
         );
 
         $childCategories =
-            Category::isChild()
+            Category::query()
+                ->isChild()
                 ->hasParents($parentIds)
                 ->get();
 

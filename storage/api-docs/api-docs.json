@@ -12,8 +12,15 @@
                 ],
                 "operationId": "4f4954eaefabb4b722c23de0bb0c9c4e",
                 "responses": {
-                    "204": {
-                        "description": "Fetched category successfully"
+                    "200": {
+                        "description": "Fetched category successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryData"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -38,7 +45,7 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/UpdateCategoryData"
                             }
@@ -764,14 +771,14 @@
                         "name": "page",
                         "in": "query",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
                         "name": "perPage",
                         "in": "query",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -789,6 +796,23 @@
                             "items": {
                                 "type": "integer"
                             }
+                        }
+                    },
+                    {
+                        "name": "date_range[]",
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -814,7 +838,7 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CreateCategoryData"
                             }
@@ -1185,6 +1209,42 @@
                 }
             }
         },
+        "/admin/stats": {
+            "get": {
+                "tags": [
+                    "stats"
+                ],
+                "operationId": "637ec7525edce64c71fa49e9653a88e1",
+                "parameters": [
+                    {
+                        "name": "start_at",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end_at",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedCategoryData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/admin/users": {
             "get": {
                 "tags": [
@@ -1227,6 +1287,47 @@
                 "responses": {
                     "204": {
                         "description": ""
+                    }
+                }
+            }
+        },
+        "/admin/files": {
+            "get": {
+                "tags": [
+                    "files"
+                ],
+                "operationId": "5f5d7a9f14764b7a00b1a6d263730e0a",
+                "responses": {
+                    "204": {
+                        "description": "File uploaded successfully"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "files"
+                ],
+                "operationId": "60572cb2d9035cbf6357a7f51dde1361",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadFileData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadFileResponseData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1490,53 +1591,70 @@
             "CategoryData": {
                 "properties": {
                     "id": {
+                        "description": "<int, string>",
                         "type": "integer"
                     },
                     "parent_id": {
+                        "description": "<int, string>",
                         "type": "integer",
                         "nullable": true
                     },
-                    "name": {
-                        "type": "string"
-                    },
-                    "image": {
+                    "parent_name": {
+                        "description": "<int, string>",
                         "type": "string",
                         "nullable": true
                     },
+                    "name": {
+                        "description": "<int, string>",
+                        "type": "string"
+                    },
+                    "images": {
+                        "description": "<int, string>",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "nullable": true
+                    },
                     "created_at": {
+                        "description": "<int, string>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2017-02-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
-                    },
-                    "parent": {
-                        "oneOf": [
-                            {
-                                "$ref": "#/components/schemas/CategoryData"
-                            }
-                        ],
-                        "nullable": true,
-                        "default": "type of containing type"
                     }
                 },
                 "type": "object"
             },
             "CategoryShowData": {
                 "properties": {
-                    "data": {
-                        "oneOf": [
-                            {
-                                "$ref": "#/components/schemas/CategoryData"
-                            }
-                        ],
+                    "id": {
+                        "description": "<int, ShowFileData>",
+                        "type": "integer"
+                    },
+                    "parent_id": {
+                        "description": "<int, ShowFileData>",
+                        "type": "integer",
                         "nullable": true
                     },
-                    "items": {
-                        "description": "ListData>",
+                    "name": {
+                        "description": "<int, ShowFileData>",
+                        "type": "string"
+                    },
+                    "images": {
+                        "description": "<int, ShowFileData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ListData"
-                        }
+                            "type": "integer"
+                        },
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "<int, ShowFileData>",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD"
                     }
                 },
                 "type": "object"
@@ -1544,16 +1662,20 @@
             "CreateCategoryData": {
                 "properties": {
                     "name": {
+                        "description": "CreateFilePathData>",
                         "type": "string"
                     },
                     "parent_id": {
+                        "description": "CreateFilePathData>",
                         "type": "integer",
                         "nullable": true
                     },
-                    "image": {
-                        "type": "string",
-                        "format": "binary",
-                        "nullable": true
+                    "image_urls": {
+                        "description": "CreateFilePathData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CreateFilePathData"
+                        }
                     }
                 },
                 "type": "object"
@@ -1594,15 +1716,20 @@
             "UpdateCategoryData": {
                 "properties": {
                     "name": {
+                        "description": "UpdateFileData>",
                         "type": "string"
                     },
                     "parent_id": {
-                        "type": "integer"
-                    },
-                    "image": {
-                        "type": "string",
-                        "format": "binary",
+                        "description": "UpdateFileData>",
+                        "type": "integer",
                         "nullable": true
+                    },
+                    "image_urls": {
+                        "description": "UpdateFileData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UpdateFileData"
+                        }
                     }
                 },
                 "type": "object"
@@ -2235,6 +2362,25 @@
                 },
                 "type": "object"
             },
+            "BestSellingProductsQueryParameterData": {
+                "properties": {
+                    "start_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "nullable": true
+                    },
+                    "end_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2017-02-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "adminCreateUser": {
                 "properties": {
                     "name": {
@@ -2292,6 +2438,68 @@
                     "number": {
                         "type": "string",
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateFilePathData": {
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "public_id": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "FilePathData": {
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ShowFileData": {
+                "properties": {
+                    "uid": {
+                        "type": "integer"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateFileData": {
+                "properties": {
+                    "uid": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UploadFileData": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
+            },
+            "UploadFileResponseData": {
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "public_id": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

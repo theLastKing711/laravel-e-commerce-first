@@ -17,7 +17,6 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->decimal('price');
-            $table->string('image')->nullable();
             $table->string('hash')->nullable();
             $table->string('description')->nullable();
             $table->decimal('price_offer')->nullable();

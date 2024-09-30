@@ -10,12 +10,21 @@ use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\Store\AuthController as StoreAuthController;
 use App\Http\Controllers\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('files')
+    ->middleware(['api'])
+    ->group(function () {
+        Route::get('', [FileController::class, 'index']);
+        Route::post('', [FileController::class, 'store']);
+    });
 
 Route::prefix('admin')
     ->middleware(['api'])
@@ -37,6 +46,7 @@ Route::prefix('admin')
                         Route::patch('{id}', [AdminController::class, 'update']);
 
                     });
+
                 Route::prefix('users')
                     ->group(function () {
                         Route::get('', [UserController::class, 'index']);
@@ -130,6 +140,13 @@ Route::prefix('admin')
                     Route::delete('{id}', [NotificationController::class, 'destroy']);
 
                 });
+
+                Route::prefix('stats')
+                    ->group(function () {
+                        Route::get('', [StatsController::class, 'getBestSellingProducts']);
+
+                    });
+
 
             });
 

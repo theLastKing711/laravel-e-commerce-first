@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\OrderDetails;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
 
@@ -56,25 +57,69 @@ class StatsController extends Controller
         //        return Category::with('products.orderDetails')
         //                        ->get();
 
-        $category_stats = Category::query()
-            ->isChild()
+        //        $child_category_stats = Category::query()
+        //            ->isChild()
+        //            ->select(['id', 'name'])
+        //            ->addSelect(
+        //                [
+        //                    'total_products' => Product::query()
+        //                        ->whereColumn('category_id', 'categories.id')
+        ////                        ->with(['orderDetails'])
+        //                        ->join('order_details', 'order_details.product_id', 'products.id')
+        //                        ->selectRaw('SUM(order_details.quantity)'),
+        //                ]
+        //            )
+        //            ->withSum(
+        //                'products',
+        //                'unit'
+        //            )
+        //            ->get();
+
+        $parent_category_stats = Category::query()
+            ->isParent()
             ->select(['id', 'name'])
-            ->addSelect(
-                [
-                    'total_products' => Product::query()
-                        ->whereColumn('category_id', 'categories.id')
-//                        ->with(['orderDetails'])
-                        ->join('order_details', 'order_details.product_id', 'products.id')
-                        ->selectRaw('SUM(order_details.quantity)'),
-                ]
+            ->selectRaw('                            (SELECT COALESCE(
+                                SUM(
+                                    COALESCE(rn.price, rn.price_offer) * order_details.quantity
+                                ),
+                                0
+                            )
+                            from
+                            (
+                                SELECT products.id as product_id,
+                                products.price,
+                                products.price_offer,
+                                ROW_NUMBER() OVER(PARTITION BY products.id ORDER BY products.id) as num
+                                FROM categories as c2
+                                INNER JOIN category_product ON c2.id = category_product.category_id
+                                INNER JOIN products ON products.id = category_product.product_id
+                                LEFT JOIN categories as child_categories
+                                ON c2.id = child_categories.parent_id
+                                where c2.parent_id = categories.id
+                            ) as rn
+                            INNER JOIN order_details on rn.product_id = order_details.product_id
+                            WHERE num = 1
+                            ) as total_products_revenue_for_category')
+            ->selectRaw('(SELECT COALESCE(SUM(order_details.quantity),0)
+                            from
+                            (
+                                SELECT products.id as product_id,c2.id as category_id,
+                                c2.name as category_name,
+                                ROW_NUMBER() OVER(PARTITION BY products.id ORDER BY products.id) as num
+                                FROM categories as c2
+                                INNER JOIN category_product ON c2.id = category_product.category_id
+                                INNER JOIN products ON products.id = category_product.product_id
+                                LEFT JOIN categories as child_categories
+                                ON c2.id = child_categories.parent_id
+                                where c2.parent_id = categories.id
+                            ) as rn
+                            INNER JOIN order_details on rn.product_id = order_details.product_id
+                            WHERE num = 1
+                            ) as total_products_sold_for_category'
             )
-//            ->withSum(
-//                'products',
-//                'unit'
-//            )
             ->get();
 
-        return $category_stats;
+        return $parent_category_stats;
         //        OrderDetails::query()
         //            ->with([
         //                'products' => [

@@ -54,9 +54,6 @@ class CategorySeeder extends Seeder
         $seededChildCategories = Category::factory()
             ->has(
                 Product::factory()->count($count)
-                    ->state(function (array $attributes, Category $category) {
-                        return ['category_id' => $category->id];
-                    })
             )
             ->child()
             ->count($count)

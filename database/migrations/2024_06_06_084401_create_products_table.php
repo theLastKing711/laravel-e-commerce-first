@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('hash')->nullable();
             $table->string('description')->nullable();
             $table->decimal('price_offer')->nullable();
-            $table->foreignId('category_id')->constrained();
             $table->boolean('is_most_buy');
             $table->boolean('is_active');
             $table->enum('unit', Unit::asValuesArray())->nullable();

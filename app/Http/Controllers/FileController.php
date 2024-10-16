@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Data\Shared\File\UploadFileData;
-use App\Data\Shared\File\UploadFileResponse;
 use App\Data\Shared\File\UploadFileResponseData;
 use App\Data\Shared\Swagger\Request\FormDataRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
@@ -21,7 +20,7 @@ class FileController extends Controller
         return [];
     }
 
-    #[OAT\Post(path: '/admin/files', tags: ['files'])]
+    #[OAT\Post(path: '/files', tags: ['files'])]
     #[FormDataRequestBody(UploadFileData::class)]
     #[SuccessItemResponse(UploadFileResponseData::class, 'File uploaded successfully')]
     public function store(UploadFileData $request)

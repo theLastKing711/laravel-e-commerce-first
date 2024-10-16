@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Media;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class CategorySeeder extends Seeder
 {
@@ -19,50 +19,91 @@ class CategorySeeder extends Seeder
         $itemCount = 10;
 
         //generate 10 parent categories
-        $this->generateParentCategories($itemCount);
+        $this->generateParentCategoriesWithProducts($itemCount);
 
         //generate 10 child categories
-        $this->generateChildCategories($itemCount);
+        $this->generateChildCategoriesWithProducts($itemCount);
     }
 
     /**
      * create Categories with no parent id aka Parent Categories
      * has Child Categories, and no child Products
      */
-    public function generateParentCategories(int $count): void
+    public function generateParentCategoriesWithProducts(int $count): void
     {
+
         $seededParentCategories = Category::factory()
-            ->count($count)
             ->parent()
+            ->has(
+                Media::factory()->count($count),
+                'medially'
+                // category is connected to media polymorphiclly through medially
+                //as defined in Category.php
+            )
+            ->has(
+                Product::factory()->count($count)
+            )
+
+            ->count($count)
             ->create();
-        //
-        //        Log::info(
-        //            'parent categories seeded {seededCategories} ',
-        //            ['seededCategories' => $seededParentCategories]
-        //        );
 
     }
 
     /**
      *has Multiple parent Cateogires, and child Products
      */
-    public function generateChildCategories(int $count): void
+    public function generateChildCategoriesWithProducts(int $count): void
     {
 
-        //        Log::info('all Categories {categories} ', ['categories' => Category::all()]);
+        $seededChildCategories = Category::factory()
+            ->child()
+            ->has(
+                Media::factory()->count($count),
+                'medially'
+            )
+            ->has(
+                Product::factory()->count($count)
+            )
+            ->count($count)
+            ->create();
+
+    }
+
+    public static function generateTestCategories(int $count): void
+    {
+
+        static::generateParentCategories(10);
+        static::generateChildCategories(10);
+
+    }
+
+    public static function generateParentCategories(int $count): void
+    {
+        $seededParentCategories = Category::factory()
+            ->has(
+                Media::factory()->count($count),
+                'medially'
+            )
+            ->parent()
+            ->count($count)
+            ->create();
+
+    }
+
+    /**
+     *has Multiple parent Categorises, and child Products
+     */
+    public static function generateChildCategories(int $count): void
+    {
 
         $seededChildCategories = Category::factory()
             ->has(
-                Product::factory()->count($count)
+                Media::factory()->count($count),
+                'medially'
             )
             ->child()
             ->count($count)
             ->create();
 
-
-        //        Log::info(
-        //            'child categories seeded {seededCategories} ',
-        //            ['seededCategories' => $seededChildCategories]
-        //        );
     }
 }

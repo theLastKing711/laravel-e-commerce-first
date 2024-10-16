@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 class OrderProcessedQueryParameterData extends Data
 {
     public function __construct(
-        public bool $is_order_processed,
+        public ?bool $is_order_processed,
     ) {
     }
 

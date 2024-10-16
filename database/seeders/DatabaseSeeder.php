@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             UserSeeder::class,
             OrderSeeder::class,
-//            CouponSeeder::class, with UserSeeder
             GroupSeeder::class,
             WorkDaysSeeder::class,
             SettingSeeder::class,

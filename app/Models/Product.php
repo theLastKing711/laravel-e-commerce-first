@@ -70,7 +70,8 @@ class Product extends Model
 {
     protected $guarded = ['id'];
 
-    use HasFactory, MediaAlly;
+    use HasFactory;
+//        MediaAlly;
 
 
     public function brands(): BelongsToMany

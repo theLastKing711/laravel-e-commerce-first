@@ -20,15 +20,15 @@ return [
         'http://localhost:8080',
         'http://localhost:5173',
         'http://localhost:5174',
+        'http://localhost:8081',
     ],
 
-//
-//    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-//        '%s%s',
-//        'localhost,http://localhost:8000, localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-//        Sanctum::currentApplicationUrlWithPort()
-//    ))),
-
+    //
+    //    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+    //        '%s%s',
+    //        'localhost,http://localhost:8000, localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
+    //        Sanctum::currentApplicationUrlWithPort()
+    //    ))),
     /*
     |--------------------------------------------------------------------------
     | Sanctum Guards

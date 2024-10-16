@@ -48,15 +48,18 @@ class OrderController extends Controller
 
         $order_status = $query_parameters->order_status?->value;
 
-        $search = $query_parameters->search;
+        $request_search_filter = $query_parameters->search;
 
-        $is_search_filter_available = (bool) $search;
+        $request_search_filter_has_value = (bool) $request_search_filter;
 
-        $is_order_status_filter_available = (bool) $order_status;
+        $request_order_status_filter_has_value = (bool) $order_status;
 
-        $orders = Order::when($is_order_status_filter_available, function (Builder $query) use ($order_status) {
-            $query->where('status', $order_status);
-        })
+        $orders = Order::when(
+            $request_order_status_filter_has_value,
+            function (Builder $query) use ($order_status) {
+                $query->where('status', $order_status);
+            }
+        )
             ->select([
                 'user_id',
                 'driver_id',
@@ -69,19 +72,27 @@ class OrderController extends Controller
                 'driver:id,name',
                 'orderDetails:order_id,id,quantity,unit_price',
             ])
-            ->when($is_search_filter_available, function (Builder $query) use ($search) {
-                $query
-                    ->whereHas('user', function (Builder $query) use ($search) {
-                        $query->whereAny(
-                            ['name', 'number'],
-                            'LIKE',
-                            '%'.$search.'%'
+            ->when(
+                $request_search_filter_has_value,
+                function (Builder $query) use ($request_search_filter) {
+                    $query
+                        ->whereHas(
+                            'user',
+                            function (Builder $query) use ($request_search_filter) {
+                                $query->whereAnyLike(
+                                    ['name', 'number'],
+                                    $request_search_filter
+                                );
+                            }
+                        )
+                        ->orWhereHas(
+                            'driver',
+                            function (Builder $query) use ($request_search_filter) {
+                                $query->whereLike('name', $request_search_filter);
+                            }
                         );
-                    })
-                    ->orWhereHas('driver', function (Builder $query) use ($search) {
-                        $query->where('name', 'LIKE', '%'.$search.'%');
-                    });
-            })
+                }
+            )
             ->get();
 
         return OrderData::collect($orders);
@@ -111,10 +122,11 @@ class OrderController extends Controller
             ])
             ->with([
                 'orderDetails:id,order_id,product_id,quantity,unit_price' => [
-                    'product:image',
+                    'product' => [
+                        'categories',
+                    ],
                 ],
                 'driver:id,lat,lon',
-                'orderDetails.product.categories',
             ])
             ->first();
 

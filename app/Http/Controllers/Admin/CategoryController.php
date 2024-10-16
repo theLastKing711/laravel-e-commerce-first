@@ -17,9 +17,9 @@ use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
+use App\Facades\MediaService;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
@@ -73,20 +73,24 @@ class CategoryController extends Controller
         CategoryIndexQueryParameterData $query_parameters
     ) {
 
+        $created_category = Category::first(['name' => 'in controller asdlkjasdlkajsd']);
+
+        \Log::info($created_category);
+
         Log::info('accessing Admin CategoryController index method');
 
-        $search_filter = $query_parameters->search;
+        $request_search_filter = $query_parameters->search;
 
-        $parent_ids_filter = $query_parameters->ids;
+        $request_parent_ids_filter = $query_parameters->ids;
 
         Log::info($query_parameters);
 
-        $per_page = $query_parameters->perPage ?? 10;
+        $request_per_page = $query_parameters->perPage ?? 10;
 
-        $sort = $query_parameters->sort;
+        $request_sort = $query_parameters->sort;
 
-        $created_at_date_range_filter_array = $query_parameters->date_range;
-        Log::info($per_page);
+        $request_created_at_filter = $query_parameters->date_range;
+        Log::info($request_per_page);
 
         $categories = Category::query()
             ->leftJoin(
@@ -95,33 +99,33 @@ class CategoryController extends Controller
                 '=',
                 'parent.id',
             )// can now reference related table(same table with sub-query) using parent.$column
-            // in subsequent elequent methods
-            ->when($search_filter, function (Builder $query) use ($search_filter) {
+            // in subsequent eloquent methods
+            ->when($request_search_filter, function (Builder $query) use ($request_search_filter) {
                 return $query->whereAnyLike(
                     [
                         'categories.id',
                         'categories.name',
                         'categories.created_at',
                     ],
-                    $search_filter
+                    $request_search_filter
                 );
             })
-            ->when($parent_ids_filter, function (Builder $query) use ($parent_ids_filter) {
+            ->when($request_parent_ids_filter, function (Builder $query) use ($request_parent_ids_filter) {
 
                 return $query->whereIn(
                     'categories.parent_id',
-                    $parent_ids_filter
+                    $request_parent_ids_filter
                 );
             })
-            ->when($sort, function (Builder $query) use ($sort) {
+            ->when($request_sort, function (Builder $query) use ($request_sort) {
 
-                [$sort_field, $sort_value] = explode(' ', $sort);
+                [$sort_field, $sort_value] = explode(' ', $request_sort);
 
                 return $query->orderByDynamic($sort_field, $sort_value);
             })
-            ->when($created_at_date_range_filter_array, function (Builder $query) use ($created_at_date_range_filter_array) {
+            ->when($request_created_at_filter, function (Builder $query) use ($request_created_at_filter) {
 
-                [$startDate, $endDate] = $created_at_date_range_filter_array;
+                [$startDate, $endDate] = $request_created_at_filter;
 
                 return $query->whereBetween(
                     'categories.created_at',
@@ -135,13 +139,10 @@ class CategoryController extends Controller
                 'categories.id',
                 'categories.parent_id',
                 'categories.name',
-                'categories.image',
                 'categories.created_at',
                 'parent.name as parent_name',
             ])
-            ->paginate(perPage: $per_page);
-
-        //        Log::info($categories);
+            ->paginate(perPage: $request_per_page);
 
         $categoriesData = CategoryData::collect($categories);
 
@@ -158,8 +159,6 @@ class CategoryController extends Controller
         CreateCategoryData $createCategoryData,
     ) {
 
-        Log::info('Accessing CategoryController store method');
-
         Log::info($createCategoryData);
 
         $category_cloudinary_public_ids = $createCategoryData
@@ -167,11 +166,14 @@ class CategoryController extends Controller
             ->pluck(['public_id']);
 
         Log::info($category_cloudinary_public_ids);
-
         $category = Category::create([
             'name' => $createCategoryData->name,
             'parent_id' => $createCategoryData->parent_id,
         ]);
+
+        $created_category = Category::first(['name' => 'in controller asdlkjasdlkajsd']);
+
+        Log::info($created_category);
 
         MediaService::createMediaForModel($category, $category_cloudinary_public_ids);
 
@@ -218,7 +220,7 @@ class CategoryController extends Controller
     #[SuccessNoContentResponse('Category was updated successfully')]
     public function update(
         CategoryIdPathParameterData $request,
-        UpdateCategoryData $updatedCategoryData,
+        UpdateCategoryData $updated_category_data,
     ) {
 
         Log::info(
@@ -226,18 +228,16 @@ class CategoryController extends Controller
             ['id' => $request->id]
         );
 
-        Log::info($updatedCategoryData);
-
         $category = Category::find($request->id);
 
-        $isCategoryUpdated = $category->update([
-            'name' => $updatedCategoryData->name,
-            'parent_id' => $updatedCategoryData->parent_id,
+        $is_category_updated = $category->update([
+            'name' => $updated_category_data->name,
+            'parent_id' => $updated_category_data->parent_id,
         ]);
 
-        if ($isCategoryUpdated) {
+        if ($is_category_updated) {
 
-            $request_image_list = $updatedCategoryData->image_urls;
+            $request_image_list = $updated_category_data->image_urls;
 
             MediaService::updateMediaForModel($category, $request_image_list);
         }
@@ -249,15 +249,23 @@ class CategoryController extends Controller
      */
     #[OAT\Delete(path: '/admin/categories/{id}', tags: ['categories'])]
     #[SuccessNoContentResponse('Item Deleted Successfully')]
-    public function destroy(CategoryIdPathParameterData $path_parameters): bool
+    public function destroy(CategoryIdPathParameterData $path_parameters)
     {
-        $categoryToDelete = Category::find($path_parameters->id);
 
-        MediaService::removeAssocciatedMediaForModel($categoryToDelete);
+        Log::info(
+            'accessing Admin CategoryController destroy method with id {id}',
+            ['id' => $path_parameters->id]
+        );
 
-        $isCategoryDeleted = $categoryToDelete->delete();
+        $category_to_delete = Category::find($path_parameters->id);
 
-        return $isCategoryDeleted;
+        MediaService::removeAssociatedMediaForModel($category_to_delete);
+
+        $isCategoryDeleted = $category_to_delete->delete();
+        if ($isCategoryDeleted) {
+            Log::info(Category::whereId('id', $path_parameters->id)->get());
+            Log::info('category deleted');
+        }
 
     }
 
@@ -287,13 +295,13 @@ class CategoryController extends Controller
             ['id' => $request->id]
         );
 
-        $categoryChilds =
+        $category_childs =
             Category::whereParentId($request->id)
                 ->select(['id', 'parent_id', 'name', 'image', 'created_at'])
                 ->orderByDesc('created_at')
                 ->get();
 
-        return CategoryData::collect($categoryChilds);
+        return CategoryData::collect($category_childs);
     }
 
     /** Get child Categories by parent Ids List */
@@ -306,19 +314,19 @@ class CategoryController extends Controller
 
         Log::info('accessing Admin CategoryController GetSubCategoriesByParents method');
 
-        $parentIds = $query_parameters->ids;
+        $request_parent_ids = $query_parameters->ids;
 
         Log::info(
             'accessing CategoryController, GetSubCategoriesByParents Method with ids  {ids}',
             ['ids' => $query_parameters->ids]
         );
 
-        $childCategories =
+        $child_categories =
             Category::query()
                 ->isChild()
-                ->hasParents($parentIds)
+                ->hasParents($request_parent_ids)
                 ->get();
 
-        return CategoryData::collect($childCategories);
+        return CategoryData::collect($child_categories);
     }
 }

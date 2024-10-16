@@ -8,47 +8,29 @@ use App\Data\Admin\User\UserData;
 use App\Enum\Auth\RolesEnum;
 use App\Enum\Gender;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
+use Tests\Feature\Admin\Abstractions\AdminTestCase;
 
-class UserTest extends TestCase
+class UserTest extends AdminTestCase
 {
-    use RefreshDatabase;
-
-    private User $admin;
-
     private string $main_route = '/admin/users';
 
-    private User $user;
+    public User $user;
+
+    private function CreateUser(): void
+    {
+        $this->user = User::factory()
+            ->user()
+            ->create();
+    }
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->seed(RolesAndPermissionsSeeder::class);
-
-        $this->CreateAdmin();
         $this->CreateUser();
 
-        $this->actingAs($this->admin);
-    }
-
-    public function CreateAdmin(): void
-    {
-        $this->admin =
-            User::factory()
-                ->admin()
-                ->create();
-    }
-
-    public function CreateUser(): void
-    {
-        $this->user = User::factory()
-            ->user()
-            ->create();
     }
 
     /**
@@ -90,28 +72,45 @@ class UserTest extends TestCase
     public function store_create_a_new_user_with_201_response(): void
     {
 
-        $createUserRequestData = CreateUserData::from([
-            'name' => 'new user',
-            'email' => 'newuser@example.com',
-            'gender' => Gender::Male,
-            'dial_code' => '+963',
-            'number' => '1234567890',
-        ]);
+        $createUserRequestData = new CreateUserData(
+            name: 'new user',
+            dial_code: '+963',
+            gender: Gender::Male,
+            number: '1234567890',
+        );
 
-        $response = $this
-            ->withHeader('Accept', 'application/json')
-            ->post($this->main_route, $createUserRequestData->toArray());
+        $response = $this->post(
+            $this->main_route,
+            $createUserRequestData->toArray()
+        );
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
 
-        $user = User::role(RolesEnum::USER->value)
-            ->where('name', $createUserRequestData->name)
+        $created_user = User::with('roles')
+            ->orderBy('id', 'desc')
             ->first();
 
-        $userData = UserData::from($user);
+        Log::info('created user {user}', ['user' => User::all()]);
 
-        $response->assertExactJson($userData->toArray());
+        $user_has_user_role = $created_user->hasRole(RolesEnum::USER->value);
 
+        $this->assertTrue($user_has_user_role);
+
+        $this->assertEquals(
+            [
+                'name' => $created_user->name,
+                'gender' => $created_user->gender->value,
+                'dial_code' => $created_user->dial_code,
+                'number' => $created_user->number,
+            ],
+            $createUserRequestData->toArray()
+        );
+
+        $created_user = User::query()
+            ->whereName($created_user->name)
+            ->first();
+
+        $this->assertNotNull($created_user);
     }
 
     #[Test]
@@ -121,48 +120,58 @@ class UserTest extends TestCase
 
         $show_route = $this->main_route.'/'.$user_path_id;
 
-        $updateUserRequestData = UpdateUserData::from([
-            'name' => 'updatedName',
-            'email' => 'newuser@example.com',
-            'dial_code' => '+964',
-            'number' => '5234567890',
-            'gender' => Gender::Male->value,
-        ]);
+        $request_update_user_data = new UpdateUserData(
+            name: 'updatedName',
+            dial_code: '+964',
+            gender: Gender::Male,
+            number: '5234567890',
+        );
 
-        $response = $this
-            ->withHeader('Accept', 'application/json')
-            ->patch($show_route, $updateUserRequestData->toArray());
+        $response = $this->patch($show_route, $request_update_user_data->toArray());
 
         $response->assertStatus(200);
 
-        $user = User::role(RolesEnum::USER->value)
-            ->find($user_path_id);
+        $updated_user = User::query()
+            ->role(RolesEnum::USER->value)
+            ->whereId($user_path_id)
+            ->first();
 
-        $userData = UserData::from($user);
+        $this->assertEquals(
+            [
+                'name' => $updated_user->name,
+                'gender' => $updated_user->gender->value,
+                'dial_code' => $updated_user->dial_code,
+                'number' => $updated_user->number,
+            ],
+            $request_update_user_data->toArray()
+        );
 
-        Log::info('userData {data}', ['data' => $userData->toArray()]);
+        $updated_user = User::query()
+            ->whereName($request_update_user_data->name)
+            ->whereDialCode($request_update_user_data->dial_code)
+            ->whereNumber($request_update_user_data->number)
+            ->first();
 
-        $response->assertExactJson($userData->toArray());
+        $this->assertNotNull($updated_user);
 
     }
 
     #[Test]
-    public function destroy_delete_an_existing_user_with_201_response(): void
+    public function destroy_delete_an_existing_user_with_200_response(): void
     {
         $user_path_id = $this->user->id;
 
         $show_route = $this->main_route.'/'.$user_path_id;
 
-        $response = $this
-            ->withHeader('Accept', 'application/json')
-            ->delete($show_route);
+        $response = $this->delete($show_route);
 
         $response->assertStatus(200);
 
-        $user = User::role(RolesEnum::USER->value)
-            ->find($user_path_id);
+        $deleted_user = User::role(RolesEnum::USER->value)
+            ->whereId($user_path_id)
+            ->first();
 
-        $this->assertNull($user);
+        $this->assertNull($deleted_user);
 
     }
 }

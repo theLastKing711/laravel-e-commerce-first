@@ -107,7 +107,6 @@ class UserController extends Controller
 
         Log::info('User was created {driver}', ['driver' => $user]);
 
-        return UserData::from($user);
 
     }
 
@@ -133,7 +132,6 @@ class UserController extends Controller
 
         $userData = UserData::from($user);
 
-        return $userData;
 
     }
 

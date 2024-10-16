@@ -23,6 +23,7 @@ return [
         'http://localhost:8000',
         'http://localhost:5173',
         'http://localhost:5174',
+        'http://localhost:8081',
     ],
     // the sites that allowd to visit this site, http://localhost:5174 is the front end site.
 

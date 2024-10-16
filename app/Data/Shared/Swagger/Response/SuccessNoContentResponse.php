@@ -12,6 +12,7 @@ class SuccessNoContentResponse extends OAT\Response
         parent::__construct(
             response: 204,
             description: $description,
+            content: new OAT\JsonContent()
         );
     }
 }

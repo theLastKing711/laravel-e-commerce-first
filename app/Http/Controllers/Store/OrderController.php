@@ -10,6 +10,7 @@ use App\Events\User\OrderStatusAccepted;
 use App\Events\User\OrderStatusRejected;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Notifications\OrderAccepted;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
 
@@ -39,7 +40,8 @@ class OrderController extends Controller
     {
         Log::info('accessing Store OrderController with id', ['id' => $request->id]);
 
-        $order = Order::find($request->id);
+        $order = Order::with('user')
+            ->first($request->id);
 
         $order->update([
             'status' => OrderStatus::Accepted->value,
@@ -48,6 +50,10 @@ class OrderController extends Controller
         TestEvent::dispatch($order);
 
         Log::info('order value {order}', ['order' => $order]);
+
+        $order_user = $order->user;
+
+        $order_user->notify(new OrderAccepted($order));
 
         //        OrderStatusAccepted::dispatch($order);
 

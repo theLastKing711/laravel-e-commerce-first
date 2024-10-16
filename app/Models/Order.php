@@ -104,20 +104,20 @@ class Order extends Model
     {
         $order_items = $this->orderDetails;
 
-        $total_before_delivery_and_discount = $order_items->sum(function (OrderDetails $item) {
+        $order_total_before_delivery_and_discount = $order_items->sum(function (OrderDetails $item) {
             $price = $item->unit_price ?? $item->unit_price_offer;
 
             return $price * $item->quantity;
         });
 
-        $coupon_value = $order->coupon?->value ?? 0;
+        $order_coupon_value = $order->coupon?->value ?? 0;
 
         $order_discount_value =
-            ($coupon_value * $total_before_delivery_and_discount) / 100;
+            ($order_coupon_value * $order_total_before_delivery_and_discount) / 100;
 
-        $delivery_price = $this->delivery_price;
+        $order_delivery_price = $this->delivery_price;
 
-        $total_after_shipment_and_delivery = $total_before_delivery_and_discount + $delivery_price - $order_discount_value;
+        $total_after_shipment_and_delivery = $order_total_before_delivery_and_discount + $order_delivery_price - $order_discount_value;
 
         return $total_after_shipment_and_delivery;
 

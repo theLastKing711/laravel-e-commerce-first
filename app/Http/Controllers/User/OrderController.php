@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Data\Shared\Swagger\Parameter\QueryParameter\BoolQueryParameter;
 use App\Data\Shared\Swagger\Property\QueryParameter;
 use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
@@ -70,12 +69,29 @@ class OrderController extends Controller
 
         $authenticatedUser = auth()->user();
 
-        $is_order_processed = $query_param->is_order_processed;
+        $request_has_order_processed_filter = $query_param->is_order_processed;
 
         $orders = Order::query()
-            ->with(['orderDetails', 'coupon'])
-            ->where('user_id', $authenticatedUser->id)
-            ->when(! $is_order_processed, function (Builder $query) {
+            ->select(['id', 'status as order_status', 'required_time', 'created_at'])
+            ->whereUserId($authenticatedUser->id)
+            ->addSelect(
+                [
+                    'total' => OrderDetails::query()
+                        ->whereColumn('order_id', 'order_details.id')
+                        ->join('products', 'order_details.product_id', 'products.id')
+                        ->selectRaw('SUM(
+                                    COALESCE(products.price, products.price_offer) * order_details.quantity
+                                )'),
+                    //                    'order_details_sum_quantity' => OrderDetails::query()
+                    //                        ->whereColumn('order_id', 'order_details.id')
+                    //                        ->join('products', 'order_details.product_id', 'products.id')
+                    //                        ->selectRaw('SUM(
+                    //                                    order_details.quantity
+                    //                                )'),
+                ]
+            )
+            ->withSum('orderDetails as items_count', 'quantity')
+            ->when(! $request_has_order_processed_filter, function (Builder $query) {
                 $un_processed_order_statuses = [
                     OrderStatus::Pending->value,
                     OrderStatus::OnTheWay->value,
@@ -85,7 +101,7 @@ class OrderController extends Controller
 
                 $query->whereIn('status', $un_processed_order_statuses);
             })
-            ->when($is_order_processed, function (Builder $query) {
+            ->when($request_has_order_processed_filter, function (Builder $query) {
                 $processed_order_statuses = [
                     OrderStatus::Completed->value,
                     OrderStatus::Rejected->value,
@@ -105,39 +121,51 @@ class OrderController extends Controller
     #[JsonRequestBody(CreateOrderData::class)]
     #[SuccessItemResponse('boolean')]
     public function store(
-        CreateOrderData $createUserData,
+        CreateOrderData $request_create_order_data,
     ) {
 
         Log::info('Accessing User OrderController store method');
 
-        $applied_coupon_id = Coupon::where('code', $createUserData->code)
+        $applied_coupon_id = Coupon::query()
+            ->where('code', $request_create_order_data->code)
             ->first()
             ->id;
 
-        $order_products = Product::whereIn('id', $createUserData->order_details->pluck('product_id')->unique())
+        $request_order_details_unique_product_ids = $request_create_order_data
+            ->order_details
+            ->pluck('product_id')
+            ->unique();
+
+        $order_products = Product::whereIn(
+            'id',
+            $request_order_details_unique_product_ids
+        )
             ->get();
 
-        $order_details = $createUserData
-            ->order_details
-            ->groupBy('product_id')
-            ->map(function (
-                Collection $order_details,
-                string $key
-            ) use ($order_products) {
+        $request_order_details = $request_create_order_data
+            ->order_details;
 
-                $product = $order_products
-                    ->where('id', $key)
-                    ->first();
+        $order_details =
+            $request_order_details
+                ->groupBy('product_id')
+                ->map(
+                    function (
+                        Collection $product_grouping,
+                        string $key
+                    ) use ($order_products) {
 
-                $price = $product->price_offer ?? $product->price;
+                        $product = $order_products
+                            ->where('id', $key)
+                            ->first();
 
-                return new OrderDetails([
-                    'product_id' => $key,
-                    'unit_price' => $product->price,
-                    'unit_price_offer' => $product->price_offer,
-                    'quantity' => $order_details->sum('quantity'),
-                ]);
-            });
+                        return new OrderDetails([
+                            'product_id' => $key,
+                            'unit_price' => $product->price,
+                            'unit_price_offer' => $product->price_offer,
+                            'quantity' => $product_grouping->sum('quantity'),
+                        ]);
+                    }
+                );
 
         $order_total = $order_details
             ->sum(function (OrderDetails $item) {
@@ -150,8 +178,8 @@ class OrderController extends Controller
         $order = Order::create([
             'user_id' => auth()->id(),
             'coupon_id' => $applied_coupon_id,
-            'notice' => $createUserData->notice,
-            'required_time' => $createUserData->required_time,
+            'notice' => $request_create_order_data->notice,
+            'required_time' => $request_create_order_data->required_time,
             'total' => $order_total,
             'status' => OrderStatus::Pending,
             'lat' => 0,

@@ -2,16 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Database\Eloquent\Builder;
+use Faker\Generator;
 use Illuminate\Support\ServiceProvider;
-/**
-* @method static Builder whereAnyLike(array $columns,string $searchTeram)
- * @method static Builder orderByDynamic(string $sort_field, string $sort_value)
-*/
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register any application services.BuilderMacrosServiceProvider
      */
     public function register(): void
     {
@@ -21,6 +18,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         // }
         $this->app->register(BuilderMacrosServiceProvider::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->app->extend(
+                Generator::class,
+                fn (Generator $generator) => tap($generator)->seed('1234')
+            );
+        }
+
     }
 
     /**

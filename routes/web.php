@@ -15,7 +15,9 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\Store\AuthController as StoreAuthController;
 use App\Http\Controllers\Store\OrderController as StoreOrderController;
-use App\Http\Controllers\User\AuthController as UserAuthController;
+use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
+use App\Http\Controllers\User\Auth\LogoutController as UserLogoutController;
+use App\Http\Controllers\User\Categories\ParentListController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -147,7 +149,6 @@ Route::prefix('admin')
 
                     });
 
-
             });
 
         Route::prefix('auth')->group(function () {
@@ -178,18 +179,22 @@ Route::prefix('store')
     });
 
 Route::prefix('user')
-    ->middleware(['api'])
+    // ->middleware(['api'])
     ->group(function () {
 
         Route::prefix('auth')->group(function () {
-            Route::post('login', [UserAuthController::class, 'login']);
-            Route::post('logout', [UserAuthController::class, 'logout']);
+            Route::post('login', UserLoginController::class);
+            Route::post('logout', UserLogoutController::class);
         });
 
         $userRole = RolesEnum::USER->value;
 
         Route::middleware(['auth:sanctum', "role:{$userRole}"])
             ->group(function () {
+
+                Route::prefix('categories')->group(function () {
+                    Route::get('parent-list', ParentListController::class);
+                });
 
                 Route::prefix('orders')->group(function () {
                     Route::get('', [UserOrderController::class, 'index']);

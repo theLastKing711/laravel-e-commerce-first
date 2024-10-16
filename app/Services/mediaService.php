@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Log;
 
-class MediaService
+class mediaService
 {
     /**
      * Delete all/one/multiple file(s) associated with a particular Model record
@@ -20,7 +20,7 @@ class MediaService
      *
      * @throws ApiError
      */
-    public static function updateMediaForModel(Mediable&Model $model, array|Collection $request_files)
+    public function updateMediaForModel(Mediable&Model $model, array|Collection $request_files)
     {
 
         $file_to_update_ids = $request_files->pluck('uid');
@@ -53,8 +53,9 @@ class MediaService
      *
      * @throws ApiError
      */
-    public static function createMediaForModel(Mediable&Model $model, array|Collection $public_ids)
+    public function createMediaForModel(Mediable&Model $model, array|Collection $public_ids)
     {
+
         foreach ($public_ids as &$public_id) {
 
             $cloud_image = Cloudinary::getImage($public_id);
@@ -65,8 +66,12 @@ class MediaService
         }
     }
 
-    public static function removeAssocciatedMediaForModel(Mediable&Model $model)
+    /**
+     * Delete all/one/multiple file(s) associated with a particular Model record
+     */
+    public function removeAssociatedMediaForModel(Mediable&Model $model): void
     {
+        Log::info('hello world');
         $model->detachMedia();
     }
 }

@@ -58,7 +58,8 @@ class CategoryFactory extends Factory
 
         return $this->state(new Sequence(
             function (Sequence $sequence) {
-                Log::info('random category {category} ', ['category' => $this->getRandomParentCategoryId()]);
+                //                Log::info('random category {category} ', ['category' => $this->getRandomParentCategoryId()]);
+//                $random_parent_id = $this->faker->randomElement(Category::isParent()->pluck('id')->toArray());
 
                 return ['parent_id' => $this->getRandomParentCategoryId()];
             }

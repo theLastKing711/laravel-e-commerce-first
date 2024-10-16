@@ -32,7 +32,12 @@
                 "operationId": "0ee11e2aa6e87c46d4a4a8c156605743",
                 "responses": {
                     "204": {
-                        "description": "Item Deleted Successfully"
+                        "description": "Item Deleted Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -54,7 +59,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Category was updated successfully"
+                        "description": "Category was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -98,7 +108,12 @@
                 "operationId": "257e54370507ab40e501335f821a22aa",
                 "responses": {
                     "204": {
-                        "description": "App\\Data\\Admin\\Admin\\AdminData"
+                        "description": "App\\Data\\Admin\\Admin\\AdminData",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -110,7 +125,12 @@
                 "operationId": "5a18d08a7ce1702461d37a70e62cddf9",
                 "responses": {
                     "204": {
-                        "description": "Admin Deleted Successfully"
+                        "description": "Admin Deleted Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -131,7 +151,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": " Admin Updated Successfully"
+                        "description": " Admin Updated Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -183,7 +208,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "User created successfully"
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -229,7 +259,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "The Coupon was created successfully"
+                        "description": "The Coupon was created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -241,7 +276,12 @@
                 "operationId": "27bba561cc9b8f63f2ecabf6db0d7be5",
                 "responses": {
                     "204": {
-                        "description": "The Coupon was deleted successfully"
+                        "description": "The Coupon was deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -263,7 +303,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "The Coupon was updated successfully"
+                        "description": "The Coupon was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -310,7 +355,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "The Driver was created successfully"
+                        "description": "The Driver was created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -322,7 +372,12 @@
                 "operationId": "988bff1b3534097d6ba1daa2f1f8f081",
                 "responses": {
                     "204": {
-                        "description": "The Driver was deleted successfully"
+                        "description": "The Driver was deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -344,7 +399,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "The Driver was updated successfully"
+                        "description": "The Driver was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -381,7 +441,12 @@
                 "operationId": "dd0b4de268ddb96b71d83abbb8f698bd",
                 "responses": {
                     "204": {
-                        "description": "The Group was deleted successfully"
+                        "description": "The Group was deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -403,7 +468,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "The Group was updated successfully"
+                        "description": "The Group was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -422,7 +492,12 @@
                 "operationId": "60bc6513b668f2bbd6fa689a0de6d486",
                 "responses": {
                     "204": {
-                        "description": "The Notification was successfully deleted"
+                        "description": "The Notification was successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -465,7 +540,12 @@
                 "operationId": "7a7abdc8418520616bcadb8af3995521",
                 "responses": {
                     "204": {
-                        "description": "Order status changed successfully"
+                        "description": "Order status changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -512,7 +592,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Product successfully updated"
+                        "description": "Product successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -530,7 +615,12 @@
                 "operationId": "06a67b6cb55a8221505a0652b2557050",
                 "responses": {
                     "204": {
-                        "description": "Fetched Product Successfully"
+                        "description": "Fetched Product Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -548,7 +638,12 @@
                 "operationId": "585976e57474020fea56e3255fa088d8",
                 "responses": {
                     "204": {
-                        "description": "Product DeActivated Successfully"
+                        "description": "Product DeActivated Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -585,7 +680,12 @@
                 "operationId": "3eeef084edb4cab4be7b76a63a00d492",
                 "responses": {
                     "204": {
-                        "description": "Item Deleted Successfully"
+                        "description": "Item Deleted Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -607,7 +707,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -625,7 +730,12 @@
                 "operationId": "0c7a5c4324b30ad923fdb1f14704e13f",
                 "responses": {
                     "204": {
-                        "description": "Order Status Changed Successfully"
+                        "description": "Order Status Changed Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -643,7 +753,12 @@
                 "operationId": "9b207b7520d9c59d2ccb1ee175e89765",
                 "responses": {
                     "204": {
-                        "description": "Order Status Changed Successfully"
+                        "description": "Order Status Changed Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             },
@@ -847,7 +962,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Category created successfully"
+                        "description": "Category created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -861,7 +981,12 @@
                 "operationId": "ef7342e8ebd84e1018e7ba46b6bdd8c7",
                 "responses": {
                     "204": {
-                        "description": "Category list fetched successfully"
+                        "description": "Category list fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -1021,7 +1146,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Group created successfully"
+                        "description": "Group created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -1076,7 +1206,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Notification created successfully"
+                        "description": "Notification created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -1172,7 +1307,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Product successfully created"
+                        "description": "Product successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -1286,7 +1426,12 @@
                 },
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -1299,15 +1444,22 @@
                 "operationId": "5f5d7a9f14764b7a00b1a6d263730e0a",
                 "responses": {
                     "204": {
-                        "description": "File uploaded successfully"
+                        "description": "File uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
-            },
+            }
+        },
+        "/files": {
             "post": {
                 "tags": [
                     "files"
                 ],
-                "operationId": "60572cb2d9035cbf6357a7f51dde1361",
+                "operationId": "08f811d5e879722f476c4451e5d3c8ae",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1452,6 +1604,38 @@
                 }
             }
         },
+        "/user/categories/parent-list": {
+            "get": {
+                "tags": [
+                    "userCategories"
+                ],
+                "operationId": "724fe156471e33fca30add35c59157b5",
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Items fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CursorPaginatedListData"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/orders": {
             "get": {
                 "tags": [
@@ -1526,10 +1710,12 @@
                         "type": "string"
                     },
                     "created_at": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"
@@ -1591,37 +1777,26 @@
             "CategoryData": {
                 "properties": {
                     "id": {
-                        "description": "<int, string>",
                         "type": "integer"
                     },
                     "parent_id": {
-                        "description": "<int, string>",
                         "type": "integer",
                         "nullable": true
                     },
                     "parent_name": {
-                        "description": "<int, string>",
                         "type": "string",
                         "nullable": true
                     },
                     "name": {
-                        "description": "<int, string>",
                         "type": "string"
                     },
-                    "images": {
-                        "description": "<int, string>",
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
-                        },
-                        "nullable": true
-                    },
                     "created_at": {
-                        "description": "<int, string>",
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"
@@ -1650,11 +1825,13 @@
                         "nullable": true
                     },
                     "created_at": {
+                        "schema": "string",
                         "description": "<int, ShowFileData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"
@@ -1713,6 +1890,33 @@
                 "type": "object"
             },
             "adminCategoryPathClass": {},
+            "TestCategoryData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "parent_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "schema": "string",
+                        "type": "string",
+                        "format": "datetime",
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
+                    }
+                },
+                "type": "object"
+            },
             "UpdateCategoryData": {
                 "properties": {
                     "name": {
@@ -1759,25 +1963,31 @@
                         "nullable": true
                     },
                     "start_at": {
+                        "schema": "string",
                         "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "end_at": {
+                        "schema": "string",
                         "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "created_at": {
+                        "schema": "string",
                         "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "users": {
                         "description": "CouponUserData>",
@@ -1824,18 +2034,22 @@
                         "nullable": true
                     },
                     "start_at": {
+                        "schema": "string",
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "end_at": {
+                        "schema": "string",
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "user_ids": {
                         "description": "int>",
@@ -1876,18 +2090,22 @@
                         "nullable": true
                     },
                     "start_at": {
+                        "schema": "string",
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "end_at": {
+                        "schema": "string",
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "user_ids": {
                         "description": "int>",
@@ -1944,10 +2162,12 @@
                         "nullable": true
                     },
                     "created_at": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"
@@ -2051,10 +2271,12 @@
                         "$ref": "#/components/schemas/NotificationType"
                     },
                     "created_at": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"
@@ -2299,11 +2521,13 @@
                         "nullable": true
                     },
                     "created_at": {
+                        "schema": "string",
                         "description": "CategoryData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "childCategories": {
                         "description": "CategoryData>",
@@ -2365,17 +2589,21 @@
             "BestSellingProductsQueryParameterData": {
                 "properties": {
                     "start_at": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
+                        "default": "2024-09-02 18:31:45",
                         "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45",
                         "nullable": true
                     },
                     "end_at": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
+                        "default": "2024-09-02 18:31:45",
                         "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45",
                         "nullable": true
                     }
                 },
@@ -2523,6 +2751,17 @@
                 },
                 "type": "object"
             },
+            "adminCursorPaginatedAbstract": {
+                "properties": {
+                    "per_page": {
+                        "type": "integer"
+                    },
+                    "next_cursor": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "adminPaginatedAbstract": {
                 "properties": {
                     "current_page": {
@@ -2600,6 +2839,41 @@
                 },
                 "type": "object"
             },
+            "CursorPaginatedListData": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/adminCursorPaginatedAbstract"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "description": "ParentListData>",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ParentListData"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "ParentListData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "CreateOrderData": {
                 "properties": {
                     "notice": {
@@ -2669,16 +2943,20 @@
                         "format": "float"
                     },
                     "required_time": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "created_at": {
+                        "schema": "string",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"
@@ -2690,11 +2968,13 @@
                         "type": "integer"
                     },
                     "required_time": {
+                        "schema": "string",
                         "description": "OrderShowItemData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     },
                     "receiver_name": {
                         "description": "OrderShowItemData>",
@@ -2731,11 +3011,13 @@
                         }
                     },
                     "created_at": {
+                        "schema": "string",
                         "description": "OrderShowItemData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2017-02-02 18:31:45",
-                        "pattern": "YYYY-MM-DD"
+                        "default": "2024-09-02 18:31:45",
+                        "pattern": "YYYY-MM-DD",
+                        "example": "2024-09-02 18:31:45"
                     }
                 },
                 "type": "object"

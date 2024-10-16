@@ -27,19 +27,19 @@ class OrderData extends Data
     ) {
     }
 
-    public static function fromModel(Order $order): self
-    {
-        $total_with_delivery_and_discount = $order->getTotalWithShipmentAndDiscount();
-
-        $items_count = $order->orderDetails->count();
-
-        return new self(
-            id: $order->id,
-            order_status: OrderStatus::from($order->status),
-            total: $total_with_delivery_and_discount,
-            items_count: $items_count,
-            required_time: $order->required_time,
-            created_at: $order->created_at,
-        );
-    }
+//    public static function fromModel(Order $order): self
+//    {
+//        $total_with_delivery_and_discount = $order->getTotalWithShipmentAndDiscount();
+//
+//        $items_count = $order->orderDetails->count();
+//
+//        return new self(
+//            id: $order->id,
+//            order_status: OrderStatus::from($order->status),
+//            total: $total_with_delivery_and_discount,
+//            items_count: $items_count,
+//            required_time: $order->required_time,
+//            created_at: $order->created_at,
+//        );
+//    }
 }

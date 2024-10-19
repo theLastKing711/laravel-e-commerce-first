@@ -793,6 +793,30 @@
                 }
             ]
         },
+        "/user/products/favourite/{id}": {
+            "post": {
+                "tags": [
+                    "userProducts"
+                ],
+                "summary": "Handle the incoming request.",
+                "operationId": "9d6b2ebc471a0c80b85e32d2b7047b44",
+                "responses": {
+                    "204": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/userProductIdPathParameter"
+                }
+            ]
+        },
         "/sanctum/csrf-cookie": {
             "get": {
                 "tags": [
@@ -1549,7 +1573,7 @@
                 "tags": [
                     "userAuth"
                 ],
-                "operationId": "f8b7cd770f6b03a9de0d2841238b7d8b",
+                "operationId": "3b5c35ea1a3a8ce62ea2667f6a863f77",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1561,22 +1585,22 @@
                     }
                 },
                 "responses": {
-                    "204": {
-                        "description": "User logged in successfully",
+                    "200": {
+                        "description": "Item fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/adminLoginResponse"
+                                    "$ref": "#/components/schemas/LoginSuccessResponseData"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "credentials are invalid",
+                        "description": "Authentication Failed",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/LoginFailedResponse"
+                                    "type": "string"
                                 }
                             }
                         }
@@ -1589,15 +1613,13 @@
                 "tags": [
                     "userAuth"
                 ],
-                "operationId": "6117f2da9c5a7269ba5fbd54f7b310e3",
+                "operationId": "5e5caf784fd90632e11dc7aa85610643",
                 "responses": {
-                    "200": {
-                        "description": "The User was successfully logged out",
+                    "204": {
+                        "description": "User logged out successfully",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "type": "boolean"
-                                }
+                                "schema": {}
                             }
                         }
                     }
@@ -1629,6 +1651,27 @@
                                     "items": {
                                         "$ref": "#/components/schemas/CursorPaginatedListData"
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/home": {
+            "get": {
+                "tags": [
+                    "userHome"
+                ],
+                "summary": "Handle the incoming request.",
+                "operationId": "52c9063a9ea1c23fd15bc7233909b8a8",
+                "responses": {
+                    "200": {
+                        "description": "Item fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HomeData"
                                 }
                             }
                         }
@@ -2609,6 +2652,17 @@
                 },
                 "type": "object"
             },
+            "LoginSuccessResponseData": {
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/adminUser"
+                    },
+                    "token": {
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "adminCreateUser": {
                 "properties": {
                     "name": {
@@ -2624,6 +2678,14 @@
                     "number": {
                         "type": "string",
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ProductIdData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -2757,7 +2819,8 @@
                         "type": "integer"
                     },
                     "next_cursor": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -2870,6 +2933,72 @@
                     },
                     "name": {
                         "type": "string"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "AllCategoriesData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "HomeData": {
+                "properties": {
+                    "user_purchased_products": {
+                        "description": "HomeProductListData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllCategoriesData"
+                        }
+                    },
+                    "categories": {
+                        "description": "HomeProductListData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllCategoriesData"
+                        }
+                    },
+                    "most_selling_products": {
+                        "description": "HomeProductListData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllCategoriesData"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "HomeProductListData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "is_favourite": {
+                        "type": "boolean"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3165,6 +3294,14 @@
                 }
             },
             "userUserIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "userProductIdPathParameter": {
                 "name": "id",
                 "in": "path",
                 "required": true,

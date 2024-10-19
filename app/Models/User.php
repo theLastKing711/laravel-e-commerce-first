@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enum\Auth\RolesEnum;
 use App\Enum\Gender;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -15,6 +17,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string|null $name
  * @property string|null $email
@@ -48,7 +52,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
- *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder|User like(string $column, string $value)
  * @method static Builder|User newModelQuery()
@@ -77,7 +80,11 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|User whereUsername($value)
  * @method static Builder|User withoutPermission($permissions)
  * @method static Builder|User withoutRole($roles, $guard = null)
- *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $favouriteProducts
+ * @property-read int|null $favourite_products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @method static Builder|User isUser()
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -130,6 +137,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Notification::class);
     }
 
+    public function favouriteProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'user_favourite_product');
+    }
+
     public function routeNotificationForWhatsApp()
     {
         return $this->number;
@@ -161,5 +173,11 @@ class User extends Authenticatable
     public function scopeLike(Builder $query, string $column, string $value): void
     {
         $query->where($column, 'LIKE', '%'.$value.'%');
+    }
+
+    public function scopeIsUser(Builder $query): void
+    {
+        $user_role = RolesEnum::USER->value;
+        $query->role($user_role);
     }
 }

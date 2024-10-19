@@ -73,10 +73,6 @@ class CategoryController extends Controller
         CategoryIndexQueryParameterData $query_parameters
     ) {
 
-        $created_category = Category::first(['name' => 'in controller asdlkjasdlkajsd']);
-
-        \Log::info($created_category);
-
         Log::info('accessing Admin CategoryController index method');
 
         $request_search_filter = $query_parameters->search;
@@ -170,10 +166,6 @@ class CategoryController extends Controller
             'name' => $createCategoryData->name,
             'parent_id' => $createCategoryData->parent_id,
         ]);
-
-        $created_category = Category::first(['name' => 'in controller asdlkjasdlkajsd']);
-
-        Log::info($created_category);
 
         MediaService::createMediaForModel($category, $category_cloudinary_public_ids);
 

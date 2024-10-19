@@ -64,19 +64,25 @@ use function strlen;
  * @method static Builder|Product whereUpdatedAt($value)
  * @property-read Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
  * @property-read int|null $medially_count
+ * @property-read Collection<int, \App\Models\User> $favouritedByUsers
+ * @property-read int|null $favourited_by_users_count
  * @mixin Eloquent
  */
 class Product extends Model
 {
     protected $guarded = ['id'];
 
-    use HasFactory;
-//        MediaAlly;
-
+    use HasFactory, MediaAlly;
+    //        MediaAlly;
 
     public function brands(): BelongsToMany
     {
         return $this->belongsToMany(Brand::class);
+    }
+
+    public function favouritedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_favourite_product');
     }
 
     public function categories(): BelongsToMany

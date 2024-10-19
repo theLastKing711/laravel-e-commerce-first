@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->decimal('price_offer')->nullable();
             $table->boolean('is_most_buy');
+            $table->boolean('is_favourite')->default(false);
             $table->boolean('is_active');
             $table->enum('unit', Unit::asValuesArray())->nullable();
             $table->integer('unit_value')->nullable();

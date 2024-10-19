@@ -18,7 +18,9 @@ use App\Http\Controllers\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
 use App\Http\Controllers\User\Auth\LogoutController as UserLogoutController;
 use App\Http\Controllers\User\Categories\ParentListController;
+use App\Http\Controllers\User\Home\HomeController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
+use App\Http\Controllers\User\Product\FavouriteProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('files')
@@ -179,7 +181,7 @@ Route::prefix('store')
     });
 
 Route::prefix('user')
-    // ->middleware(['api'])
+    ->middleware(['api'])
     ->group(function () {
 
         Route::prefix('auth')->group(function () {
@@ -189,11 +191,22 @@ Route::prefix('user')
 
         $userRole = RolesEnum::USER->value;
 
+        //sanctum middleware
+        //allows Auth::user->id to return value for user and id in controller
         Route::middleware(['auth:sanctum', "role:{$userRole}"])
+        // Route::middleware([])
             ->group(function () {
+
+                Route::prefix('home')->group(function () {
+                    Route::get('', HomeController::class);
+                });
 
                 Route::prefix('categories')->group(function () {
                     Route::get('parent-list', ParentListController::class);
+                });
+
+                Route::prefix('products')->group(function () {
+                    Route::post('favourite/{id}', FavouriteProductController::class);
                 });
 
                 Route::prefix('orders')->group(function () {

@@ -40,10 +40,6 @@ class CategorySeeder extends Seeder
                 // category is connected to media polymorphiclly through medially
                 //as defined in Category.php
             )
-            ->has(
-                Product::factory()->count($count)
-            )
-
             ->count($count)
             ->create();
 
@@ -62,7 +58,12 @@ class CategorySeeder extends Seeder
                 'medially'
             )
             ->has(
-                Product::factory()->count($count)
+                Product::factory()
+                    ->has(
+                        Media::factory()->count(2),
+                        'medially'
+                    )
+                    ->count($count)
             )
             ->count($count)
             ->create();

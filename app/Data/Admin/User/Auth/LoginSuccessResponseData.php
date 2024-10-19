@@ -6,7 +6,7 @@ use App\Data\Admin\User\UserData;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
-#[Oat\Schema(schema: 'adminCreateUser')]
+#[Oat\Schema()]
 class LoginSuccessResponseData extends Data
 {
     public function __construct(

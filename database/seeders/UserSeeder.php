@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Coupon;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -49,12 +50,14 @@ class UserSeeder extends Seeder
         user::factory()
             ->userWithUserCredentials()
             ->has(Coupon::factory()->count(2)->testCoupon())
+            ->has(Product::factory()->count(2), 'favouriteProducts')
             ->create();
 
         User::factory()
             ->count(9)
             ->user()
             ->has(Coupon::factory()->count(2))
+            ->has(Product::factory()->count(2), 'favouriteProducts')
             ->create();
     }
 

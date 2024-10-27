@@ -2,36 +2,30 @@
 
 namespace App\Http\Controllers\User\Home;
 
+use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Data\User\Home\AllCategoriesData;
 use App\Data\User\Home\HomeData;
 use App\Data\User\Home\HomeProductListData;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use OpenApi\Attributes\Get;
+use OpenApi\Attributes as OAT;
 
 class HomeController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    #[Get(path: '/user/home', tags: ['userHome'])]
+    #[OAT\Get(path: '/user/home', tags: ['userHome'])]
+    #[QueryParameter('name')]
     #[SuccessItemResponse(HomeData::class)]
-    public function __invoke(Request $request)
+    public function __invoke()
     {
 
         $logged_user_id = 21;
 
         $all_categories = Category::all();
-
-        // $most_selling_products = Product::query()
-        //     ->select(['id', 'name', 'price', 'is_favourite'])
-        //     ->whereIsMostBuy(true)
-        //     ->take(10)
-        //     ->get();
 
         $most_selling_products = $logged_user_id === 21 ?
         DB::select(

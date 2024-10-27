@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
- * 
- *
  * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -40,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
  * @property-read User $user
+ *
  * @method static OrderFactory factory($count = null, $state = [])
  * @method static Builder|Order newModelQuery()
  * @method static Builder|Order newQuery()
@@ -62,6 +61,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Order whereTotal($value)
  * @method static Builder|Order whereUpdatedAt($value)
  * @method static Builder|Order whereUserId($value)
+ *
  * @mixin Eloquent
  */
 class Order extends Model
@@ -90,14 +90,22 @@ class Order extends Model
         return $this->hasMany(OrderDetails::class);
     }
 
-    protected function status(): Attribute
+    // protected function status(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (int $value) => OrderStatus::from($value),
+    //         set: function (OrderStatus $value) {
+    //             return $value->value;
+    //         }
+    //     );
+    // }
+
+    //int when saved to db, and enum when retrieved from database
+    protected function casts(): array
     {
-        return Attribute::make(
-            get: fn (int $value) => OrderStatus::from($value),
-            set: function (OrderStatus $value) {
-                return $value->value;
-            }
-        );
+        return [
+            'status' => OrderStatus::class,
+        ];
     }
 
     public function getTotalWithShipmentAndDiscount(): float

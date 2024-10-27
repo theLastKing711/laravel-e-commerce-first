@@ -817,6 +817,31 @@
                 }
             ]
         },
+        "/user/products/{id}": {
+            "get": {
+                "tags": [
+                    "userProducts"
+                ],
+                "operationId": "dd9b8ac2ae94b98c5b056b1b0b3142fd",
+                "responses": {
+                    "200": {
+                        "description": "Item fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetProductDetailsData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/userProductIdPathParameter"
+                }
+            ]
+        },
         "/sanctum/csrf-cookie": {
             "get": {
                 "tags": [
@@ -1665,6 +1690,15 @@
                 ],
                 "summary": "Handle the incoming request.",
                 "operationId": "52c9063a9ea1c23fd15bc7233909b8a8",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Item fetched successfully",
@@ -1672,6 +1706,39 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/HomeData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/home/search-suggestion-list": {
+            "get": {
+                "tags": [
+                    "userSearch"
+                ],
+                "summary": "Handle the incoming request.",
+                "operationId": "c5347382bb9f5afbc8af3d1f42aeecff",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Items fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CursorPaginatedSearchSuggestionData"
+                                    }
                                 }
                             }
                         }
@@ -1734,6 +1801,27 @@
                             "application/json": {
                                 "schema": {
                                     "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/products/favourite": {
+            "get": {
+                "tags": [
+                    "userProducts"
+                ],
+                "summary": "Handle the incoming request.",
+                "operationId": "6419fafb928b1b50492ca8c8d56a8e25",
+                "responses": {
+                    "200": {
+                        "description": "Item fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CursorPaginatedFavouriteProductData"
                                 }
                             }
                         }
@@ -2682,6 +2770,90 @@
                 },
                 "type": "object"
             },
+            "CursorPaginatedFavouriteProductData": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/adminCursorPaginatedAbstract"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "description": "GetUserFavouriteProductsData>",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/GetUserFavouriteProductsData"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "FavouriteProductData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "is_favourite": {
+                        "type": "boolean"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "GetProductDetailsData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "is_favourite": {
+                        "type": "boolean"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "GetUserFavouriteProductsData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "is_favourite": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "ProductIdData": {
                 "properties": {
                     "id": {
@@ -2956,6 +3128,26 @@
                 },
                 "type": "object"
             },
+            "CursorPaginatedSearchSuggestionData": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/adminCursorPaginatedAbstract"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "description": "SearchSuggestionData>",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SearchSuggestionData"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "HomeData": {
                 "properties": {
                     "user_purchased_products": {
@@ -2994,7 +3186,23 @@
                         "type": "string"
                     },
                     "is_favourite": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SearchSuggestionData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
                     },
                     "image_url": {
                         "type": "string",

@@ -31,8 +31,6 @@ class FavouriteProductController extends Controller
     public function __invoke(ProductIdData $request)
     {
 
-        Log::info('hello world');
-
         Log::info(
             'accessing User FavouriteProductController with id {id}',
             ['id' => $request->id]

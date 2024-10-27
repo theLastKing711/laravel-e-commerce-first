@@ -17,8 +17,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * 
- *
  * @property int $id
  * @property string|null $name
  * @property string|null $email
@@ -52,6 +50,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder|User like(string $column, string $value)
  * @method static Builder|User newModelQuery()
@@ -80,11 +79,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|User whereUsername($value)
  * @method static Builder|User withoutPermission($permissions)
  * @method static Builder|User withoutRole($roles, $guard = null)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $favouriteProducts
  * @property-read int|null $favourite_products_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
+ *
  * @method static Builder|User isUser()
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -149,6 +151,7 @@ class User extends Authenticatable
 
     /**
      * Get the attributes that should be cast.
+     * enum is int when saved to db, and enum when retrieved from database
      *
      * @return array<string, string>
      */
@@ -157,18 +160,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'gender' => Gender::class,
+
         ];
     }
 
-    protected function gender(): Attribute
-    {
-        return Attribute::make(
-            get: fn (?int $value) => $value === null ? null : Gender::from($value),
-            set: function (Gender $value) {
-                return $value->value;
-            }
-        );
-    }
+    // protected function gender(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (?int $value) => $value === null ? null : Gender::from($value),
+    //         set: function (Gender $value) {
+    //             return $value->value;
+    //         }
+    //     );
+    // }
 
     public function scopeLike(Builder $query, string $column, string $value): void
     {

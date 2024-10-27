@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * 
- *
  * @property int $id
  * @property int|null $from_admin
  * @property string $name
@@ -22,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $user
  * @property-read int|null $user_count
+ *
  * @method static \Database\Factories\NotificationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Notification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Notification newQuery()
@@ -35,8 +34,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Notification whereOrderStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Notification whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Notification whereUpdatedAt($value)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
+ *
  * @mixin \Eloquent
  */
 class Notification extends Model
@@ -50,15 +51,21 @@ class Notification extends Model
         return $this->belongsToMany(User::class);
     }
 
+    // protected function type(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (?int $value) => $value === null ? null : NotificationType::from($value),
+    //         set: function (NotificationType $value) {
+    //             return $value->value;
+    //         }
+    //     );
+    // }
 
-    protected function type(): Attribute
+    //int when saved to db, and enum when retrieved from database
+    protected function casts(): array
     {
-        return Attribute::make(
-            get: fn (?int $value) => $value === null ? null : NotificationType::from($value),
-            set: function (NotificationType $value) {
-                return $value->value;
-            }
-        );
+        return [
+            'type' => NotificationType::class,
+        ];
     }
-
 }

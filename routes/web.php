@@ -19,8 +19,11 @@ use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
 use App\Http\Controllers\User\Auth\LogoutController as UserLogoutController;
 use App\Http\Controllers\User\Categories\ParentListController;
 use App\Http\Controllers\User\Home\HomeController;
+use App\Http\Controllers\User\Home\Search\SearchSuggestionController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
 use App\Http\Controllers\User\Product\FavouriteProductController;
+use App\Http\Controllers\User\Product\GetProductDetailsController;
+use App\Http\Controllers\User\Product\GetUserFavouriteProductsController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('files')
@@ -193,12 +196,13 @@ Route::prefix('user')
 
         //sanctum middleware
         //allows Auth::user->id to return value for user and id in controller
-        Route::middleware(['auth:sanctum', "role:{$userRole}"])
-        // Route::middleware([])
+        // Route::middleware(['auth:sanctum', "role:{$userRole}"])
+        Route::middleware([])
             ->group(function () {
 
                 Route::prefix('home')->group(function () {
                     Route::get('', HomeController::class);
+                    Route::get('search-suggestion-list', SearchSuggestionController::class);
                 });
 
                 Route::prefix('categories')->group(function () {
@@ -206,6 +210,9 @@ Route::prefix('user')
                 });
 
                 Route::prefix('products')->group(function () {
+                    Route::get('favourite', GetUserFavouriteProductsController::class);
+                    Route::get('{id}', GetProductDetailsController::class);
+
                     Route::post('favourite/{id}', FavouriteProductController::class);
                 });
 

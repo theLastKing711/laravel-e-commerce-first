@@ -20,6 +20,7 @@ use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Facades\MediaService;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
@@ -72,6 +73,23 @@ class CategoryController extends Controller
     public function index(
         CategoryIndexQueryParameterData $query_parameters
     ) {
+
+        // $user_with_favourite_products = User::query()
+        //     ->whereId(21)
+        //     ->select('id')
+        //     ->with(['favouriteProducts:id,name,price'])
+        //     ->cursorPaginate(15);
+
+        return Product::query()
+            ->select('id', 'name', 'price')
+            ->whereHas('favouritedByUsers', function ($query) {
+                return $query->where('user_id', 21);
+            })
+            ->cursorPaginate(15);
+
+        // $user_with_favourite_products->data = $user_with_favourite_products->data[0]->favourite_products;
+
+        return $user_with_favourite_products->pluck('id');
 
         Log::info('accessing Admin CategoryController index method');
 

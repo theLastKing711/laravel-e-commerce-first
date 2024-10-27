@@ -8,7 +8,6 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
-
 // if the value of the property is null
 // it doesn't transfom
 //// otherwise it return the web path of the property

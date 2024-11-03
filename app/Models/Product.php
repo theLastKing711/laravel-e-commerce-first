@@ -95,6 +95,14 @@ class Product extends Model
         return $this->hasMany(OrderDetails::class);
     }
 
+    /**
+     * Get all of the variants for the Product
+     */
+    public function variants(): HasMany
+    {
+        return $this->hasMany(Variant::class);
+    }
+
     public function scopeHasName(Builder $query, ?string $name): void
     {
         Log::info('value of name is {name} ', ['name' => $name]);

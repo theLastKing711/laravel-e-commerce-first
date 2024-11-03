@@ -54,6 +54,14 @@ class FileController extends Controller
                 ],
                 [
                     'width' => 700,
+                    'height' => 700,
+                    'crop' => 'pad',
+                    // 'pad',
+                    // 'scale' => 'auto',
+                ],
+                [
+                    'width' => 700,
+                    // 'pad',
                     // 'scale' => 'auto',
                 ],
                 //             "width": 700,

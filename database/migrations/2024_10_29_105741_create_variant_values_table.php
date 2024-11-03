@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_favourite_product', function (Blueprint $table) {
+        Schema::create('variant_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('product_id')->constrained();
-            // $table->primary(['user_id', 'product_id']);
+            $table->foreignId('variant_id')->constrained();
+            $table->string('name');
+            $table->decimal('price');
+            $table->integer('available'); // number of items in inventory
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_favourite_product');
+        Schema::dropIfExists('variant_values');
     }
 };

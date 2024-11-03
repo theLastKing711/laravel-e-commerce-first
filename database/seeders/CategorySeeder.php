@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Media;
 use App\Models\Product;
+use App\Models\Variant;
+use App\Models\VariantValue;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -59,9 +62,45 @@ class CategorySeeder extends Seeder
             )
             ->has(
                 Product::factory()
+                    ->state(new Sequence(
+                        ['price' => fake()->randomFloat(2, 10, 100)],
+                        ['price' => '0.00']
+                    ))
                     ->has(
                         Media::factory()->count(2),
                         'medially'
+                    )
+                    ->has(
+                        Variant::factory()
+                            ->state(new Sequence(
+                                ['name' => 'اللون'],
+                                ['name' => 'الحجم'],
+                            ))
+                            ->has(
+                                // has created booted callback that create variantValue combinations each time a variantValue is created
+                                VariantValue::factory()
+                                    // starts at 4 in the second iteration of the variant factory
+                                    ->state(new Sequence(
+                                        ['name' => 'أحمر'],
+                                        ['name' => 'أصفر'],
+                                        ['name' => 'أخضر'],
+                                        ['name' => 'صغير'],
+                                        ['name' => 'وسط'],
+                                        ['name' => 'كبير'],
+                                    ))
+                                    ->state(function (array $attributes, Variant $variant) {
+                                        return [
+                                            // 'price' => $variant->product->price === '0.00' ? fake()->randomFloat(2, 10, 100) : '0.00',
+                                            'price' => fake()->randomFloat(2, 10, 100),
+                                        ];
+                                    })
+                                    ->has(
+                                        Media::factory()->count(1),
+                                        'medially'
+                                    )
+                                    ->count(3)
+                            )
+                            ->count(2)
                     )
                     ->count($count)
             )

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('first_variant_value_id');
             $table->foreignId('second_variant_value_id');
             $table->decimal('price')->nullable();
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

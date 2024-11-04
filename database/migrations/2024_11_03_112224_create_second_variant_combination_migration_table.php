@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('second_variant_combination_migration', function (Blueprint $table) {
+        Schema::create('second_variant_combination', function (Blueprint $table) {
             $table->id();
             $table->foreignId('variant_combination_id');
             $table->foreignId('variant_id');
             $table->decimal('price')->nullable();
+            $table->integer('quantity');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('second_variant_combination_migration');
+        Schema::dropIfExists('second_variant_combination');
     }
 };

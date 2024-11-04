@@ -105,7 +105,6 @@ class Product extends Model
 
     public function scopeHasName(Builder $query, ?string $name): void
     {
-        Log::info('value of name is {name} ', ['name' => $name]);
 
         $query->where(
             'name',
@@ -138,7 +137,7 @@ class Product extends Model
             get: fn ($value) => $value,
             set: function (string $value) {
 
-                Log::info('value {value} ', ['value' => $value]);
+                // Log::info('value {value} ', ['value' => $value]);
 
                 if (! str_contains($value, '.')) {
                     return $value.'.'.'00';
@@ -153,7 +152,7 @@ class Product extends Model
                     $list[1] = $list[1].'0';
                 }
 
-                Log::info('price after update {price} ', ['price' => $list[0].'.'.$list[1]]);
+                // Log::info('price after update {price} ', ['price' => $list[0].'.'.$list[1]]);
 
                 return $list[0].'.'.$list[1];
 

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Log;
 
 //example small, big, large, cheese, salt
 class VariantValue extends Model
@@ -18,17 +19,70 @@ class VariantValue extends Model
     public static function booted(): void
     {
         static::created(function (VariantValue $variant_value) {
-            $product_price = $variant_value->variant->product->price;
+
+            // Log::info($variant_value);
+
+            $variant = Variant::query()
+                ->with([
+                    'product' => [
+                        'variants',
+                    ],
+                ])
+                ->whereId($variant_value->variant_id)
+                ->first();
+
+            $variant_value_ids = $variant->variantValues()->pluck('id');
+
+            $product = $variant->product;
+
+            $product_price = $product->price;
 
             $max_of_product_price_and_main_variant_value_price = max($product_price, $variant_value->price);
 
-            VariantValue::query()
-                ->whereNot('variant_id', $variant_value->variant->id)
-                ->where('variant.product.id', $variant_value->product->id)
-                ->each(function (VariantValue $variant_value_to_add) use ($variant_value, $max_of_product_price_and_main_variant_value_price) {
-                    $max_price = max($max_of_product_price_and_main_variant_value_price, $variant_value_to_add->price);
-                    $variant_value->combinations()->attach($variant_value_to_add->id, ['price' => $max_price]);
-                });
+            $number_of_product_variant = $product->variants()->count();
+
+            if ($number_of_product_variant == 1) {
+                return;
+            }
+            if ($number_of_product_variant == 2) {// add to variant_combination table
+                VariantValue::query()
+                    // ->whereHas('variant.product', function ($query) {
+                    //     $query->whereId()
+                    // })
+                    ->whereNotIn('id', $variant_value_ids)
+                    // ->whereNot('variant_id', $variant->id)
+                    // ->where('variant.product.id', $product->id)
+                    ->each(
+                        function (VariantValue $variant_value_to_add) use ($variant_value, $max_of_product_price_and_main_variant_value_price) {
+                            $max_price = max($max_of_product_price_and_main_variant_value_price, $variant_value_to_add->price);
+                            $variant_value->combinations()
+                                ->attach(
+                                    $variant_value_to_add->id,
+                                    ['price' => $max_price, 'quantity' => 0]
+                                );
+
+                        }
+                    );
+            }
+            if ($number_of_product_variant == 3) {// add to second_variant_combination_table
+                VariantCombination::query()
+                    ->each(
+                        function (VariantCombination $variant_combination) use ($variant_value) {
+                            $max_price = max($variant_combination->price, $variant_value->price);
+                            $variant_combination->combinations()
+                                ->attach(
+                                    $variant_value,
+                                    ['price' => $max_price, 'quantity' => 0]
+                                );
+                            // $variant_value->second_level_combinations()
+                            //     ->attach(
+                            //         $variant_combination->id,
+                            //         ['price' => $max_price, 'quantity' => '0.00']
+                            //     );
+                        }
+                    );
+            }
+
         });
     }
 
@@ -89,7 +143,7 @@ class VariantValue extends Model
     }
 
     //variant value second_variant_combination through variant_combination
-    public function late_combined_by(): HasManyThrough
+    public function second_level_combinations(): HasManyThrough
     {
         return $this->hasManyThrough(
             SecondVariantCombination::class,
@@ -105,7 +159,7 @@ class VariantValue extends Model
         return $this->hasManyThrough(
             SecondVariantCombination::class,
             VariantCombination::class,
-            'first_variant_value_id', // Foreign key on the variant_combaination table...
+            'second_variant_value_id', // Foreign key on the variant_combaination table...
             'variant_combination_id', // Foreign key on the second_variant_combaination table
         );
     }

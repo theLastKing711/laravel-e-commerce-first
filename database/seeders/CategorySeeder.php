@@ -19,7 +19,7 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $itemCount = 10;
+        $itemCount = 6;
 
         //generate 10 parent categories
         $this->generateParentCategoriesWithProducts($itemCount);
@@ -64,30 +64,58 @@ class CategorySeeder extends Seeder
                 Product::factory()
                     ->state(new Sequence(
                         ['price' => fake()->randomFloat(2, 10, 100)],
-                        ['price' => '0.00']
+                        // ['price' => '0.00']
                     ))
                     ->has(
                         Media::factory()->count(2),
                         'medially'
                     )
-                    ->has(
-                        Variant::factory()
+                    ->afterCreating(function (Product $product) {
+
+                        $VARIANTS = ['اللون', 'الحجم', 'اللمسة'];
+
+                        $variant_map = [
+                            'اللون' => [
+                                'أحمر',
+                                'أزرق',
+                            ],
+                            'الحجم' => [
+                                'صغير',
+                                'وسط',
+                            ],
+                            'اللمسة' => [
+                                'مات',
+                                'نيون',
+                            ],
+                        ];
+
+                        // $random_variant = key(fake()->randomElement($variant_map)); //returns color,size or finish.
+
+                        $shuffled_variants = fake()->shuffleArray($VARIANTS);
+
+                        $variants = Variant::factory()
                             ->state(new Sequence(
-                                ['name' => 'اللون'],
-                                ['name' => 'الحجم'],
+                                ['product_id' => $product->id, 'name' => $shuffled_variants[0]],
+                                ['product_id' => $product->id, 'name' => $shuffled_variants[1]],
+                                ['product_id' => $product->id, 'name' => $shuffled_variants[2]],
                             ))
                             ->has(
                                 // has created booted callback that create variantValue combinations each time a variantValue is created
                                 VariantValue::factory()
                                     // starts at 4 in the second iteration of the variant factory
-                                    ->state(new Sequence(
-                                        ['name' => 'أحمر'],
-                                        ['name' => 'أصفر'],
-                                        ['name' => 'أخضر'],
-                                        ['name' => 'صغير'],
-                                        ['name' => 'وسط'],
-                                        ['name' => 'كبير'],
-                                    ))
+                                    ->state(
+                                        new Sequence(
+                                            // ['name' => $variant_map[$random_variant][0]],
+                                            // ['name' => $variant_map[$random_variant][1]],
+                                            // ['name' => $variant_map[$random_variant][2]]
+                                            ['name' => $variant_map[$shuffled_variants[0]][0]],
+                                            ['name' => $variant_map[$shuffled_variants[0]][1]],
+                                            ['name' => $variant_map[$shuffled_variants[1]][0]],
+                                            ['name' => $variant_map[$shuffled_variants[1]][1]],
+                                            ['name' => $variant_map[$shuffled_variants[2]][0]],
+                                            ['name' => $variant_map[$shuffled_variants[2]][1]],
+                                        )
+                                    )
                                     ->state(function (array $attributes, Variant $variant) {
                                         return [
                                             // 'price' => $variant->product->price === '0.00' ? fake()->randomFloat(2, 10, 100) : '0.00',
@@ -98,11 +126,13 @@ class CategorySeeder extends Seeder
                                         Media::factory()->count(1),
                                         'medially'
                                     )
-                                    ->count(3)
+                                    ->count(2)
                             )
-                            ->count(2)
-                    )
-                    ->count($count)
+                            ->count(rand(0, 3))
+                            ->create();
+
+                        $product->variants()->saveMany($variants);
+                    })
             )
             ->count($count)
             ->create();

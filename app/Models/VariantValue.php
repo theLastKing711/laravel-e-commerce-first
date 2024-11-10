@@ -2,89 +2,23 @@
 
 namespace App\Models;
 
+use App\Interfaces\Mediable;
+use App\Observers\VariantValueObserver;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Log;
+use Illuminate\Support\Collection;
 
 //example small, big, large, cheese, salt
-class VariantValue extends Model
+#[ObservedBy([VariantValueObserver::class])]
+class VariantValue extends Model implements Mediable
 {
     use HasFactory, MediaAlly;
-
-    public static function booted(): void
-    {
-        static::created(function (VariantValue $variant_value) {
-
-            // Log::info($variant_value);
-
-            $variant = Variant::query()
-                ->with([
-                    'product' => [
-                        'variants',
-                    ],
-                ])
-                ->whereId($variant_value->variant_id)
-                ->first();
-
-            $variant_value_ids = $variant->variantValues()->pluck('id');
-
-            $product = $variant->product;
-
-            $product_price = $product->price;
-
-            $max_of_product_price_and_main_variant_value_price = max($product_price, $variant_value->price);
-
-            $number_of_product_variant = $product->variants()->count();
-
-            if ($number_of_product_variant == 1) {
-                return;
-            }
-            if ($number_of_product_variant == 2) {// add to variant_combination table
-                VariantValue::query()
-                    // ->whereHas('variant.product', function ($query) {
-                    //     $query->whereId()
-                    // })
-                    ->whereNotIn('id', $variant_value_ids)
-                    // ->whereNot('variant_id', $variant->id)
-                    // ->where('variant.product.id', $product->id)
-                    ->each(
-                        function (VariantValue $variant_value_to_add) use ($variant_value, $max_of_product_price_and_main_variant_value_price) {
-                            $max_price = max($max_of_product_price_and_main_variant_value_price, $variant_value_to_add->price);
-                            $variant_value->combinations()
-                                ->attach(
-                                    $variant_value_to_add->id,
-                                    ['price' => $max_price, 'quantity' => 0]
-                                );
-
-                        }
-                    );
-            }
-            if ($number_of_product_variant == 3) {// add to second_variant_combination_table
-                VariantCombination::query()
-                    ->each(
-                        function (VariantCombination $variant_combination) use ($variant_value) {
-                            $max_price = max($variant_combination->price, $variant_value->price);
-                            $variant_combination->combinations()
-                                ->attach(
-                                    $variant_value,
-                                    ['price' => $max_price, 'quantity' => 0]
-                                );
-                            // $variant_value->second_level_combinations()
-                            //     ->attach(
-                            //         $variant_combination->id,
-                            //         ['price' => $max_price, 'quantity' => '0.00']
-                            //     );
-                        }
-                    );
-            }
-
-        });
-    }
 
     public function medially(): MorphMany
     {
@@ -112,7 +46,7 @@ class VariantValue extends Model
             'variant_combination',
             'first_variant_value_id',
             'second_variant_value_id'
-        );
+        )->withPivot('id', 'is_thumb');
     }
 
     /**
@@ -128,7 +62,7 @@ class VariantValue extends Model
             'variant_combination',
             'second_variant_value_id',
             'first_variant_value_id',
-        );
+        )->withPivot('id', 'is_thumb');
     }
 
     //combination of variant_combination and variant value
@@ -137,9 +71,9 @@ class VariantValue extends Model
         return $this->belongsToMany(
             VariantValue::class,
             'second_variant_combination',
-            'variant_id',
-            'first_variant_value_id',
-        );
+            'variant_value_id',
+            'variant_combination_id',
+        )->withPivot('id', 'is_thumb', 'price');
     }
 
     //variant value second_variant_combination through variant_combination
@@ -164,19 +98,105 @@ class VariantValue extends Model
         );
     }
 
-    // public function generateValuesCombinations()
-    // {
-    //     $product_price = $this->variant->product->price;
+    public function getProduct(): Product
+    {
+        return Product::query()
+            ->with([
+                'variants' => [
+                    'variantValues' => [
+                        'variant',
+                        'combinations' => [
+                            'combinations',
+                        ],
+                        'late_combinations',
+                    ],
+                ],
+            ])
+            ->whereHas('variants', function ($query) { // select the product that has variants that has varian_value with id of $newly_created_variant_value
+                $query->whereHas('variantValues', function ($query) {
+                    $query->where('id', $this->id);
+                });
+            })
+            ->first();
+    }
 
-    //     $max_of_product_price_and_main_variant_price = max($product_price, $this->price);
+    public function attachCombinationsIds(Collection $combinations_ids): void
+    {
+        $this
+            ->combinations()
+            ->attach(
+                $combinations_ids,
+                ['is_thumb' => false, 'quantity' => 0]
+            );
+    }
 
-    //     $all_but_current_variant_values = VariantValue::query()
-    //         ->whereNot('variant_id', $this->variant->id)
-    //         ->where('variant.product.id', $this->product->id)
-    //         ->each(function (VariantValue $variant_value_to_add) use ($this, $max_of_product_price_and_main_variant_price) {
-    //             $max_price = max($max_of_product_price_and_main_variant_price, $variant_value_to_add->price);
-    //             $this->combinations()->attach($variant_value_to_add->id, ['price' => $max_price]);
-    //         });
+    public function attachLateCombinationsIds(Collection $combinations_ids): void
+    {
+        $this
+            ->late_combinations()
+            ->attach(
+                $combinations_ids,
+                ['is_thumb' => false, 'quantity' => 0]
+            );
+    }
 
-    // }
+    public function setCombinationPricesToMaxValue(Product $product)
+    {
+        $product_price =
+                $product
+                    ->price;
+
+        $max_of_product_price_and_main_variant_value_price =
+            max($product_price, $this->price);
+
+        $this
+            ->combinations()
+            ->each(function ($variantValue) use ($max_of_product_price_and_main_variant_value_price) {
+
+                $max_price = max($max_of_product_price_and_main_variant_value_price, $variantValue->price);
+
+                VariantCombination::query()
+                    ->firstWhere('id', $variantValue->pivot->id)
+                    ->update(['price' => $max_price]);
+
+            });
+
+    }
+
+    public function SetLateCombinationPricesToMaxValue(Product $product)
+    {
+        $product_price = $product->price;
+
+        $max_of_product_price_and_main_variant_value_price = max($product_price, $this->price);
+
+        $this
+            ->late_combinations()
+            ->each(function (VariantValue $variantValue) use ($max_of_product_price_and_main_variant_value_price) {
+
+                $max_price = max($max_of_product_price_and_main_variant_value_price, $variantValue->pivot->price);
+
+                SecondVariantCombination::query()
+                    ->firstWhere('id', $variantValue->pivot->id)
+                    ->update(['price' => $max_price]);
+
+            });
+    }
+
+    public function setCombinationThumbToTrueById(int $variant_value_id)
+    {
+        $this->combinations()
+            ->updateExistingPivot(
+                $variant_value_id,
+                ['is_thumb' => true]
+            );
+    }
+
+    public function setLateCombinationThumbToTrueById(int $second_varaiont_combination_id)
+    {
+        $this->late_combinations()
+            ->updateExistingPivot(
+                $second_varaiont_combination_id,
+                ['is_thumb' => true]
+            );
+    }
 }

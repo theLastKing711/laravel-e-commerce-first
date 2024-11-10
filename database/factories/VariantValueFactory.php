@@ -21,6 +21,7 @@ class VariantValueFactory extends Factory
             'name' => 'asldkfj',
             'price' => $this->faker->randomFloat(2, 10, 100),
             'available' => $this->faker->numberBetween(0, 5),
+            'is_thumb' => false,
         ];
     }
 

@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('second_variant_combination', function (Blueprint $table) {
             $table->id();
             $table->foreignId('variant_combination_id');
-            $table->foreignId('variant_id');
+            $table->foreignId('variant_value_id');
+            $table->boolean('is_thumb');
             $table->decimal('price')->nullable();
             $table->integer('quantity');
             $table->timestamps();

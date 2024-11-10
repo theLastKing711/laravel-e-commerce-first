@@ -34,27 +34,35 @@ class GetProductDetailsController extends Controller
                 '
                 case
                 when (
-                select count(*)
-                from user_favourite_product
-                where exists (
-                        select true
-                        where user_favourite_product.product_id = products.id
-                        and user_favourite_product.user_id = ?
-                      )
+                    select count(*)
+                    from user_favourite_product
+                    where exists (
+                            select true
+                            where user_favourite_product.product_id = products.id
+                            and user_favourite_product.user_id = ?
+                        )
                 ) >= 1
                 then 1
                 else 0
                 end as is_favourite',
                 [21]
             )
-            ->with('medially', function ($query) {
-                $query->select('medially_id', 'file_url')->first();
-            })
+            ->with(
+                [
+                    'medially' => function ($query) {
+                        $query->select('medially_id', 'file_url')->first();
+                    },
+                    'variants' => [
+                        'medially:medially_id,file_url',
+                        'variantValues' => [
+                            'medially:medially_id,file_url',
+                        ],
+                    ],
+                ]
+            )
             ->first();
 
         return GetProductDetailsData::from($product);
-
-        return $product;
 
     }
 }

@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
+use App\Interfaces\Mediable;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 //example size, flavour .. etc
-class Variant extends Model
+class Variant extends Model implements Mediable
 {
-    use HasFactory;
+    use HasFactory, MediaAlly;
+
+    public function medially(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
 
     /**
      * Get the product that owns the Variant
@@ -30,22 +39,11 @@ class Variant extends Model
         return $this->hasMany(VariantValue::class);
     }
 
-    // public function generateValuesCombinations()
-    // {
-    //     $product_price = $this->product->price;
-
-    //     $all_but_current_variant_values = VariantValue::query()
-    //         ->whereNot('variant_id', $this->id)
-    //         ->where('variant.product.id', $this->product_id)
-    //         ->get();
-
-    //     $this->variantValues()
-    //         ->each(function (VariantValue $variant_value) use ($all_but_current_variant_values, $product_price) {
-
-    //             $max_price = max($product_price, $variant_value->price);
-
-    //             $variant_value->combinations()
-    //                 ->saveMany($all_but_current_variant_values, ['price' => $max_price]);
-    //         });
-    // }
+    /**
+     * Get all of the combinations for the Variant
+     */
+    public function combinations(): HasManyThrough
+    {
+        return $this->hasManyThrough(VariantCombination::class, VariantValue::class, 'variant_id', 'first_variant_value_id');
+    }
 }

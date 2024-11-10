@@ -94,7 +94,7 @@ class CategorySeeder extends Seeder
                         $shuffled_variants = fake()->shuffleArray($VARIANTS);
 
                         $variants = Variant::factory()
-                            ->state(new Sequence(
+                            ->state(new Sequence(// git
                                 ['product_id' => $product->id, 'name' => $shuffled_variants[0]],
                                 ['product_id' => $product->id, 'name' => $shuffled_variants[1]],
                                 ['product_id' => $product->id, 'name' => $shuffled_variants[2]],
@@ -102,18 +102,16 @@ class CategorySeeder extends Seeder
                             ->has(
                                 // has created booted callback that create variantValue combinations each time a variantValue is created
                                 VariantValue::factory()
-                                    // starts at 4 in the second iteration of the variant factory
+                                    // starts at 3 in the second iteration of the variant factory
+                                    // count 3 * 2 = 6 items max.
                                     ->state(
                                         new Sequence(
-                                            // ['name' => $variant_map[$random_variant][0]],
-                                            // ['name' => $variant_map[$random_variant][1]],
-                                            // ['name' => $variant_map[$random_variant][2]]
-                                            ['name' => $variant_map[$shuffled_variants[0]][0]],
-                                            ['name' => $variant_map[$shuffled_variants[0]][1]],
-                                            ['name' => $variant_map[$shuffled_variants[1]][0]],
-                                            ['name' => $variant_map[$shuffled_variants[1]][1]],
-                                            ['name' => $variant_map[$shuffled_variants[2]][0]],
-                                            ['name' => $variant_map[$shuffled_variants[2]][1]],
+                                            ['name' => $variant_map[$shuffled_variants[0]][0], 'is_thumb' => true],
+                                            ['name' => $variant_map[$shuffled_variants[0]][1], 'is_thumb' => false],
+                                            ['name' => $variant_map[$shuffled_variants[1]][0], 'is_thumb' => false],
+                                            ['name' => $variant_map[$shuffled_variants[1]][1], 'is_thumb' => true],
+                                            ['name' => $variant_map[$shuffled_variants[2]][0], 'is_thumb' => false],
+                                            ['name' => $variant_map[$shuffled_variants[2]][1], 'is_thumb' => true],
                                         )
                                     )
                                     ->state(function (array $attributes, Variant $variant) {

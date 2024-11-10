@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('variant_values', function (Blueprint $table) {
             $table->id();
             $table->foreignId('variant_id')->constrained();
+            $table->boolean('is_thumb');
             $table->string('name');
             $table->decimal('price');
             $table->integer('available'); // number of items in inventory

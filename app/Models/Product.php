@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enum\Unit;
+use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Database\Factories\ProductFactory;
 use Eloquent;
@@ -13,7 +14,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection as SupportCollection;
 use Log;
 
 use function explode;
@@ -69,11 +72,16 @@ use function strlen;
  *
  * @mixin Eloquent
  */
-class Product extends Model
+class Product extends Model implements Mediable
 {
     protected $guarded = ['id'];
 
     use HasFactory, MediaAlly;
+
+    public function medially(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
 
     public function brands(): BelongsToMany
     {
@@ -158,5 +166,162 @@ class Product extends Model
 
             }
         );
+    }
+
+    public function getProductVariantByVariantValueId(int $variant_value_id): VariantValue
+    {
+        return $this
+            ->variants
+            ->pluck('variantValues')
+            ->flatten()
+            ->firstWhere('id', $variant_value_id)
+            ->variant;
+    }
+
+    /**
+       @return Collection<int, int>
+     */
+    public function getVariantCombinationsIds(): SupportCollection
+    {
+        return
+            $this->getVariantCombinations()
+                ->pluck('pivot.id');
+    }
+
+    /** @return Collection<int, VariantValue> */
+    public function getVariantCombinations(): SupportCollection
+    {
+        return $this
+            ->variants
+            ->pluck('variantValues')
+            ->flatten()
+            ->pluck('combinations')
+            ->flatten();
+    }
+
+    public function hasThumbVariantCombination()
+    {
+
+        $product_variant_combinations =
+            $this->getThumbVariantCombination();
+
+        return $product_variant_combinations
+            == null ? false : true;
+
+    }
+
+    public function getThumbVariantCombination(): ?VariantValue
+    {
+        return $this
+            ->variants
+            ->pluck('variantValues')
+            ->flatten()
+            ->pluck('combinations')
+            ->flatten()
+            ->firstWhere('pivot.is_thumb', true);
+    }
+
+    /** @return Collection<int, int>  */
+    public function getOtherVariantsVariantValueIds(int $variant_value_id): SupportCollection
+    {
+        $variant =
+            $this
+                ->variants
+                ->pluck('variantValues')
+                ->flatten()
+                ->firstWhere('id', $variant_value_id)
+                ->variant;
+
+        $variant_value_variant_ids =
+            $variant
+                ->variantValues()
+                ->pluck('id');
+
+        return VariantValue::query()
+            ->whereNotIn('id', $variant_value_variant_ids)
+            ->whereHas('variant', function ($query) {
+                $query->whereHas('product', function ($query) {
+                    $query->id = $this;
+                });
+            })
+            ->pluck('id');
+    }
+
+    public function hasThumbSecondVariantCombination(): bool
+    {
+        return $this
+            ->getFirstThumbSecondVariantCombinationId()
+            == null ? false : true;
+    }
+
+    public function setFirstVariantValueThumbToTrue()
+    {
+        $this
+            ->variants
+            ->pluck('variantValues')
+            ->flatten()
+            ->first()
+            ?->update(['is_thumb' => true]);
+
+    }
+
+    public function setFirstVariantCombinationThumbToTrue()
+    {
+        $this
+            ->getVariantCombinations()
+            ->first()
+            ?->update(['is_thumb' => true]);
+
+    }
+
+    public function setFirstSecondVariantCombinationValueThumbToTrue()
+    {
+        $this
+            ->getSecondVariantCombinations()
+            ->first()
+            ?->update(['is_thumb' => true]);
+
+    }
+
+    public function getFirstThumbSecondVariantCombinationId(): ?int
+    {
+        return $this
+            ->getSecondVariantCombinations()
+            ->firstWhere('pivot.is_thumb', true)
+            ?->id;
+    }
+
+    public function getFirstSecondVariantCombinationId(): ?int
+    {
+        return $this
+            ->getSecondVariantCombinations()
+            ->first()
+            ?->id;
+    }
+
+    /** @return Collection<int, VariantValue> */
+    public function getSecondVariantCombinations(): SupportCollection
+    {
+        return $this
+            ->variants
+            ->pluck('variantValues')
+            ->flatten()
+            ->pluck('late_combinations')
+            ->flatten();
+    }
+
+    public function getVariantsCount(): int
+    {
+        return $this->variants()->count();
+    }
+
+    public function hasTwoVariants()
+    {
+        return $this->getVariantsCount() == 2;
+    }
+
+    public function hasThreeVariants()
+    {
+        return $this->getVariantsCount() == 3;
     }
 }

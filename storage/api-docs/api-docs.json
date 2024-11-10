@@ -2814,20 +2814,30 @@
             "GetProductDetailsData": {
                 "properties": {
                     "id": {
+                        "description": "VariantData>",
                         "type": "integer"
                     },
                     "name": {
+                        "description": "VariantData>",
                         "type": "string"
                     },
                     "price": {
+                        "description": "VariantData>",
                         "type": "string"
                     },
                     "is_favourite": {
+                        "description": "VariantData>",
                         "type": "boolean"
                     },
-                    "image_url": {
-                        "type": "string",
-                        "nullable": true
+                    "image": {
+                        "$ref": "#/components/schemas/SingleMedia"
+                    },
+                    "variants": {
+                        "description": "VariantData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VariantData"
+                        }
                     }
                 },
                 "type": "object"
@@ -2858,6 +2868,51 @@
                 "properties": {
                     "id": {
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "VariantData": {
+                "properties": {
+                    "id": {
+                        "description": "VaraintValueData>",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "VaraintValueData>",
+                        "type": "string"
+                    },
+                    "variant_values": {
+                        "description": "VaraintValueData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VariantValueData"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "VariantValueData": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "available": {
+                        "type": "integer"
+                    },
+                    "thumbnail": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/SingleMedia"
+                            }
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -2980,6 +3035,17 @@
             "LoginFailedResponse": {
                 "properties": {
                     "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SingleMedia": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "file_url": {
                         "type": "string"
                     }
                 },

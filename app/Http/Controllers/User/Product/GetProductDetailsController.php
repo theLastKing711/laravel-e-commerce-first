@@ -50,7 +50,9 @@ class GetProductDetailsController extends Controller
             ->with(
                 [
                     'medially' => function ($query) {
-                        $query->select('medially_id', 'file_url')->first();
+                        $query
+                            ->select('medially_id', 'file_url')
+                            ->first();
                     },
                     'variants' => [
                         'medially:medially_id,file_url',

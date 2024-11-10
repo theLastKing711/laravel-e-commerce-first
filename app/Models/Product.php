@@ -24,6 +24,8 @@ use function str_contains;
 use function strlen;
 
 /**
+ * 
+ *
  * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -44,7 +46,6 @@ use function strlen;
  * @property-read int|null $categories_count
  * @property-read Collection<int, OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
- *
  * @method static ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product hasName(?string $name)
  * @method static Builder|Product newModelQuery()
@@ -64,12 +65,14 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
- *
  * @property-read Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
  * @property-read int|null $medially_count
  * @property-read Collection<int, \App\Models\User> $favouritedByUsers
  * @property-read int|null $favourited_by_users_count
- *
+ * @property int $is_favourite
+ * @property-read Collection<int, \App\Models\Variant> $variants
+ * @property-read int|null $variants_count
+ * @method static Builder|Product whereIsFavourite($value)
  * @mixin Eloquent
  */
 class Product extends Model implements Mediable
@@ -274,7 +277,7 @@ class Product extends Model implements Mediable
 
     }
 
-    public function setFirstSecondVariantCombinationValueThumbToTrue()
+    public function setFirstSecondVariantCombinationThumbToTrue()
     {
         $this
             ->getSecondVariantCombinations()

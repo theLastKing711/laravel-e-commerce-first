@@ -16,6 +16,44 @@ use Illuminate\Support\Collection;
 
 //example small, big, large, cheese, salt
 #[ObservedBy([VariantValueObserver::class])]
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $variant_id
+ * @property int $is_thumb
+ * @property string $name
+ * @property string $price
+ * @property int $available
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, VariantValue> $combinations
+ * @property-read int|null $combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, VariantValue> $combined_by
+ * @property-read int|null $combined_by_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, VariantValue> $late_combinations
+ * @property-read int|null $late_combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SecondVariantCombination> $second_level_combinations
+ * @property-read int|null $second_level_combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SecondVariantCombination> $second_level_combined_by
+ * @property-read int|null $second_level_combined_by_count
+ * @property-read \App\Models\Variant $variant
+ * @method static \Database\Factories\VariantValueFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue query()
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereAvailable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereIsThumb($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereVariantId($value)
+ * @mixin \Eloquent
+ */
 class VariantValue extends Model implements Mediable
 {
     use HasFactory, MediaAlly;

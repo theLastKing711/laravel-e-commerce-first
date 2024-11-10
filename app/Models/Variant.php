@@ -12,6 +12,32 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 //example size, flavour .. etc
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantCombination> $combinations
+ * @property-read int|null $combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
+ * @property-read \App\Models\Product $product
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantValue> $variantValues
+ * @property-read int|null $variant_values_count
+ * @method static \Database\Factories\VariantFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Variant extends Model implements Mediable
 {
     use HasFactory, MediaAlly;

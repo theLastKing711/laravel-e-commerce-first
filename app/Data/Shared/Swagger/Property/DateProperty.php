@@ -13,7 +13,7 @@ class DateProperty extends OAT\Property
             schema: 'string',
             type: 'string',
             format: 'datetime',
-            default: '2024-09-02 18:31:45',
+            default: $default,
             pattern: 'YYYY-MM-DD',
             example: '2024-09-02 18:31:45',
         );

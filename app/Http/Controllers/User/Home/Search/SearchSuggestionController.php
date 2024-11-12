@@ -48,15 +48,20 @@ class SearchSuggestionController extends Controller
                         'variantValues' => function ($query) {
                             $query
                                 ->where('is_thumb', true)
-                                ->with(['medially', 'combinations' => function ($query) {
-                                    $query
-                                        ->where('is_thumb', true)
-                                        ->with(['medially', 'combinations' => function ($query) {
+                                ->with(
+                                    [
+                                        'medially',
+                                        'combinations' => function ($query) {
                                             $query
                                                 ->where('is_thumb', true)
-                                                ->with('medially');
-                                        }]);
-                                }]);
+                                                ->with(['medially', 'combinations' => function ($query) {
+                                                    $query
+                                                        ->where('is_thumb', true)
+                                                        ->with('medially');
+                                                }]);
+                                        },
+                                    ]
+                                );
                         },
                     ],
                 ]

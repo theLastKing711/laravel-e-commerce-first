@@ -17,8 +17,6 @@ use Illuminate\Support\Collection;
 //example small, big, large, cheese, salt
 #[ObservedBy([VariantValueObserver::class])]
 /**
- * 
- *
  * @property int $id
  * @property int $variant_id
  * @property int $is_thumb
@@ -40,6 +38,7 @@ use Illuminate\Support\Collection;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SecondVariantCombination> $second_level_combined_by
  * @property-read int|null $second_level_combined_by_count
  * @property-read \App\Models\Variant $variant
+ *
  * @method static \Database\Factories\VariantValueFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|VariantValue newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VariantValue newQuery()
@@ -52,6 +51,7 @@ use Illuminate\Support\Collection;
  * @method static \Illuminate\Database\Eloquent\Builder|VariantValue wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantValue whereVariantId($value)
+ *
  * @mixin \Eloquent
  */
 class VariantValue extends Model implements Mediable
@@ -79,12 +79,14 @@ class VariantValue extends Model implements Mediable
     //exmple small(id) and pizza(id) or medium(id) and salt(id)
     public function combinations(): BelongsToMany
     {
-        return $this->belongsToMany(
-            VariantValue::class,
-            'variant_combination',
-            'first_variant_value_id',
-            'second_variant_value_id'
-        )->withPivot('id', 'is_thumb');
+        return $this
+            ->belongsToMany(
+                VariantValue::class,
+                'variant_combination',
+                'first_variant_value_id',
+                'second_variant_value_id'
+            )
+            ->withPivot('id', 'is_thumb');
     }
 
     /**
@@ -95,23 +97,27 @@ class VariantValue extends Model implements Mediable
     {
         // return Product::categories()->sync();
 
-        return $this->belongsToMany(
-            VariantValue::class,
-            'variant_combination',
-            'second_variant_value_id',
-            'first_variant_value_id',
-        )->withPivot('id', 'is_thumb');
+        return $this
+            ->belongsToMany(
+                VariantValue::class,
+                'variant_combination',
+                'second_variant_value_id',
+                'first_variant_value_id',
+            )
+            ->withPivot('id', 'is_thumb');
     }
 
     //combination of variant_combination and variant value
     public function late_combinations(): BelongsToMany
     {
-        return $this->belongsToMany(
-            VariantValue::class,
-            'second_variant_combination',
-            'variant_value_id',
-            'variant_combination_id',
-        )->withPivot('id', 'is_thumb', 'price');
+        return
+            $this->belongsToMany(
+                VariantValue::class,
+                'second_variant_combination',
+                'variant_value_id',
+                'variant_combination_id',
+            )
+                ->withPivot('id', 'is_thumb', 'price');
     }
 
     //variant value second_variant_combination through variant_combination
@@ -158,6 +164,9 @@ class VariantValue extends Model implements Mediable
             ->first();
     }
 
+    /**
+     * @param  Collection<int,int>  $combinations_ids
+     */
     public function attachCombinationsIds(Collection $combinations_ids): void
     {
         $this
@@ -180,9 +189,8 @@ class VariantValue extends Model implements Mediable
 
     public function setCombinationPricesToMaxValue(Product $product)
     {
-        $product_price =
-                $product
-                    ->price;
+        $product_price = $product
+                            ->price;
 
         $max_of_product_price_and_main_variant_value_price =
             max($product_price, $this->price);
@@ -222,7 +230,8 @@ class VariantValue extends Model implements Mediable
 
     public function setCombinationThumbToTrueById(int $variant_value_id)
     {
-        $this->combinations()
+        $this
+            ->combinations()
             ->updateExistingPivot(
                 $variant_value_id,
                 ['is_thumb' => true]
@@ -231,7 +240,8 @@ class VariantValue extends Model implements Mediable
 
     public function setLateCombinationThumbToTrueById(int $second_varaiont_combination_id)
     {
-        $this->late_combinations()
+        $this
+            ->late_combinations()
             ->updateExistingPivot(
                 $second_varaiont_combination_id,
                 ['is_thumb' => true]

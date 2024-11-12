@@ -20,7 +20,7 @@ class SingleMedia extends Data
     ) {
     }
 
-    public static function fromModel(Mediable $mediable): self
+    public static function fromModel(Mediable $mediable): ?self
     {
         if ($mediable->medially()->count() == 0) {
 

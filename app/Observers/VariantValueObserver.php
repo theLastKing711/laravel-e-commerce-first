@@ -15,9 +15,7 @@ class VariantValueObserver
     {
         $newly_created_variant_value_product =
             $newly_created_variant_value
-                ->getProduct(
-                    $newly_created_variant_value
-                );
+                ->getProduct();
 
         $number_of_product_variants =
             $newly_created_variant_value_product
@@ -66,11 +64,12 @@ class VariantValueObserver
 
     private function handleProductHasTwoVariants(Product $newly_created_variant_value_product, VariantValue $newly_created_variant_value)
     {
+
         $product_other_variants_variant_values_ids =
-        $newly_created_variant_value_product
-            ->getOtherVariantsVariantValueIds(
-                $newly_created_variant_value->id
-            );
+            $newly_created_variant_value_product
+                ->getOtherVariantsVariantValueIdsByVariantValueId(
+                    $newly_created_variant_value->id
+                );
 
         $newly_created_variant_value
             ->attachCombinationsIds(
@@ -108,9 +107,7 @@ class VariantValueObserver
 
         $product_variant_combinations_ids =
             $newly_created_variant_value_product
-                ->getVariantCombinationsIds(
-                    $newly_created_variant_value_product
-                );
+                ->getVariantCombinationsIds();
 
         $newly_created_variant_value
             ->attachLateCombinationsIds(
@@ -157,6 +154,7 @@ class VariantValueObserver
      */
     public function deleted(VariantValue $newly_deleted_variant_value): void
     {
+
         $newly_deleted_variant_value_product =
             $newly_deleted_variant_value
                 ->getProduct();
@@ -176,7 +174,7 @@ class VariantValueObserver
 
         $product_has_one_variant =
             $this->productHasOneVariant(
-                $product_variants_count
+                25
             );
 
         if ($product_has_one_variant) {
@@ -214,12 +212,12 @@ class VariantValueObserver
         if ($product_has_three_variant) {
 
             $product_has_secondary_thumb_variant_combination =
-            $newly_deleted_variant_value_product
-                ->hasThumbSecondVariantCombination();
+                $newly_deleted_variant_value_product
+                    ->hasThumbSecondVariantCombination();
 
             if (! $product_has_secondary_thumb_variant_combination) {
                 $newly_deleted_variant_value_product
-                    ->setFirstSecondVariantCombinationValueThumbToTrue();
+                    ->setFirstSecondVariantCombinationThumbToTrue();
             }
 
         }

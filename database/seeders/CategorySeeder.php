@@ -7,11 +7,17 @@ use App\Models\Media;
 use App\Models\Product;
 use App\Models\Variant;
 use App\Models\VariantValue;
+use App\Services\VariantValue\VariantValueCreationService;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
+    public function __construct(public VariantValueCreationService $variantValueCreationService)
+    {
+
+    }
+
     /**
      * Run the database seeds.
      * number of categories with null parent is half the specified number
@@ -119,6 +125,9 @@ class CategorySeeder extends Seeder
                                             // 'price' => $variant->product->price === '0.00' ? fake()->randomFloat(2, 10, 100) : '0.00',
                                             'price' => fake()->randomFloat(2, 10, 100),
                                         ];
+                                    })
+                                    ->afterCreating(function (VariantValue $variantValue) {
+                                        $variantValueCreationService->handle($variantValue);
                                     })
                                     ->has(
                                         Media::factory()->count(1),

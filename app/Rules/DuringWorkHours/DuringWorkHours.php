@@ -2,6 +2,7 @@
 
 namespace App\Rules\DuringWorkHours;
 
+use App\Rules\Product\ActiveProduct\ActiveProductRule;
 use Attribute;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;

@@ -37,7 +37,7 @@ class FavouriteProductController extends Controller
         );
 
         $logged_user = User::query()
-            ->whereId(Auth::User()->id)
+            ->whereId(Auth::user()->id)
             ->first();
 
         $logged_user->favouriteProducts()

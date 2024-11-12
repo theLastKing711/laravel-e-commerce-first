@@ -144,7 +144,7 @@ class OrderController extends Controller
             ->first();
 
         $order->update([
-            'status' => $request->status,
+            'status' => $request->order_status,
         ]);
 
     }

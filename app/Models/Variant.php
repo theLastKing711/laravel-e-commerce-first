@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 //example size, flavour .. etc
 /**
- * 
- *
  * @property int $id
  * @property int $product_id
  * @property string $name
@@ -27,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property-read \App\Models\Product $product
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantValue> $variantValues
  * @property-read int|null $variant_values_count
+ *
  * @method static \Database\Factories\VariantFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Variant newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Variant newQuery()
@@ -36,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Variant extends Model implements Mediable
@@ -49,8 +49,6 @@ class Variant extends Model implements Mediable
 
     /**
      * Get the product that owns the Variant
-     *
-     * @return \Illuminate\Product\Eloquent\Relations\BelongsTo
      */
     public function product(): BelongsTo
     {

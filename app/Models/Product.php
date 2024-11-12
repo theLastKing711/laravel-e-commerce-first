@@ -24,8 +24,6 @@ use function str_contains;
 use function strlen;
 
 /**
- * 
- *
  * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -46,6 +44,7 @@ use function strlen;
  * @property-read int|null $categories_count
  * @property-read Collection<int, OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
+ *
  * @method static ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product hasName(?string $name)
  * @method static Builder|Product newModelQuery()
@@ -65,6 +64,7 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
+ *
  * @property-read Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
  * @property-read int|null $medially_count
  * @property-read Collection<int, \App\Models\User> $favouritedByUsers
@@ -72,7 +72,9 @@ use function strlen;
  * @property int $is_favourite
  * @property-read Collection<int, \App\Models\Variant> $variants
  * @property-read int|null $variants_count
+ *
  * @method static Builder|Product whereIsFavourite($value)
+ *
  * @mixin Eloquent
  */
 class Product extends Model implements Mediable
@@ -155,11 +157,11 @@ class Product extends Model implements Mediable
                 }
                 $list = explode('.', $value);
 
-                if (strlen($list[1] > 2)) {
+                if (strlen($list[1]) > 2) {
                     $list[1] = substr($list[1], 0, 2);
                 }
 
-                while (strlen($list[1] < 2)) {
+                while (strlen($list[1]) < 2) {
                     $list[1] = $list[1].'0';
                 }
 
@@ -182,16 +184,17 @@ class Product extends Model implements Mediable
     }
 
     /**
-       @return Collection<int, int>
+       @return SupportCollection<int, int>
      */
     public function getVariantCombinationsIds(): SupportCollection
     {
         return
-            $this->getVariantCombinations()
+            $this
+                ->getVariantCombinations()
                 ->pluck('pivot.id');
     }
 
-    /** @return Collection<int, VariantValue> */
+    /** @return SupportCollection<int, VariantValue> */
     public function getVariantCombinations(): SupportCollection
     {
         return $this
@@ -224,8 +227,8 @@ class Product extends Model implements Mediable
             ->firstWhere('pivot.is_thumb', true);
     }
 
-    /** @return Collection<int, int>  */
-    public function getOtherVariantsVariantValueIds(int $variant_value_id): SupportCollection
+    /** @return SupportCollection<int>  */
+    public function getOtherVariantsVariantValueIdsByVariantValueId(int $variant_value_id): SupportCollection
     {
         $variant =
             $this
@@ -257,7 +260,7 @@ class Product extends Model implements Mediable
             == null ? false : true;
     }
 
-    public function setFirstVariantValueThumbToTrue()
+    public function setFirstVariantValueThumbToTrue(): void
     {
         $this
             ->variants
@@ -268,7 +271,7 @@ class Product extends Model implements Mediable
 
     }
 
-    public function setFirstVariantCombinationThumbToTrue()
+    public function setFirstVariantCombinationThumbToTrue(): void
     {
         $this
             ->getVariantCombinations()
@@ -277,7 +280,7 @@ class Product extends Model implements Mediable
 
     }
 
-    public function setFirstSecondVariantCombinationThumbToTrue()
+    public function setFirstSecondVariantCombinationThumbToTrue(): void
     {
         $this
             ->getSecondVariantCombinations()
@@ -302,7 +305,7 @@ class Product extends Model implements Mediable
             ?->id;
     }
 
-    /** @return Collection<int, VariantValue> */
+    /** @return SupportCollection<int, VariantValue> */
     public function getSecondVariantCombinations(): SupportCollection
     {
         return $this
@@ -318,12 +321,12 @@ class Product extends Model implements Mediable
         return $this->variants()->count();
     }
 
-    public function hasTwoVariants()
+    public function hasTwoVariants(): bool
     {
         return $this->getVariantsCount() == 2;
     }
 
-    public function hasThreeVariants()
+    public function hasThreeVariants(): bool
     {
         return $this->getVariantsCount() == 3;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Data\Admin\Order\PathParameters;
 
+use App\Enum\OrderStatus;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Data;
@@ -20,6 +21,8 @@ class OrderIdPathParameterData extends Data
             FromRouteParameter('id'),
         ]
         public int $id,
+        #[OAT\Property]
+        public OrderStatus $order_status,
     ) {
     }
 }

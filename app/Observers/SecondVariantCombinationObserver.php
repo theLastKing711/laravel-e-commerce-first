@@ -27,8 +27,9 @@ class SecondVariantCombinationObserver
      */
     public function deleted(SecondVariantCombination $newly_deleted_second_variant_combinations): void
     {
-        $newly_deleted_second_variant_combinations_product = $newly_deleted_second_variant_combinations
-            ->getProduct();
+        $newly_deleted_second_variant_combinations_product =
+            $newly_deleted_second_variant_combinations
+                ->getProduct();
 
         $product_has_three_variations =
             $newly_deleted_second_variant_combinations_product

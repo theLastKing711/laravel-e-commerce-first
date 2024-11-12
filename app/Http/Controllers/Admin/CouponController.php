@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Data\Admin\Coupon\CreateCouponData;
 use App\Data\Admin\Coupon\CouponData;
+use App\Data\Admin\Coupon\CreateCouponData;
 use App\Data\Admin\Coupon\PathParameters\CouponIdPathParameterData;
 use App\Data\Admin\Coupon\UpdateCouponData;
 use App\Data\Shared\Swagger\Request\JsonRequestBody;
@@ -13,7 +13,6 @@ use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use App\Models\Group;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Log;
 use OpenApi\Attributes as OAT;
@@ -30,7 +29,6 @@ use OpenApi\Attributes as OAT;
 ]
 class CouponController extends Controller
 {
-
     #[OAT\Get(path: '/admin/coupons', tags: ['coupons'])]
     #[SuccessListResponse(CouponData::class, 'The Coupons were successfully fetched')]
     public function index()
@@ -53,7 +51,6 @@ class CouponController extends Controller
                 ->get()
         );
     }
-
 
     #[OAT\Get(path: '/admin/coupons/{id}', tags: ['coupons'])]
     #[SuccessItemResponse(CouponData::class, 'The Coupon was successfully fetched')]
@@ -83,7 +80,6 @@ class CouponController extends Controller
     /**
      * Update the specified resource in storage.
      */
-
     #[OAT\Patch(path: '/admin/coupons/{id}', tags: ['coupons'])]
     #[JsonRequestBody(UpdateCouponData::class)]
     #[SuccessNoContentResponse('The Coupon was updated successfully')]
@@ -117,7 +113,6 @@ class CouponController extends Controller
         return true;
     }
 
-
     #[OAT\Post(path: '/admin/coupons/{id}', tags: ['coupons'])]
     #[JsonRequestBody(CreateCouponData::class)]
     #[SuccessNoContentResponse('The Coupon was created successfully')]
@@ -149,14 +144,10 @@ class CouponController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
     #[OAT\Delete(path: '/admin/coupons/{id}', tags: ['coupons'])]
     #[SuccessNoContentResponse('The Coupon was deleted successfully')]
     public function destroy(CouponIdPathParameterData $request): bool
     {
-
-        User::with('lastname');
-
         Log::info('Accessing CouponController destroy method');
 
         $couponToDelete = Coupon::find($request->id);

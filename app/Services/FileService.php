@@ -15,7 +15,7 @@ class FileService
         }
 
         if (! Storage::exists($directory)) {
-            Storage::makeDirectory($directory, 0777, true, true);
+            Storage::makeDirectory($directory);
         }
         Storage::put($directory, $file);
 

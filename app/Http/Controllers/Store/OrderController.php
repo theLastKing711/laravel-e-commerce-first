@@ -40,8 +40,9 @@ class OrderController extends Controller
     {
         Log::info('accessing Store OrderController with id', ['id' => $request->id]);
 
-        $order = Order::with('user')
-            ->first($request->id);
+        $order = Order::query()
+            ->with('user')
+            ->firstWhere('id', $request->id);
 
         $order->update([
             'status' => OrderStatus::Accepted->value,

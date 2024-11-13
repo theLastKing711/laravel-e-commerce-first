@@ -7,10 +7,8 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-#[ObservedBy(SecondVariantCombinationObserver::class)]
+// #[ObservedBy(SecondVariantCombinationObserver::class)]
 /**
- * 
- *
  * @property int $id
  * @property int $variant_combination_id
  * @property int $variant_value_id
@@ -19,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property int $quantity
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination query()
@@ -30,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantCombinationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantValueId($value)
+ *
  * @mixin \Eloquent
  */
 class SecondVariantCombination extends Pivot

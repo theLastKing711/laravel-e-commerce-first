@@ -23,11 +23,14 @@ class SearchSuggestionData extends Data
     {
         // Log::info('product {product}', ['product' => $product]);
 
-        $variants_count = $product->variants()->count();
+        $product_variants_count =
+            $product
+                ->variants
+                ->count();
 
         //i.e small/red/neon or small/blue/mat
-        if ($variants_count == 3) {
-            $second_variant_combination =
+        if ($product_variants_count == 3) {
+            $product_second_variant_combinations =
                 $product
                     ->variants
                     ->pluck('variantValues')
@@ -36,12 +39,12 @@ class SearchSuggestionData extends Data
                     ->flatten()
                     ->pluck('combinations')
                     ->flatten()
-                    ->first();
+                    ->firstWhere('is_thumb', true);
 
             return new self(
-                id: $second_variant_combination->id,
+                id: $product_second_variant_combinations->id,
                 name: $product->name,
-                image_url: $second_variant_combination
+                image_url: $product_second_variant_combinations
                     ->medially
                     ->first()
                     ->file_url
@@ -49,20 +52,20 @@ class SearchSuggestionData extends Data
         }
 
         //i.e small/red
-        if ($variants_count == 2) {
-            $product_variant =
+        if ($product_variants_count == 2) {
+            $product_variant_combinations =
                 $product
                     ->variants
                     ->pluck('variantValues')// it pastes from 'variantValues' => $value, the $value part to an array -> [[['id' => 25, name => 'variantvalue'],['id' => 20, name => 'otherVariant']]]
                     ->flatten()
                     ->pluck('combinations')
                     ->flatten()
-                    ->first();
+                    ->firstWhere('is_thumb', true);
 
             return new self(
-                id: $product_variant->id,
+                id: $product_variant_combinations->id,
                 name: $product->name,
-                image_url: $product_variant
+                image_url: $product_variant_combinations
                     ->medially
                     ->first()
                     ->file_url
@@ -71,18 +74,18 @@ class SearchSuggestionData extends Data
 
         // image and id is picked from main(is_main) item in variant_values
         //i.e small, medium etc.
-        if ($variants_count == 1) {
-            $product_variant =
+        if ($product_variants_count == 1) {
+            $product_variant_combinations =
                 $product
                     ->variants
                     ->pluck('variantValues')
                     ->flatten()
-                    ->first();
+                    ->firstWhere('is_thumb', true);
 
             return new self(
-                id: $product_variant->id,
+                id: $product_variant_combinations->id,
                 name: $product->name,
-                image_url: $product_variant
+                image_url: $product_variant_combinations
                     ->medially()
                     ->first()
                     ->file_url

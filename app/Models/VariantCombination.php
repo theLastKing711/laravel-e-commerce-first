@@ -9,10 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-#[ObservedBy(VariantCombinationObserver::class)]
+// #[ObservedBy(VariantCombinationObserver::class)]
 /**
- * 
- *
  * @property int $id
  * @property int $first_variant_value_id
  * @property int $second_variant_value_id
@@ -25,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property-read int|null $combinations_count
  * @property-read \App\Models\VariantValue|null $first_variant
  * @property-read \App\Models\VariantValue|null $second_variant
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination query()
@@ -36,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereSecondVariantValueId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class VariantCombination extends Pivot

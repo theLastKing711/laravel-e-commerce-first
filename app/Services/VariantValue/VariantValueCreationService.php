@@ -4,14 +4,28 @@ namespace App\Services\VariantValue;
 
 use App\Models\Product;
 use App\Models\VariantValue;
-use Illuminate\Database\Eloquent\Collection as SupportCollection;
+use Illuminate\Support\Facades\DB;
 
 class VariantValueCreationService
 {
     public function handle(VariantValue $newly_created_variant_value): void
     {
 
+        DB::transaction(function () use ($newly_created_variant_value) {
 
+            $is_newly_created_variant_value_saved =
+                $newly_created_variant_value->save();
+
+            if ($is_newly_created_variant_value_saved) {
+                $this->onVariantValueCreated($newly_created_variant_value);
+            }
+        });
+
+    }
+
+    public function onVariantValueCreated(
+        VariantValue $newly_created_variant_value
+    ) {
         $newly_created_variant_value_product =
             $newly_created_variant_value
                 ->getProduct();
@@ -22,9 +36,7 @@ class VariantValueCreationService
 
         $product_has_one_variant =
             $newly_created_variant_value_product
-                ->productHasOneVariant(
-                    $number_of_product_variants
-                );
+                ->hasOneVariant();
 
         if ($product_has_one_variant) {
             return;
@@ -32,14 +44,12 @@ class VariantValueCreationService
 
         $product_has_two_variants =
             $newly_created_variant_value_product
-                ->productHasTwoVariants(
-                    $number_of_product_variants
-                );
+                ->hasTwoVariants();
 
         // add to variant_combination table i.e small/green small/blue
         if ($product_has_two_variants) {
 
-            $newly_created_variant_value_product
+            $this
                 ->handleProductHasTwoVariants(
                     $newly_created_variant_value_product,
                     $newly_created_variant_value
@@ -49,21 +59,17 @@ class VariantValueCreationService
         }
 
         $product_has_three_variants =
-            $newly_created_variant_value_product
-                ->handleProductHasThreeVariants(
-                    $newly_created_variant_value_product,
-                    $newly_created_variant_value
-                );
+           $newly_created_variant_value_product
+               ->hasThreeVariants();
 
         if ($product_has_three_variants) {
 
-            $newly_created_variant_value_product
+            $this
                 ->handleProductHasThreeVariants(
                     $newly_created_variant_value_product,
                     $newly_created_variant_value
                 );
         }
-
     }
 
     private function handleProductHasTwoVariants(
@@ -147,3 +153,4 @@ class VariantValueCreationService
         }
 
     }
+}

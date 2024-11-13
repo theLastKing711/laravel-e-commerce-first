@@ -34,11 +34,6 @@ class SearchSuggestionController extends Controller
             return [];
         }
 
-        // $product_variant_count = Product::query()
-        //     ->with('variants')
-        //     ->variants()
-        //     ->count();
-
         $search_result = Product::query()
             // ->select('id', 'name')
             ->whereLike('name', $request_search)
@@ -47,18 +42,18 @@ class SearchSuggestionController extends Controller
                     'variants' => [
                         'variantValues' => function ($query) {
                             $query
-                                ->where('is_thumb', true)
                                 ->with(
                                     [
                                         'medially',
                                         'combinations' => function ($query) {
                                             $query
-                                                ->where('is_thumb', true)
-                                                ->with(['medially', 'combinations' => function ($query) {
-                                                    $query
-                                                        ->where('is_thumb', true)
-                                                        ->with('medially');
-                                                }]);
+                                                ->with(
+                                                    [
+                                                        'medially',
+                                                        'combinations' => function ($query) {
+                                                            $query->with('medially');
+                                                        }]
+                                                );
                                         },
                                     ]
                                 );

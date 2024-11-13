@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 
 //example small, big, large, cheese, salt
-#[ObservedBy([VariantValueObserver::class])]
+// #[ObservedBy([VariantValueObserver::class])]
 /**
  * @property int $id
  * @property int $variant_id

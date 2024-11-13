@@ -127,7 +127,9 @@ class CategorySeeder extends Seeder
                                         ];
                                     })
                                     ->afterCreating(function (VariantValue $variantValue) {
-                                        $variantValueCreationService->handle($variantValue);
+                                        $this
+                                            ->variantValueCreationService
+                                            ->onVariantValueCreated($variantValue);
                                     })
                                     ->has(
                                         Media::factory()->count(1),

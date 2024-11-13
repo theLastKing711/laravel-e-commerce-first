@@ -172,9 +172,14 @@ class VariantValueObserver
             return;
         }
 
+        $product_variants_count =
+            $newly_deleted_variant_value_product
+                ->variants
+                ->count();
+
         $product_has_one_variant =
             $this->productHasOneVariant(
-                25
+                $product_variants_count
             );
 
         if ($product_has_one_variant) {

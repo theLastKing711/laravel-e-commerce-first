@@ -318,7 +318,7 @@ class Product extends Model implements Mediable
 
     public function getVariantsCount(): int
     {
-        return $this->variants->count();
+        return $this->variants()->count();
     }
 
     public function hasOneVariant()

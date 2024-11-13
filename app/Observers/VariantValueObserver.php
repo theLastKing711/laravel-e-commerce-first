@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Models\Product;
 use App\Models\VariantValue;
-use Log;
 
 class VariantValueObserver
 {
@@ -46,13 +45,17 @@ class VariantValueObserver
             return;
         }
 
-        $product_has_three_variants =
-            $this->handleProductHasThreeVariants(
-                $newly_created_variant_value_product,
-                $newly_created_variant_value
-            );
+        // $product_has_three_variants =
+        //     $this->handleProductHasThreeVariants(
+        //         $newly_created_variant_value_product,
+        //         $newly_created_variant_value
+        //     );
 
-        if ($product_has_three_variants) {
+        $product_has_three_variants =
+            $newly_created_variant_value_product
+                ->hasThreeVariants();
+
+        if ($newly_created_variant_value_product->variants) {
 
             $this->handleProductHasThreeVariants(
                 $newly_created_variant_value_product,
@@ -145,8 +148,6 @@ class VariantValueObserver
      */
     public function updated(VariantValue $variantValue): void
     {
-        Log::info($variantValue);
-
     }
 
     /**

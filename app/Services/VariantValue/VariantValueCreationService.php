@@ -14,10 +14,13 @@ class VariantValueCreationService
         DB::transaction(function () use ($newly_created_variant_value) {
 
             $is_newly_created_variant_value_saved =
-                $newly_created_variant_value->save();
+                $newly_created_variant_value
+                    ->save();
 
             if ($is_newly_created_variant_value_saved) {
-                $this->onVariantValueCreated($newly_created_variant_value);
+                $this->onVariantValueCreated(
+                    $newly_created_variant_value
+                );
             }
         });
 
@@ -35,41 +38,42 @@ class VariantValueCreationService
                 ->getVariantsCount();
 
         $product_has_one_variant =
-            $newly_created_variant_value_product
-                ->hasOneVariant();
+            $this->productHasOneVariant(
+                $number_of_product_variants
+            );
 
         if ($product_has_one_variant) {
             return;
         }
 
         $product_has_two_variants =
-            $newly_created_variant_value_product
-                ->hasTwoVariants();
+            $this->productHasTwoVariants(
+                $number_of_product_variants
+            );
 
         // add to variant_combination table i.e small/green small/blue
         if ($product_has_two_variants) {
 
-            $this
-                ->handleProductHasTwoVariants(
-                    $newly_created_variant_value_product,
-                    $newly_created_variant_value
-                );
+            $this->handleProductHasTwoVariants(
+                $newly_created_variant_value_product,
+                $newly_created_variant_value
+            );
 
             return;
         }
 
         $product_has_three_variants =
-           $newly_created_variant_value_product
-               ->hasThreeVariants();
+            $newly_created_variant_value_product
+                ->hasThreeVariants();
 
         if ($product_has_three_variants) {
 
-            $this
-                ->handleProductHasThreeVariants(
-                    $newly_created_variant_value_product,
-                    $newly_created_variant_value
-                );
+            $this->handleProductHasThreeVariants(
+                $newly_created_variant_value_product,
+                $newly_created_variant_value
+            );
         }
+
     }
 
     private function handleProductHasTwoVariants(
@@ -152,5 +156,25 @@ class VariantValueCreationService
                 );
         }
 
+    }
+
+    private function productHasNoVariant(int $number_of_product_variants): bool
+    {
+        return $number_of_product_variants === 0;
+    }
+
+    private function productHasOneVariant(int $number_of_product_variants): bool
+    {
+        return $number_of_product_variants === 1;
+    }
+
+    private function productHasTwoVariants(int $number_of_product_variants): bool
+    {
+        return $number_of_product_variants === 2;
+    }
+
+    private function productHasThreeVariants(int $number_of_product_variants): bool
+    {
+        return $number_of_product_variants === 3;
     }
 }

@@ -47,9 +47,11 @@ class VariantValueCreationService
         }
 
         $product_has_two_variants =
-            $this->productHasTwoVariants(
-                $number_of_product_variants
-            );
+            $newly_created_variant_value_product
+                ->hasTwoVariants();
+        // $this->productHasTwoVariants(
+        //     $number_of_product_variants
+        // );
 
         // add to variant_combination table i.e small/green small/blue
         if ($product_has_two_variants) {

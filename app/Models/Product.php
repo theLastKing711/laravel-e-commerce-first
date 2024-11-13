@@ -323,7 +323,7 @@ class Product extends Model implements Mediable
 
     public function hasOneVariant()
     {
-        return $this->getVariantsCount() == 3;
+        return $this->getVariantsCount() == 1;
     }
 
     public function hasTwoVariants(): bool

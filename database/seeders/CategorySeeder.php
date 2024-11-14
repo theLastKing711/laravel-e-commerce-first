@@ -140,7 +140,9 @@ class CategorySeeder extends Seeder
                             ->count(rand(0, 3))
                             ->create();
 
-                        $product->variants()->saveMany($variants);
+                        $product
+                            ->variants()
+                            ->saveMany($variants);
                     })
             )
             ->count($count)

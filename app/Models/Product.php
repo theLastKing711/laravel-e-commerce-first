@@ -321,6 +321,21 @@ class Product extends Model implements Mediable
         return $this->variants()->count();
     }
 
+    public function hasThumbVariantValue(): bool
+    {
+        return $this->thumbVariantValue() == null ? false : true;
+    }
+
+    public function thumbVariantValue(): VariantValue
+    {
+        return
+            $this
+                ->variants
+                ->pluck('variantValues')
+                ->flatten()
+                ->firstWhere('is_thumb', true);
+    }
+
     public function hasOneVariant()
     {
         return $this->getVariantsCount() == 1;

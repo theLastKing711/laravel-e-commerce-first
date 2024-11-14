@@ -30,28 +30,28 @@ class VariantValueCreationService
         VariantValue $newly_created_variant_value
     ) {
         $newly_created_variant_value_product =
-            $newly_created_variant_value
-                ->getProduct();
+        $newly_created_variant_value
+            ->getProduct();
 
         $number_of_product_variants =
             $newly_created_variant_value_product
                 ->getVariantsCount();
 
-        $product_has_one_variant =
-            $this->productHasOneVariant(
-                $number_of_product_variants
-            );
+        $product_has_three_variants =
+            $newly_created_variant_value_product
+                ->hasThreeVariants();
 
-        if ($product_has_one_variant) {
-            return;
+        if ($product_has_three_variants) {
+
+            $this->handleProductHasThreeVariants(
+                $newly_created_variant_value_product,
+                $newly_created_variant_value
+            );
         }
 
         $product_has_two_variants =
             $newly_created_variant_value_product
                 ->hasTwoVariants();
-        // $this->productHasTwoVariants(
-        //     $number_of_product_variants
-        // );
 
         // add to variant_combination table i.e small/green small/blue
         if ($product_has_two_variants) {
@@ -64,16 +64,19 @@ class VariantValueCreationService
             return;
         }
 
-        $product_has_three_variants =
+        // $product_has_one_variant =
+        //     $newly_created_variant_value_product
+        //         ->hasOneVariant();
+
+        $product_thumb_variant_value =
             $newly_created_variant_value_product
-                ->hasThreeVariants();
+                ->thumbVariantValue();
 
-        if ($product_has_three_variants) {
-
-            $this->handleProductHasThreeVariants(
-                $newly_created_variant_value_product,
-                $newly_created_variant_value
-            );
+        if ($product_thumb_variant_value?->is_thumb) {
+            $product_thumb_variant_value
+                ->update([
+                    'is_thumb' => false,
+                ]);
         }
 
     }

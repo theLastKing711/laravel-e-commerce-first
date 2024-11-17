@@ -2,8 +2,6 @@
 
 namespace App\Data\Admin\Product;
 
-use App\Models\Product;
-use Illuminate\Validation\Rules\Exists;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -14,7 +12,7 @@ class ProductListData extends Data
 {
     public function __construct(
         #[OAT\Property()]
-        public int $id,
+        public string $id,
         #[OAT\Property()]
         public string $name,
     ) {

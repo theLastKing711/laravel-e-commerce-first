@@ -10,6 +10,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection as SupportCollection;
 use Log;
+use Str;
 
 use function explode;
 use function str_contains;
@@ -81,7 +83,16 @@ class Product extends Model implements Mediable
 {
     protected $guarded = ['id'];
 
-    use HasFactory, MediaAlly;
+    public $incrementing = false;
+
+    use HasFactory, HasUuids, MediaAlly;
+
+    public static function booted(): void
+    {
+        static::creating(function (Product $product) {
+            $product->id = Str::uuid();
+        });
+    }
 
     public function medially(): MorphMany
     {
@@ -108,9 +119,6 @@ class Product extends Model implements Mediable
         return $this->hasMany(OrderDetails::class);
     }
 
-    /**
-     * Get all of the variants for the Product
-     */
     public function variants(): HasMany
     {
         return $this->hasMany(Variant::class);
@@ -184,7 +192,7 @@ class Product extends Model implements Mediable
     }
 
     /**
-       @return SupportCollection<int, int>
+       @return SupportCollection<string, string>
      */
     public function getVariantCombinationsIds(): SupportCollection
     {
@@ -194,7 +202,7 @@ class Product extends Model implements Mediable
                 ->pluck('pivot.id');
     }
 
-    /** @return SupportCollection<int, VariantValue> */
+    /** @return SupportCollection<string, VariantValue> */
     public function getVariantCombinations(): SupportCollection
     {
         return $this
@@ -228,7 +236,7 @@ class Product extends Model implements Mediable
     }
 
     /** @return SupportCollection<int>  */
-    public function getOtherVariantsVariantValueIdsByVariantValueId(int $variant_value_id): SupportCollection
+    public function getOtherVariantsVariantValueIdsByVariantValueId(string $variant_value_id): SupportCollection
     {
         $variant =
             $this
@@ -289,7 +297,7 @@ class Product extends Model implements Mediable
 
     }
 
-    public function getFirstThumbSecondVariantCombinationId(): ?int
+    public function getFirstThumbSecondVariantCombinationId(): ?string
     {
         return $this
             ->getSecondVariantCombinations()
@@ -297,7 +305,7 @@ class Product extends Model implements Mediable
             ?->id;
     }
 
-    public function getFirstSecondVariantCombinationId(): ?int
+    public function getFirstSecondVariantCombinationId(): ?string
     {
         return $this
             ->getSecondVariantCombinations()
@@ -316,7 +324,7 @@ class Product extends Model implements Mediable
             ->flatten();
     }
 
-    public function getVariantsCount(): int
+    public function getVariantsCount(): string
     {
         return $this->variants()->count();
     }
@@ -326,7 +334,7 @@ class Product extends Model implements Mediable
         return $this->thumbVariantValue() == null ? false : true;
     }
 
-    public function thumbVariantValue(): VariantValue
+    public function thumbVariantValue(): ?VariantValue
     {
         return
             $this

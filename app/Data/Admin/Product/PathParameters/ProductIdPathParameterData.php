@@ -2,10 +2,9 @@
 
 namespace App\Data\Admin\Product\PathParameters;
 
-use Spatie\LaravelData\Data;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
-
+use Spatie\LaravelData\Data;
 
 class ProductIdPathParameterData extends Data
 {
@@ -15,7 +14,7 @@ class ProductIdPathParameterData extends Data
                 parameter: 'adminProductIdPathParameter', //the name used in ref
                 name: 'id',
                 schema: new OAT\Schema(
-                    type: 'integer',
+                    type: 'string',
                 ),
             ),
             FromRouteParameter('id'),

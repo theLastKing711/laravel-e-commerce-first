@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Str;
 
 //example size, flavour .. etc
 /**
@@ -41,6 +42,15 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Variant extends Model implements Mediable
 {
     use HasFactory, MediaAlly;
+
+    public $incrementing = false;
+
+    public static function booted(): void
+    {
+        static::creating(function (Variant $variant) {
+            $variant->id = Str::uuid();
+        });
+    }
 
     public function medially(): MorphMany
     {

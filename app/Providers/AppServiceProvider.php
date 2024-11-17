@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
             );
         }
 
+        //for debug bar loggin
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
     }
 
     /**

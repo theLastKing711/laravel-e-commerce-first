@@ -6,6 +6,7 @@ use App\Interfaces\Mediable;
 use App\Observers\VariantValueObserver;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -56,7 +57,7 @@ use Illuminate\Support\Collection;
  */
 class VariantValue extends Model implements Mediable
 {
-    use HasFactory, MediaAlly;
+    use HasFactory, HasUuids, MediaAlly;
 
     public function medially(): MorphMany
     {
@@ -86,7 +87,8 @@ class VariantValue extends Model implements Mediable
                 'first_variant_value_id',
                 'second_variant_value_id'
             )
-            ->withPivot('id', 'is_thumb');
+            ->withPivot('id', 'is_thumb')
+            ->using(VariantCombination::class);
     }
 
     /**
@@ -112,12 +114,13 @@ class VariantValue extends Model implements Mediable
     {
         return
             $this->belongsToMany(
-                VariantValue::class,
+                VariantCombination::class,
                 'second_variant_combination',
                 'variant_value_id',
                 'variant_combination_id',
             )
-                ->withPivot('id', 'is_thumb', 'price');
+                ->withPivot('id', 'is_thumb', 'price')
+                ->using(SecondVariantCombination::class);
     }
 
     //variant value second_variant_combination through variant_combination
@@ -158,6 +161,7 @@ class VariantValue extends Model implements Mediable
             ])
             ->whereHas('variants', function ($query) { // select the product that has variants that has varian_value with id of $newly_created_variant_value
                 $query->whereHas('variantValues', function ($query) {
+
                     $query->where('id', $this->id);
                 });
             })
@@ -165,7 +169,7 @@ class VariantValue extends Model implements Mediable
     }
 
     /**
-     * @param  Collection<int,int>  $combinations_ids
+     * @param  Collection<int,string>  $combinations_ids
      */
     public function attachCombinationsIds(Collection $combinations_ids): void
     {
@@ -177,6 +181,7 @@ class VariantValue extends Model implements Mediable
             );
     }
 
+    /** @param Collection<int, string> $combinations_ids */
     public function attachLateCombinationsIds(Collection $combinations_ids): void
     {
         $this
@@ -217,7 +222,7 @@ class VariantValue extends Model implements Mediable
 
         $this
             ->late_combinations()
-            ->each(function (VariantValue $variantValue) use ($max_of_product_price_and_main_variant_value_price) {
+            ->each(function ($variantValue) use ($max_of_product_price_and_main_variant_value_price) {
 
                 $max_price = max($max_of_product_price_and_main_variant_value_price, $variantValue->pivot->price);
 
@@ -228,7 +233,7 @@ class VariantValue extends Model implements Mediable
             });
     }
 
-    public function setCombinationThumbToTrueById(int $variant_value_id)
+    public function setCombinationThumbToTrueById(string $variant_value_id)
     {
         $this
             ->combinations()
@@ -238,7 +243,7 @@ class VariantValue extends Model implements Mediable
             );
     }
 
-    public function setLateCombinationThumbToTrueById(int $second_varaiont_combination_id)
+    public function setLateCombinationThumbToTrueById(string $second_varaiont_combination_id)
     {
         $this
             ->late_combinations()

@@ -15,7 +15,7 @@ class CursorPaginatedSearchSuggestionData extends CursorPaginationResultData
     public function __construct(
         int $per_page,
         ?string $next_cursor,
-        #[ArrayProperty(SearchSuggestionData::class)]
+        #[ArrayProperty(ProductSearchSuggestionData::class)]
         /** @var Collection<int, SearchSuggestionData> */
         public Collection $data,
     ) {

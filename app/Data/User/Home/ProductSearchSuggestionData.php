@@ -7,11 +7,11 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
 #[Oat\Schema()]
-class SearchSuggestionData extends Data
+class ProductSearchSuggestionData extends Data
 {
     public function __construct(
         #[OAT\Property()]
-        public int $id,
+        public string $id,
         #[OAT\Property()]
         public string $name,
         #[OAT\Property()]
@@ -72,7 +72,6 @@ class SearchSuggestionData extends Data
             );
         }
 
-        // image and id is picked from main(is_main) item in variant_values
         //i.e small, medium etc.
         if ($product_variants_count == 1) {
             $product_variant_combinations =

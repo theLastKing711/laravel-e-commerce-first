@@ -7,6 +7,7 @@ use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,9 +54,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Category extends Model implements Mediable
 {
-    use HasFactory, MediaAlly;
+    use HasFactory, HasUuids, MediaAlly;
 
     protected $guarded = ['id'];
+
+    public $incrementing = false;
 
     public function medially(): MorphMany
     {
@@ -79,7 +82,10 @@ class Category extends Model implements Mediable
             'category_product',
             'category_id',
             'product_id'
-        );
+        )->using(new class extends \Illuminate\Database\Eloquent\Relations\Pivot
+        {
+            use \Illuminate\Database\Eloquent\Concerns\HasUuids;
+        });
     }
 
     public function scopeIsParent(Builder $query): void

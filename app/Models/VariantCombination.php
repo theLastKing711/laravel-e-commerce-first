@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Observers\VariantCombinationObserver;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -40,14 +42,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class VariantCombination extends Pivot
 {
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = true;
+    protected $table = 'variant_combination';
 
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     /**
      * Get the first_variant that owns the VariantCombination
@@ -70,12 +67,16 @@ class VariantCombination extends Pivot
      */
     public function combinations(): BelongsToMany
     {
+        Debugbar::info('combinations');
+
         return $this->belongsToMany(
             SecondVariantCombination::class,
             'second_variant_combination',
             'variant_combination_id',
             'variant_id'
-        );
+        )
+            ->with('id')
+            ->using(SecondVariantCombination::class);
     }
 
     public function getProduct(): Product

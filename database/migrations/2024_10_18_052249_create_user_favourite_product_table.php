@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('user_favourite_product', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('product_id')->constrained();
-            // $table->primary(['user_id', 'product_id']);
+            $table->foreignUuid('product_id')->constrained();
             $table->timestamps();
         });
     }

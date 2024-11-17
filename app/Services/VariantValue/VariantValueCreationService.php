@@ -3,8 +3,10 @@
 namespace App\Services\VariantValue;
 
 use App\Models\Product;
+use App\Models\Variant;
 use App\Models\VariantValue;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class VariantValueCreationService
 {
@@ -30,8 +32,8 @@ class VariantValueCreationService
         VariantValue $newly_created_variant_value
     ) {
         $newly_created_variant_value_product =
-        $newly_created_variant_value
-            ->getProduct();
+            $newly_created_variant_value
+                ->getProduct();
 
         $number_of_product_variants =
             $newly_created_variant_value_product
@@ -41,22 +43,11 @@ class VariantValueCreationService
             $newly_created_variant_value_product
                 ->hasThreeVariants();
 
+        Log::info($newly_created_variant_value_product->variants()->count());
+
         if ($product_has_three_variants) {
 
             $this->handleProductHasThreeVariants(
-                $newly_created_variant_value_product,
-                $newly_created_variant_value
-            );
-        }
-
-        $product_has_two_variants =
-            $newly_created_variant_value_product
-                ->hasTwoVariants();
-
-        // add to variant_combination table i.e small/green small/blue
-        if ($product_has_two_variants) {
-
-            $this->handleProductHasTwoVariants(
                 $newly_created_variant_value_product,
                 $newly_created_variant_value
             );
@@ -64,19 +55,20 @@ class VariantValueCreationService
             return;
         }
 
-        // $product_has_one_variant =
-        //     $newly_created_variant_value_product
-        //         ->hasOneVariant();
-
-        $product_thumb_variant_value =
+        $product_has_two_variants =
             $newly_created_variant_value_product
-                ->thumbVariantValue();
+                ->hasTwoVariants();
 
-        if ($product_thumb_variant_value?->is_thumb) {
-            $product_thumb_variant_value
-                ->update([
-                    'is_thumb' => false,
-                ]);
+        if ($product_has_two_variants) {
+
+            Log::info('hello world');
+
+            $this->handleProductHasTwoVariants(
+                $newly_created_variant_value_product,
+                $newly_created_variant_value
+            );
+
+            return;
         }
 
     }
@@ -132,6 +124,8 @@ class VariantValueCreationService
             $newly_created_variant_value_product
                 ->getVariantCombinationsIds();
 
+        // Log::info($product_variant_combinations_ids);
+
         $newly_created_variant_value
             ->attachLateCombinationsIds(
                 $product_variant_combinations_ids
@@ -151,6 +145,22 @@ class VariantValueCreationService
 
         if (! $product_has_thumb_second_variant_combination) {
 
+            // Log::info(VariantValue::with('late_combinations')->firstWhere('id', $newly_created_variant_value->id));
+            Log::info('test');
+
+            Log::info($newly_created_variant_value->id);
+
+            Log::info(VariantValue::with('late_combinations')->firstWhere('id', $newly_created_variant_value->id));
+
+            // $variant_value = VariantValue::query()->where('id', $newly_created_variant_value)->first()->combinations;
+
+            // Log::info($variant_value);
+
+            // Log::info($newly_created_variant_value_product
+            //     ->variants
+            //     ->pluck('variantValues')
+            //     ->flatten());
+
             $product_first_second_variant_combination_id =
                 $newly_created_variant_value_product
                     ->getFirstSecondVariantCombinationId();
@@ -161,25 +171,5 @@ class VariantValueCreationService
                 );
         }
 
-    }
-
-    private function productHasNoVariant(int $number_of_product_variants): bool
-    {
-        return $number_of_product_variants === 0;
-    }
-
-    private function productHasOneVariant(int $number_of_product_variants): bool
-    {
-        return $number_of_product_variants === 1;
-    }
-
-    private function productHasTwoVariants(int $number_of_product_variants): bool
-    {
-        return $number_of_product_variants === 2;
-    }
-
-    private function productHasThreeVariants(int $number_of_product_variants): bool
-    {
-        return $number_of_product_variants === 3;
     }
 }

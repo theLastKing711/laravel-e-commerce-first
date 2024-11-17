@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMediaTable extends Migration
 {
@@ -10,7 +10,7 @@ class CreateMediaTable extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->morphs('medially');
+            $table->uuidMorphs('medially');
             $table->text('file_url');
             $table->string('file_name');
             $table->string('file_type')->nullable();
@@ -21,8 +21,6 @@ class CreateMediaTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {

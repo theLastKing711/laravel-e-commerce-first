@@ -19,7 +19,7 @@ class ProductData extends Data
 {
     public function __construct(
         #[OAT\Property()]
-        public int $id,
+        public string $id,
         #[OAT\Property()]
         public string $name,
         #[OAT\Property()]

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\SecondVariantCombinationObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -34,14 +35,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class SecondVariantCombination extends Pivot
 {
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = true;
+    protected $table = 'second_variant_combination';
 
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     public function getProduct(): Product
     {

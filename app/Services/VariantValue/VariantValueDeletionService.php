@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Services\VariantValue;
@@ -32,7 +31,7 @@ class VariantValueDeletionService
 
         $product_has_no_variant =
             $newly_deleted_variant_value_product
-                ->productHasNoVariant();
+                ->hasNoVariants();
 
         if ($product_has_no_variant) {
             return;
@@ -40,7 +39,7 @@ class VariantValueDeletionService
 
         $product_has_one_variant =
             $newly_deleted_variant_value_product
-                ->productHasOneVariant();
+                ->hasOneVariant();
 
         if ($product_has_one_variant) {
 
@@ -53,7 +52,7 @@ class VariantValueDeletionService
 
         $product_has_two_variant =
             $newly_deleted_variant_value_product
-                ->productHasTwoVariants();
+                ->hasTwoVariants();
 
         if ($product_has_two_variant) {
 
@@ -70,7 +69,7 @@ class VariantValueDeletionService
 
         $product_has_three_variant =
             $newly_deleted_variant_value_product
-                ->productHasThreeVariants();
+                ->hasThreeVariants();
 
         if ($product_has_three_variant) {
 

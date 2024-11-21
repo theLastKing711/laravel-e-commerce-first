@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('variant_values', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('variant_id')->constrained();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('variant_id')->constrained();
             $table->boolean('is_thumb');
             $table->string('name');
             $table->decimal('price');

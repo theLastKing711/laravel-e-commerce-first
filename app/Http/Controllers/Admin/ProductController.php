@@ -49,7 +49,6 @@ use OpenApi\Attributes as OAT;
 ]
 class ProductController extends Controller
 {
-
     #[OAT\Get(path: '/admin/products', tags: ['products'])]
     #[QueryParameter('page', 'integer')]
     #[QueryParameter('perPage', 'integer')]
@@ -69,7 +68,6 @@ class ProductController extends Controller
 
     }
 
-
     #[OAT\Get(path: '/admin/products/{id}', tags: ['products'])]
     #[SuccessItemResponse(ProductData::class)]
     public function show(ProductIdPathParameterData $request)
@@ -88,7 +86,6 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-
     #[OAT\Patch(path: '/admin/products/{id}', tags: ['products'])]
     #[FormDataRequestBody(UpdateProductData::class)]
     #[SuccessNoContentResponse('Product successfully updated')]
@@ -99,14 +96,13 @@ class ProductController extends Controller
         $product = Product::find($request->id)
             ->with('categories.parent');
 
-        $isProductUpdated = $product->update($request->all());
+        $is_product_updated = $product->update($request->all());
 
-        if ($isProductUpdated) {
-            FileService::delete('product', $product->first()->image);
-        }
+        // if ($is_product_updated) {
+        //     FileService::delete('product', $product->first()->image);
+        // }
 
     }
-
 
     #[OAT\Get(path: '/admin/products/getProductsByName', tags: ['products'])]
     #[QueryParameter('name')]
@@ -124,7 +120,6 @@ class ProductController extends Controller
 
     }
 
-
     #[OAT\Post(path: '/admin/products', tags: ['products'])]
     #[FormDataRequestBody(CreateProductData::class)]
     #[SuccessNoContentResponse('Product successfully created')]
@@ -140,8 +135,6 @@ class ProductController extends Controller
 
     }
 
-
-
     #[OAT\Patch(path: '/admin/products/{id}/activate', tags: ['products'])]
     #[SuccessNoContentResponse('Fetched Product Successfully')]
     public function activate(ProductIdPathParameterData $request)
@@ -153,8 +146,6 @@ class ProductController extends Controller
         $product->save();
 
     }
-
-
 
     #[OAT\Patch(path: '/admin/products/{id}/deActivate', tags: ['products'])]
     #[SuccessNoContentResponse('Product DeActivated Successfully')]

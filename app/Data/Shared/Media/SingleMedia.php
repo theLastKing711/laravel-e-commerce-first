@@ -3,6 +3,7 @@
 namespace App\Data\Shared\Media;
 
 use App\Interfaces\Mediable;
+use App\Models\Media;
 use Log;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
@@ -26,7 +27,7 @@ class SingleMedia extends Data
 
             return null;
         }
-
+        /** @var Media $first_media */
         $first_media = $mediable->medially()->first();
 
         Log::info('media {media}', ['media' => $mediable->medially()->first()]);

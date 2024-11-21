@@ -5,60 +5,60 @@ namespace App\Models;
 use App\Enum\Unit;
 use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
-use Database\Factories\ProductFactory;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection as SupportCollection;
 use Log;
-use Str;
 
 use function explode;
 use function str_contains;
 use function strlen;
 
 /**
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * 
+ *
+ * @property string $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
  * @property string $price
- * @property string|null $image
  * @property string|null $hash
  * @property string|null $description
  * @property string|null $price_offer
- * @property int $category_id
  * @property int $is_most_buy
+ * @property int $is_favourite
  * @property int $is_active
- * @property Unit $unit
+ * @property Unit|null $unit
  * @property int|null $unit_value
- * @property-read Collection<int, Brand> $brands
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Brand> $brands
  * @property-read int|null $brands_count
- * @property-read Collection<int, Category> $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
  * @property-read int|null $categories_count
- * @property-read Collection<int, OrderDetails> $orderDetails
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $favouritedByUsers
+ * @property-read int|null $favourited_by_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
- *
- * @method static ProductFactory factory($count = null, $state = [])
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Variant> $variants
+ * @property-read int|null $variants_count
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product hasName(?string $name)
  * @method static Builder|Product newModelQuery()
  * @method static Builder|Product newQuery()
  * @method static Builder|Product query()
- * @method static Builder|Product whereCategoryId($value)
  * @method static Builder|Product whereCreatedAt($value)
  * @method static Builder|Product whereDescription($value)
  * @method static Builder|Product whereHash($value)
  * @method static Builder|Product whereId($value)
- * @method static Builder|Product whereImage($value)
  * @method static Builder|Product whereIsActive($value)
+ * @method static Builder|Product whereIsFavourite($value)
  * @method static Builder|Product whereIsMostBuy($value)
  * @method static Builder|Product whereName($value)
  * @method static Builder|Product wherePrice($value)
@@ -66,33 +66,13 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
- *
- * @property-read Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
- * @property-read int|null $medially_count
- * @property-read Collection<int, \App\Models\User> $favouritedByUsers
- * @property-read int|null $favourited_by_users_count
- * @property int $is_favourite
- * @property-read Collection<int, \App\Models\Variant> $variants
- * @property-read int|null $variants_count
- *
- * @method static Builder|Product whereIsFavourite($value)
- *
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class Product extends Model implements Mediable
 {
     protected $guarded = ['id'];
 
-    public $incrementing = false;
-
-    use HasFactory, HasUuids, MediaAlly;
-
-    public static function booted(): void
-    {
-        static::creating(function (Product $product) {
-            $product->id = Str::uuid();
-        });
-    }
+    use HasFactory, HasUlids, MediaAlly;
 
     public function medially(): MorphMany
     {
@@ -192,7 +172,7 @@ class Product extends Model implements Mediable
     }
 
     /**
-       @return SupportCollection<string, string>
+       @return SupportCollection<int, string>
      */
     public function getVariantCombinationsIds(): SupportCollection
     {
@@ -202,7 +182,7 @@ class Product extends Model implements Mediable
                 ->pluck('pivot.id');
     }
 
-    /** @return SupportCollection<string, VariantValue> */
+    /** @return SupportCollection<int, VariantValue> */
     public function getVariantCombinations(): SupportCollection
     {
         return $this
@@ -324,7 +304,7 @@ class Product extends Model implements Mediable
             ->flatten();
     }
 
-    public function getVariantsCount(): string
+    public function getVariantsCount(): int
     {
         return $this->variants()->count();
     }
@@ -342,6 +322,11 @@ class Product extends Model implements Mediable
                 ->pluck('variantValues')
                 ->flatten()
                 ->firstWhere('is_thumb', true);
+    }
+
+    public function hasNoVariants()
+    {
+        return $this->getVariantsCount() == 0;
     }
 
     public function hasOneVariant()

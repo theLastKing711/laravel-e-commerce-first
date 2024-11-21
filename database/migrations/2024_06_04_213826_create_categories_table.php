@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id('id')->primary();
             $table->string('name')
                 ->nullable();
             $table->string('hash')
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_special')
                 ->nullable()
                 ->default(false);
-            $table->foreignUuid('parent_id')
+            $table->foreignUlid('parent_id')
                 ->nullable();
             $table->timestamps();
 

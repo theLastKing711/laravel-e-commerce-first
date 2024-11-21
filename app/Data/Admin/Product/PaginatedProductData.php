@@ -14,7 +14,7 @@ class PaginatedProductData extends PaginationResultData
 {
     public function __construct(
         int $current_page,
-        string $per_page,
+        int $per_page,
         #[ArrayProperty(ProductData::class)]
         /** @var Collection<int, ProductData> */
         public Collection $data,
@@ -22,5 +22,4 @@ class PaginatedProductData extends PaginationResultData
     ) {
         parent::__construct($current_page, $per_page, $total);
     }
-
 }

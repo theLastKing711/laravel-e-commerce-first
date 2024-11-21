@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\SecondVariantCombinationDeletionService;
+namespace App\Services\SecondVariantCombination;
 
 use App\Models\SecondVariantCombination;
 use Illuminate\Support\Facades\DB;
 
-class VariantValueCreationService
+class SecondVariantCombinationDeletionService
 {
     public function handle(
         SecondVariantCombination $second_variant_combination_to_delete

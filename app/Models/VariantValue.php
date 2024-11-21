@@ -3,10 +3,8 @@
 namespace App\Models;
 
 use App\Interfaces\Mediable;
-use App\Observers\VariantValueObserver;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,11 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 
-//example small, big, large, cheese, salt
-// #[ObservedBy([VariantValueObserver::class])]
 /**
- * @property int $id
- * @property int $variant_id
+ * @property string $id
+ * @property string $variant_id
  * @property int $is_thumb
  * @property string $name
  * @property string $price
@@ -30,7 +26,7 @@ use Illuminate\Support\Collection;
  * @property-read int|null $combinations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, VariantValue> $combined_by
  * @property-read int|null $combined_by_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, VariantValue> $late_combinations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantCombination> $late_combinations
  * @property-read int|null $late_combinations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
  * @property-read int|null $medially_count
@@ -57,7 +53,7 @@ use Illuminate\Support\Collection;
  */
 class VariantValue extends Model implements Mediable
 {
-    use HasFactory, HasUuids, MediaAlly;
+    use HasFactory, HasUlids, MediaAlly;
 
     public function medially(): MorphMany
     {
@@ -177,7 +173,7 @@ class VariantValue extends Model implements Mediable
             ->combinations()
             ->attach(
                 $combinations_ids,
-                ['is_thumb' => false, 'quantity' => 0]
+                ['is_thumb' => false, 'available' => 0]
             );
     }
 
@@ -188,7 +184,7 @@ class VariantValue extends Model implements Mediable
             ->late_combinations()
             ->attach(
                 $combinations_ids,
-                ['is_thumb' => false, 'quantity' => 0]
+                ['is_thumb' => false, 'available' => 0]
             );
     }
 

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Data\Admin\Product\PathParameters;
+namespace App\Data\Admin\Admin\PathParameters;
 
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Data;
 
-class ProductIdPathParameterData extends Data
+#[Oat\Schema()]
+class AdminProductIdPathParameterData extends Data
 {
     public function __construct(
         #[
@@ -19,14 +20,7 @@ class ProductIdPathParameterData extends Data
             ),
             FromRouteParameter('id'),
         ]
-        public int $id,
+        public string $id,
     ) {
     }
-
-    //    public static function rules(ValidationContext $context): array
-    //    {
-    //        return [
-    //            'id' => 'required|int|exists:products,id',
-    //        ];
-    //    }
 }

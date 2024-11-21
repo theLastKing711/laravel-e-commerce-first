@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('second_variant_combination', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('variant_combination_id');
-            $table->foreignUuid('variant_value_id');
+            $table->ulid('id')->primary();
+            $table->foreignUlid('variant_combination_id');
+            $table->foreignUlid('variant_value_id');
             $table->boolean('is_thumb');
             $table->decimal('price')->nullable();
-            $table->integer('quantity');
+            $table->integer('available');
             $table->timestamps();
         });
     }

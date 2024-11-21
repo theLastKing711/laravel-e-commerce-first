@@ -210,8 +210,8 @@ Route::prefix('user')
                 });
 
                 Route::prefix('products')->group(function () {
-                    Route::get('favourite', GetUserFavouriteProductsController::class);
                     Route::get('{id}', GetProductDetailsController::class);
+                    Route::get('favourite', GetUserFavouriteProductsController::class);
 
                     Route::post('favourite/{id}', FavouriteProductController::class);
                 });

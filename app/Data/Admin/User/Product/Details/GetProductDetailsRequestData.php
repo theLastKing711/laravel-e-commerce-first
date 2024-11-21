@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Data\Admin\Order\PathParameters;
+namespace App\Data\Admin\User\Product\Details;
 
-use App\Enum\OrderStatus;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Data;
 
-class OrderIdPathParameterData extends Data
+class GetProductDetailsRequestData extends Data
 {
     public function __construct(
         #[
             OAT\PathParameter(
-                parameter: 'adminOrderIdPathParameter', //the name used in ref
+                parameter: 'userProductVariationtIdPathParameter', //the name used in ref
                 name: 'id',
                 schema: new OAT\Schema(
-                    type: 'integer',
+                    type: 'string',
                 ),
             ),
             FromRouteParameter('id'),
         ]
-        public int $id,
-        public OrderStatus $order_status,
+        public string $id,
+        #[OAT\Property]
+        public ?GetProductDetailsQueryParameterData $variant_value_query_paramters,
     ) {
+
     }
 }

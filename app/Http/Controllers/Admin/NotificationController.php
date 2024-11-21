@@ -10,7 +10,6 @@ use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
 use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
-use App\Enum\Auth\RolesEnum;
 use App\Enum\NotificationType;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
@@ -30,12 +29,9 @@ use OpenApi\Attributes as OAT;
 ]
 class NotificationController extends Controller
 {
-    private string $notificationRole = RolesEnum::USER->value;
-
     /**
      * Get All Notifications
      */
-
     #[OAT\Get(path: '/admin/notifications', tags: ['notifications'])]
     #[QueryParameter('notification_type', NotificationType::class)]
     #[SuccessListResponse(NotificationData::class, 'The Notifications were successfully fetched')]
@@ -67,7 +63,6 @@ class NotificationController extends Controller
     /**
      * Create a new Notification.
      */
-
     #[OAT\Post(path: '/admin/notifications', tags: ['notifications'])]
     #[JsonRequestBody(CreateNotificationData::class)]
     #[SuccessNoContentResponse('Notification created successfully')]
@@ -97,7 +92,6 @@ class NotificationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
     #[OAT\Delete(path: '/admin/notifications/{id}', tags: ['notifications'])]
     #[SuccessNoContentResponse('The Notification was successfully deleted')]
     public function destroy(NotificationIdPathParameterData $request): bool

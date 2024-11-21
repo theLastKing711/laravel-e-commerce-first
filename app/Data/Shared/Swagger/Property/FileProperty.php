@@ -7,7 +7,7 @@ use OpenApi\Attributes as OAT;
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY | \Attribute::TARGET_PARAMETER | \Attribute::TARGET_CLASS_CONSTANT | \Attribute::IS_REPEATABLE)]
 class FileProperty extends OAT\Property
 {
-    public function __construct(string $default = '2017-02-02 18:31:45')
+    public function __construct()
     {
         parent::__construct(
             type: 'string',

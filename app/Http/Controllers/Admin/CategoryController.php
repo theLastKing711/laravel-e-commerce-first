@@ -57,8 +57,6 @@ use OpenApi\Attributes as OAT;
 ]
 class CategoryController extends Controller
 {
-    private string $mainRoute = '/admin/categories';
-
     /**
      * Get All Categories
      */

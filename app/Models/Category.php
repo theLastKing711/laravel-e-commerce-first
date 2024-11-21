@@ -7,7 +7,7 @@ use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string|null $name
  * @property string|null $image
@@ -29,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property-read Category|null $parent
  * @property-read Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
- *
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @method static Builder|Category hasParents(array $ids)
  * @method static Builder|Category isChild()
@@ -46,15 +47,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static Builder|Category whereName($value)
  * @method static Builder|Category whereParentId($value)
  * @method static Builder|Category whereUpdatedAt($value)
- *
  * @property-read Collection<int, Media> $medially
  * @property-read int|null $medially_count
- *
  * @mixin Eloquent
  */
 class Category extends Model implements Mediable
 {
-    use HasFactory, HasUuids, MediaAlly;
+    use HasFactory, HasUlids, MediaAlly;
 
     protected $guarded = ['id'];
 
@@ -82,10 +81,7 @@ class Category extends Model implements Mediable
             'category_product',
             'category_id',
             'product_id'
-        )->using(new class extends \Illuminate\Database\Eloquent\Relations\Pivot
-        {
-            use \Illuminate\Database\Eloquent\Concerns\HasUuids;
-        });
+        );
     }
 
     public function scopeIsParent(Builder $query): void

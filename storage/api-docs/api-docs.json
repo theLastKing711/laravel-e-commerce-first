@@ -838,7 +838,7 @@
             },
             "parameters": [
                 {
-                    "$ref": "#/components/parameters/userProductIdPathParameter"
+                    "$ref": "#/components/parameters/userProductVariationtIdPathParameter"
                 }
             ]
         },
@@ -1863,6 +1863,7 @@
                 "type": "object"
             },
             "adminAdminPathClass": {},
+            "AdminProductIdPathParameterData": {},
             "UpdateAdminData": {
                 "properties": {
                     "name": {
@@ -2073,7 +2074,7 @@
                 "properties": {
                     "id": {
                         "description": "CouponUserData>",
-                        "type": "string"
+                        "type": "integer"
                     },
                     "name": {
                         "description": "CouponUserData>",
@@ -2098,7 +2099,7 @@
                         "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-09-02 18:31:45",
+                        "default": "2024-08-02 18:31:45",
                         "pattern": "YYYY-MM-DD",
                         "example": "2024-09-02 18:31:45"
                     },
@@ -2169,7 +2170,7 @@
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-09-02 18:31:45",
+                        "default": "2024-08-02 18:31:45",
                         "pattern": "YYYY-MM-DD",
                         "example": "2024-09-02 18:31:45"
                     },
@@ -2225,7 +2226,7 @@
                         "description": "int>",
                         "type": "string",
                         "format": "datetime",
-                        "default": "2024-09-02 18:31:45",
+                        "default": "2024-08-02 18:31:45",
                         "pattern": "YYYY-MM-DD",
                         "example": "2024-09-02 18:31:45"
                     },
@@ -2606,7 +2607,7 @@
                 "properties": {
                     "id": {
                         "description": "CategoryData>",
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "description": "CategoryData>",
@@ -2680,7 +2681,7 @@
             "adminProductList": {
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"
@@ -2790,6 +2791,71 @@
                     }
                 ]
             },
+            "GetProductDetailsData": {
+                "properties": {
+                    "id": {
+                        "description": "VariantData>",
+                        "type": "string"
+                    },
+                    "variation": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductVariationData"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "name": {
+                        "description": "VariantData>",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "VariantData>",
+                        "type": "string"
+                    },
+                    "is_favourite": {
+                        "description": "VariantData>",
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/SingleMedia"
+                    },
+                    "variants": {
+                        "description": "VariantData>",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VariantData"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ProductVariationData": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/SingleMedia"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductWithVariationId": {
+                "properties": {
+                    "variation_id": {
+                        "type": "string"
+                    },
+                    "product": {
+                        "type": "App\\Models\\Product"
+                    }
+                },
+                "type": "object"
+            },
             "FavouriteProductData": {
                 "properties": {
                     "id": {
@@ -2807,37 +2873,6 @@
                     "image_url": {
                         "type": "string",
                         "nullable": true
-                    }
-                },
-                "type": "object"
-            },
-            "GetProductDetailsData": {
-                "properties": {
-                    "id": {
-                        "description": "VariantData>",
-                        "type": "integer"
-                    },
-                    "name": {
-                        "description": "VariantData>",
-                        "type": "string"
-                    },
-                    "price": {
-                        "description": "VariantData>",
-                        "type": "string"
-                    },
-                    "is_favourite": {
-                        "description": "VariantData>",
-                        "type": "boolean"
-                    },
-                    "image": {
-                        "$ref": "#/components/schemas/SingleMedia"
-                    },
-                    "variants": {
-                        "description": "VariantData>",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/VariantData"
-                        }
                     }
                 },
                 "type": "object"
@@ -2876,7 +2911,7 @@
                 "properties": {
                     "id": {
                         "description": "VaraintValueData>",
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "description": "VaraintValueData>",
@@ -2895,7 +2930,7 @@
             "VariantValueData": {
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"
@@ -3206,7 +3241,7 @@
                                 "description": "SearchSuggestionData>",
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/SearchSuggestionData"
+                                    "$ref": "#/components/schemas/ProductSearchSuggestionData"
                                 }
                             }
                         },
@@ -3262,10 +3297,10 @@
                 },
                 "type": "object"
             },
-            "SearchSuggestionData": {
+            "ProductSearchSuggestionData": {
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"
@@ -3511,6 +3546,14 @@
                     "type": "integer"
                 }
             },
+            "adminProductIdPathParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
             "adminCategoryIdPathParameter": {
                 "name": "id",
                 "in": "path",
@@ -3559,7 +3602,7 @@
                     "type": "integer"
                 }
             },
-            "adminProductIdPathParameter": {
+            "userUserIdPathParameter": {
                 "name": "id",
                 "in": "path",
                 "required": true,
@@ -3567,12 +3610,12 @@
                     "type": "integer"
                 }
             },
-            "userUserIdPathParameter": {
+            "userProductVariationtIdPathParameter": {
                 "name": "id",
                 "in": "path",
                 "required": true,
                 "schema": {
-                    "type": "integer"
+                    "type": "string"
                 }
             },
             "userProductIdPathParameter": {

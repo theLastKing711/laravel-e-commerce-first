@@ -7,7 +7,7 @@ use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
 #[Oat\Schema()]
-class ProductVariationData extends Data
+class ProductVariantCombinationData extends Data
 {
     public function __construct(
         #[OAT\Property]

@@ -3,10 +3,8 @@
 namespace App\Services\VariantValue;
 
 use App\Models\Product;
-use App\Models\Variant;
 use App\Models\VariantValue;
 use Illuminate\Support\Facades\DB;
-use Log;
 
 class VariantValueCreationService
 {
@@ -43,8 +41,6 @@ class VariantValueCreationService
             $newly_created_variant_value_product
                 ->hasThreeVariants();
 
-        Log::info($newly_created_variant_value_product->variants()->count());
-
         if ($product_has_three_variants) {
 
             $this->handleProductHasThreeVariants(
@@ -60,8 +56,6 @@ class VariantValueCreationService
                 ->hasTwoVariants();
 
         if ($product_has_two_variants) {
-
-            Log::info('hello world');
 
             $this->handleProductHasTwoVariants(
                 $newly_created_variant_value_product,
@@ -124,8 +118,6 @@ class VariantValueCreationService
             $newly_created_variant_value_product
                 ->getVariantCombinationsIds();
 
-        // Log::info($product_variant_combinations_ids);
-
         $newly_created_variant_value
             ->attachLateCombinationsIds(
                 $product_variant_combinations_ids
@@ -144,22 +136,6 @@ class VariantValueCreationService
                 ->hasThumbSecondVariantCombination();
 
         if (! $product_has_thumb_second_variant_combination) {
-
-            // Log::info(VariantValue::with('late_combinations')->firstWhere('id', $newly_created_variant_value->id));
-            Log::info('test');
-
-            Log::info($newly_created_variant_value->id);
-
-            Log::info(VariantValue::with('late_combinations')->firstWhere('id', $newly_created_variant_value->id));
-
-            // $variant_value = VariantValue::query()->where('id', $newly_created_variant_value)->first()->combinations;
-
-            // Log::info($variant_value);
-
-            // Log::info($newly_created_variant_value_product
-            //     ->variants
-            //     ->pluck('variantValues')
-            //     ->flatten());
 
             $product_first_second_variant_combination_id =
                 $newly_created_variant_value_product

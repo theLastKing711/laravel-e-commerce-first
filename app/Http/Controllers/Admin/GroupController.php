@@ -10,7 +10,6 @@ use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\Shared\Swagger\Response\SuccessNoContentResponse;
-use App\Enum\Auth\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use Illuminate\Support\Facades\Log;
@@ -28,12 +27,9 @@ use OpenApi\Attributes as OAT;
 ]
 class GroupController extends Controller
 {
-    private string $userRole = RolesEnum::USER->value;
-
     /**
      * Get All Groups
      */
-
     #[OAT\Get(path: '/admin/groups', tags: ['groups'])]
     #[SuccessListResponse(GroupData::class, 'The Groups were successfully fetched')]
     public function index()
@@ -55,7 +51,6 @@ class GroupController extends Controller
 
         return GroupData::collect($groups);
     }
-
 
     #[OAT\Get(path: '/admin/groups/{id}', tags: ['groups'])]
     #[SuccessItemResponse(GroupData::class, 'The Group was successfully fetched')]
@@ -94,11 +89,9 @@ class GroupController extends Controller
 
     }
 
-
     /**
      * Update the specified resource in storage.
      */
-
     #[OAT\Patch(path: '/admin/groups/{id}', tags: ['groups'])]
     #[JsonRequestBody(UpdateGroupData::class)]
     #[SuccessNoContentResponse('The Group was updated successfully')]
@@ -119,7 +112,6 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
     #[OAT\Delete(path: '/admin/groups/{id}', tags: ['groups'])]
     #[SuccessNoContentResponse('The Group was deleted successfully')]
     public function destroy(GroupIdPathParameterData $request): bool

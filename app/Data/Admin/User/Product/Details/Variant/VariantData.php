@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Data\Admin\User\Product\Variant;
+namespace App\Data\Admin\User\Product\Details\Variant;
 
-use App\Data\Admin\User\Product\Variant\VariantValue\VariantValueData;
+use App\Data\Admin\User\Product\Details\Variant\VariantValueData\VariantValueData;
 use App\Data\Shared\Swagger\Property\ArrayProperty;
 use App\Models\Variant;
+use App\Models\VariantValue;
 use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
@@ -27,6 +28,17 @@ class VariantData extends Data
 
     public static function fromModel(Variant $variant): self
     {
+
+        $variant_values =
+            $variant->variantValues
+                ->map(function(VariantValue $variantValue) {
+                    return new VariantValueData(
+                        id: $variantValue->id,
+                        name: $variantValue->name,
+                        is_selected: $variant_value->price,
+                        available: $variant_value->available,
+                    )
+                });
 
         return new self(
             id: $variant->id,

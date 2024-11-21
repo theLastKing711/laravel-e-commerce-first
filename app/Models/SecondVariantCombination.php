@@ -2,42 +2,27 @@
 
 namespace App\Models;
 
-use App\Observers\SecondVariantCombinationObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-// #[ObservedBy(SecondVariantCombinationObserver::class)]
-/**
- * @property int $id
- * @property int $variant_combination_id
- * @property int $variant_value_id
- * @property int $is_thumb
- * @property string|null $price
- * @property int $quantity
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- *
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination query()
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereIsThumb($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantCombinationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantValueId($value)
- *
- * @mixin \Eloquent
- */
 class SecondVariantCombination extends Pivot
 {
-    protected $table = 'second_variant_combination';
+    use HasFactory, HasUlids;
 
-    use HasFactory, HasUuids;
+    /**
+     * Get the combination that owns the SecondVariantCombination
+     */
+    public function variantCombination(): BelongsTo
+    {
+        return $this->belongsTo(VariantCombination::class, 'variant_combination_id');
+    }
+
+    public function variantValue(): BelongsTo
+    {
+        return $this->belongsTo(VariantValue::class, 'variant_value_id');
+    }
 
     public function getProduct(): Product
     {

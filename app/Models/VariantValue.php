@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -53,7 +54,7 @@ use Illuminate\Support\Collection;
  */
 class VariantValue extends Model implements Mediable
 {
-    use HasFactory, HasUlids, MediaAlly;
+    use EagerLoadPivotTrait, HasFactory, HasUlids, MediaAlly;
 
     public function medially(): MorphMany
     {
@@ -106,6 +107,7 @@ class VariantValue extends Model implements Mediable
     }
 
     //combination of variant_combination and variant value
+    // return list of variant combination objects with second_variant_combination as pivot in each
     public function late_combinations(): BelongsToMany
     {
         return

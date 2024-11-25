@@ -8,6 +8,7 @@ use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Variant;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use OpenApi\Attributes as OAT;
 
@@ -34,14 +35,17 @@ class GetProductDetailsController extends Controller
     public function __invoke(GetProductDetailsRequestData $request)
     {
 
+        // return Product::with('variants.variantValues.combinations.combinations')->first();
+
         Debugbar::info($request);
 
         $product_id = $request->id;
 
-        $product_variants_count = Product::query()
-            ->whereId($request->id)
-            ->withCount('variants')
-            ->variants_count;
+        // $product_variants_count = Product::query()
+        //     ->whereId($request->id)
+        //     ->withCount('variants')
+        //     ->variants_count;
+        $product_variants_count = 3;
 
         // $product = Product::query()
         //     ->join(
@@ -203,24 +207,31 @@ class GetProductDetailsController extends Controller
                     'products.name',
                     'products.price',
                 ])
-                ->with(['variants' => [
-                    'variantValues' => [
-                        'combinations' => [
-                            'combinations',
+                ->with(
+                    [
+                        'variants' => [
+                            'variantValues' => [
+                                'combinations' => [
+                                    'pivot' => [
+                                        'combintaions',
+                                    ],
+                                ],
+                                'combined_by' => [
+                                    'pivot' => [
+                                        'combinations',
+                                    ],
+                                ],
+                                'late_combinations',
+                            ],
                         ],
-                        'combined_by' => [
-                            'combinations',
-                        ],
-                    ],
-                ]])
+                    ]
+                )
                 ->where('second_variant_combination.id', $product_id)
                 ->orWhere('variant_combination.id', $product_id)
                 ->orWhere('variant_values.id', $product_id)
                 ->first();
 
             Debugbar::info('product with three variant');
-
-            return $product;
 
             return GetProductDetailsData::from($product, $product_id);
         }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Log;
 
 class VariantCombination extends Pivot
 {
@@ -36,13 +37,15 @@ class VariantCombination extends Pivot
     {
         Debugbar::info('combinations');
 
+        Log::info($this);
+
         return $this->belongsToMany(
             VariantValue::class,
             'second_variant_combination',
             'variant_combination_id',
             'variant_value_id'
         )
-            ->withPivot('id')
+            ->withPivot('id', 'is_thumb')
             ->using(SecondVariantCombination::class);
     }
 

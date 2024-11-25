@@ -26,7 +26,7 @@ class VariantValueData extends Data
         #[OAT\Property]
         public SingleMedia $image,
         #[OAT\Property]
-        public GetProductDetailsQueryParameterData $variant_value_ids_query_parameter,
+        public GetProductDetailsQueryParameterData $combinations_ids_with_selected_variant_value,
     ) {
     }
 

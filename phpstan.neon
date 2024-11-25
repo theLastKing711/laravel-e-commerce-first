@@ -9,6 +9,9 @@ parameters:
     # Level 9 is the highest level
     level: 5
 
+    universalObjectCratesClasses:
+         - Illuminate\Database\Eloquent\Relations\Pivot
+
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
 #

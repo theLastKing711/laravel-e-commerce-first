@@ -7,6 +7,9 @@ use CloudinaryLabs\CloudinaryLaravel\Model\Media;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 
+/**
+ * @phpstan-require-implements CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+ */
 interface Mediable
 {
     public function medially(): MorphMany;

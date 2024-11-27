@@ -3,9 +3,9 @@
 namespace App\Data\Admin\User\Product\Details;
 
 use OpenApi\Attributes as OAT;
-use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Dto;
 
-class GetProductDetailsQueryParameterData extends Data
+class GetProductDetailsQueryParameterData extends Dto
 {
     public function __construct(
         #[OAT\Property]

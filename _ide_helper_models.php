@@ -13,9 +13,9 @@
 
 namespace App\Models{
 /**
+ * 
  *
- *
- * @property int $id
+ * @property string $id
  * @property string $name
  * @property string|null $image
  * @property string|null $hash
@@ -40,7 +40,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- *
+ * 
  *
  * @property int $id
  * @property string|null $name
@@ -50,41 +50,166 @@ namespace App\Models{
  * @property int|null $parent_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $children
+ * @property-read Collection<int, Category> $children
  * @property-read int|null $children_count
  * @property-read Category|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSpecial($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
- * @method static Builder|Category child()
- * @method static Builder|Category latest()
- * @method static Builder|Category isChild()
  * @method static Builder|Category hasParents(array $ids)
- * @mixin \Eloquent
+ * @method static Builder|Category isChild()
+ * @method static Builder|Category isParent()
+ * @method static Builder|Category latest()
+ * @method static Builder|Category newModelQuery()
+ * @method static Builder|Category newQuery()
+ * @method static Builder|Category query()
+ * @method static Builder|Category whereCreatedAt($value)
+ * @method static Builder|Category whereHash($value)
+ * @method static Builder|Category whereId($value)
+ * @method static Builder|Category whereImage($value)
+ * @method static Builder|Category whereIsSpecial($value)
+ * @method static Builder|Category whereName($value)
+ * @method static Builder|Category whereParentId($value)
+ * @method static Builder|Category whereUpdatedAt($value)
+ * @property-read Collection<int, Media> $medially
+ * @property-read int|null $medially_count
+ * @mixin Eloquent
  */
-	class Category extends \Eloquent {}
+	class Category extends \Eloquent implements \App\Interfaces\Mediable {}
 }
 
 namespace App\Models{
 /**
- *
+ * 
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $name
+ * @property string $code
+ * @property string|null $percent
+ * @property string|null $value
+ * @property string $start_at
+ * @property string $end_at
+ * @method static \Database\Factories\CouponFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon wherePercent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereStartAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereValue($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @mixin \Eloquent
+ */
+	class Coupon extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\GroupFactory factory($count = null, $state = [])
+ * @method static Builder|Group newModelQuery()
+ * @method static Builder|Group newQuery()
+ * @method static Builder|Group query()
+ * @method static Builder|Group whereCreatedAt($value)
+ * @method static Builder|Group whereId($value)
+ * @method static Builder|Group whereName($value)
+ * @method static Builder|Group whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class Group extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $medially_type
+ * @property int $medially_id
+ * @property string $file_url
+ * @property string $file_name
+ * @property string|null $file_type
+ * @property int $size
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\MediaFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Media newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Media newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Media query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereFileType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereFileUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereMediallyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereMediallyType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereUpdatedAt($value)
+ * @property-read Model|\Eloquent $medially
+ * @mixin \Eloquent
+ */
+	class Media extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int|null $from_admin
+ * @property string $name
+ * @property string $body
+ * @property int $order_id
+ * @property int $order_status
+ * @property string $type
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $user
+ * @property-read int|null $user_count
+ * @method static \Database\Factories\NotificationFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereFromAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereOrderStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notification whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @mixin \Eloquent
+ */
+	class Notification extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string $total
- * @property string $status
+ * @property int $status
  * @property string|null $rejection_reason
  * @property string $required_time
  * @property string|null $notice
@@ -96,43 +221,47 @@ namespace App\Models{
  * @property string|null $completed_at
  * @property string $delivery_price
  * @property int $user_id
+ * @property int|null $coupon_id
  * @property int|null $driver_id
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
+ * @property-read Coupon|null $coupon
+ * @property-read User|null $driver
+ * @property-read Collection<int, OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
- * @property-read \App\Models\User $user
- * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Order query()
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereAcceptedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereCompletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeliveryPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereDriverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereLat($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereLon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereNotice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOnTheWayAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereRejectedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereRejectionReason($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereRequiredTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereTotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
- * @mixin \Eloquent
+ * @property-read User $user
+ * @method static OrderFactory factory($count = null, $state = [])
+ * @method static Builder|Order newModelQuery()
+ * @method static Builder|Order newQuery()
+ * @method static Builder|Order query()
+ * @method static Builder|Order whereAcceptedAt($value)
+ * @method static Builder|Order whereCompletedAt($value)
+ * @method static Builder|Order whereCouponId($value)
+ * @method static Builder|Order whereCreatedAt($value)
+ * @method static Builder|Order whereDeliveryPrice($value)
+ * @method static Builder|Order whereDriverId($value)
+ * @method static Builder|Order whereId($value)
+ * @method static Builder|Order whereLat($value)
+ * @method static Builder|Order whereLon($value)
+ * @method static Builder|Order whereNotice($value)
+ * @method static Builder|Order whereOnTheWayAt($value)
+ * @method static Builder|Order whereRejectedAt($value)
+ * @method static Builder|Order whereRejectionReason($value)
+ * @method static Builder|Order whereRequiredTime($value)
+ * @method static Builder|Order whereStatus($value)
+ * @method static Builder|Order whereTotal($value)
+ * @method static Builder|Order whereUpdatedAt($value)
+ * @method static Builder|Order whereUserId($value)
+ * @mixin Eloquent
  */
 	class Order extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
- *
+ * 
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int $order_id
  * @property int $product_id
  * @property string|null $unit_price
@@ -152,34 +281,40 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPriceOffer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 	class OrderDetails extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * 
  *
- *
- * @property int $id
+ * @property string $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
  * @property string $price
- * @property string|null $image
  * @property string|null $hash
  * @property string|null $description
  * @property string|null $price_offer
  * @property int $is_most_buy
+ * @property int $is_favourite
  * @property int $is_active
- * @property Unit $unit
+ * @property Unit|null $unit
  * @property int|null $unit_value
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Brand> $brands
  * @property-read int|null $brands_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
  * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $favouritedByUsers
+ * @property-read int|null $favourited_by_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
  * @property-read int|null $order_details_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Variant> $variants
+ * @property-read int|null $variants_count
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product hasName(?string $name)
  * @method static Builder|Product newModelQuery()
@@ -189,8 +324,8 @@ namespace App\Models{
  * @method static Builder|Product whereDescription($value)
  * @method static Builder|Product whereHash($value)
  * @method static Builder|Product whereId($value)
- * @method static Builder|Product whereImage($value)
  * @method static Builder|Product whereIsActive($value)
+ * @method static Builder|Product whereIsFavourite($value)
  * @method static Builder|Product whereIsMostBuy($value)
  * @method static Builder|Product whereName($value)
  * @method static Builder|Product wherePrice($value)
@@ -200,12 +335,79 @@ namespace App\Models{
  * @method static Builder|Product whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Product extends \Eloquent {}
+	class Product extends \Eloquent implements \App\Interfaces\Mediable {}
 }
 
 namespace App\Models{
 /**
+ * 
  *
+ * @property string $id
+ * @property string $variant_combination_id
+ * @property string $variant_value_id
+ * @property int $is_thumb
+ * @property string|null $price
+ * @property int $available
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\VariantCombination|null $variantCombination
+ * @property-read \App\Models\VariantValue|null $variantValue
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereAvailable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereIsThumb($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantCombinationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantValueId($value)
+ * @mixin \Eloquent
+ */
+	class SecondVariantCombination extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property float $km_price
+ * @property float $open_km_price
+ * @property float $order_delivery_min_distance
+ * @property float $order_delivery_min_item_per_order
+ * @property float $min_order_item_quantity_for_free_delivery
+ * @property float $store_lat
+ * @property float $store_lon
+ * @property string $address
+ * @property string $work_days
+ * @method static \Database\Factories\SettingFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereKmPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereMinOrderItemQuantityForFreeDelivery($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereOpenKmPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereOrderDeliveryMinDistance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereOrderDeliveryMinItemPerOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereStoreLat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereStoreLon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWorkDays($value)
+ * @mixin \Eloquent
+ */
+	class Setting extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
  *
  * @property int $id
  * @property string|null $name
@@ -218,14 +420,21 @@ namespace App\Models{
  * @property Gender $gender
  * @property string|null $number
  * @property string|null $dial_code
- * @property int|null $account_registration_step
+ * @property string|null $account_registration_step
  * @property string|null $code
  * @property string|null $temp_number
  * @property string|null $temp_dial_code
  * @property string|null $temp_code
+ * @property string|null $username
  * @property float|null $lat
  * @property float|null $lon
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Coupon> $coupons
+ * @property-read int|null $coupons_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $driver_orders
+ * @property-read int|null $driver_orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Group> $groups
+ * @property-read int|null $groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
  * @property-read int|null $orders_count
@@ -234,37 +443,172 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions, $without = false)
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null, $without = false)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereAccountRegistrationStep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereDialCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLat($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereTempCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereTempDialCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereTempNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User withoutPermission($permissions)
- * @method static \Illuminate\Database\Eloquent\Builder|User withoutRole($roles, $guard = null)
- * @property string|null $userName
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserName($value)
+ * @method static Builder|User like(string $column, string $value)
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static Builder|User permission($permissions, $without = false)
+ * @method static Builder|User query()
+ * @method static Builder|User role($roles, $guard = null, $without = false)
+ * @method static Builder|User whereAccountRegistrationStep($value)
+ * @method static Builder|User whereCode($value)
+ * @method static Builder|User whereCreatedAt($value)
+ * @method static Builder|User whereDialCode($value)
+ * @method static Builder|User whereEmail($value)
+ * @method static Builder|User whereEmailVerifiedAt($value)
+ * @method static Builder|User whereGender($value)
+ * @method static Builder|User whereId($value)
+ * @method static Builder|User whereLat($value)
+ * @method static Builder|User whereLon($value)
+ * @method static Builder|User whereName($value)
+ * @method static Builder|User whereNumber($value)
+ * @method static Builder|User wherePassword($value)
+ * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereTempCode($value)
+ * @method static Builder|User whereTempDialCode($value)
+ * @method static Builder|User whereTempNumber($value)
+ * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|User whereUsername($value)
+ * @method static Builder|User withoutPermission($permissions)
+ * @method static Builder|User withoutRole($roles, $guard = null)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $favouriteProducts
+ * @property-read int|null $favourite_products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @method static Builder|User isUser()
  * @mixin \Eloquent
- * @property string|null $username
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  */
 	class User extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property string $id
+ * @property string $product_id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantCombination> $combinations
+ * @property-read int|null $combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
+ * @property-read \App\Models\Product $product
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantValue> $variantValues
+ * @property-read int|null $variant_values_count
+ * @method static \Database\Factories\VariantFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Variant whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class Variant extends \Eloquent implements \App\Interfaces\Mediable {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property string $id
+ * @property string $first_variant_value_id
+ * @property string $second_variant_value_id
+ * @property int $is_thumb
+ * @property string|null $price
+ * @property int $available
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read ModelWithPivotCollection<VariantValue, VariantCombination> $combinations
+ * @property-read int|null $combinations_count
+ * @property-read \App\Models\VariantValue|null $first_variant_value
+ * @property-read \App\Models\VariantValue|null $second_variant_value
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination query()
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereAvailable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereFirstVariantValueId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereIsThumb($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereSecondVariantValueId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantValue> $combinations
+ * @mixin \Eloquent
+ */
+	class VariantCombination extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property string $id
+ * @property string $variant_id
+ * @property int $is_thumb
+ * @property string $name
+ * @property string $price
+ * @property int $available
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read App\Data\Shared\ModelwithPivotCollection\ModelwithPivotCollection<App\Models\VariantValue,App\Models\VariantCombination> $combinations
+ * @property-read int|null $combinations_count
+ * @property-read App\Data\Shared\ModelwithPivotCollection\ModelwithPivotCollection<App\Models\VariantValue,App\Models\VariantCombination> $combined_by
+ * @property-read int|null $combined_by_count
+ * @property-read App\Data\Shared\ModelwithPivotCollection\ModelwithPivotCollection<App\Models\VariantCombination,App\Models\SecondVariantCombination> $late_combinations
+ * @property-read int|null $late_combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SecondVariantCombination> $second_level_combinations
+ * @property-read int|null $second_level_combinations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SecondVariantCombination> $second_level_combined_by
+ * @property-read int|null $second_level_combined_by_count
+ * @property-read \App\Models\Variant $variant
+ * @method static \Database\Factories\VariantValueFactory factory($count = null, $state = [])
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue newModelQuery()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue newQuery()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue query()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereAvailable($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereCreatedAt($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereId($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereIsThumb($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereName($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue wherePrice($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereUpdatedAt($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereVariantId($value)
+ */
+	class VariantValue extends \Eloquent implements \App\Interfaces\Mediable {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property Day $name
+ * @method static \Database\Factories\WorkDaysFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays query()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $number
+ * @property int $is_vacation
+ * @property string $from
+ * @property string $to
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereIsVacation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class WorkDays extends \Eloquent {}
 }
 

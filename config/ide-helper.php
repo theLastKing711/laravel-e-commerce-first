@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'filename'  => '_ide_helper.php',
+    'filename' => '_ide_helper.php',
 
     /*
     |--------------------------------------------------------------------------
@@ -122,7 +122,7 @@ return [
     'include_helpers' => false,
 
     'helper_files' => [
-        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+        base_path().'/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
     ],
 
     /*
@@ -156,18 +156,19 @@ return [
     ],
 
     /*
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------combinations-------------
     | Models hooks
     |--------------------------------------------------------------------------
     |
     | Define which hook classes you want to run for models to add custom information
     |
-    | Hooks should implement Barryvdh\LaravelIdeHelper\Contracts\ModelHookInterface.
+    | Hooks should implement Barryvdh\LaravelIdeHelpecombinationsr\Contracts\ModelHookInterface.
     |
     */
 
     'model_hooks' => [
         // App\Support\IdeHelper\MyModelHook::class
+        'App\CustomHook',
     ],
 
     /*

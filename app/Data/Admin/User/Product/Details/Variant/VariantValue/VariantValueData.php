@@ -4,8 +4,6 @@ namespace App\Data\Admin\User\Product\Details\Variant\VariantValueData;
 
 use App\Data\Admin\User\Product\Details\GetProductDetailsQueryParameterData;
 use App\Data\Shared\Media\SingleMedia;
-use App\Models\Variant;
-use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -29,14 +27,4 @@ class VariantValueData extends Data
         public GetProductDetailsQueryParameterData $combinations_ids_with_selected_variant_value,
     ) {
     }
-
-    // public static function fromModel(Variant $variant): self
-    // {
-
-    //     return new self(
-    //         id: $variant->id,
-    //         name: $variant->name,
-    //         variant_values: VariantValueData::collect($variant->variantValues, Collection::class)
-    //     );
-    // }
 }

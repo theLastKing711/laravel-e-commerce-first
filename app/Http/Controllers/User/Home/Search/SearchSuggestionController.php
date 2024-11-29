@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User\Home\Search;
 use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
 use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\User\Home\CursorPaginatedSearchSuggestionData;
-use App\Data\User\Home\SearchSuggestionData;
+use App\Data\User\Home\ProductSearchSuggestionData;
 use App\Data\User\Shared\QueryParameters\SearchSuggestionQueryParameterData;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -65,7 +65,7 @@ class SearchSuggestionController extends Controller
 
         Log::info('next cursor value {cursor}', ['cursor' => $request->query('cursor')]);
 
-        return SearchSuggestionData::collect($search_result);
+        return ProductSearchSuggestionData::collect($search_result);
 
     }
 }

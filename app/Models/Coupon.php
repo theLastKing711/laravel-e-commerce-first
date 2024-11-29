@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 
@@ -35,15 +34,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class Coupon extends Model
+class Coupon extends Eloquent
 {
     protected $guarded = ['id'];
+
     use HasFactory;
 
     public function users(): BelongsToMany
     {
         return $this->BelongsToMany(User::class);
     }
-
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_special')
                 ->nullable()
                 ->default(false);
-            $table->foreignUlid('parent_id')
+            $table->foreignId('parent_id')
                 ->nullable();
             $table->timestamps();
 

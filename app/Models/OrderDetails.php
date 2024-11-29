@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -35,7 +34,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUpdatedAt($value)
  * @mixin Eloquent
  */
-class OrderDetails extends Model
+class OrderDetails extends Eloquent
 {
     use HasFactory;
 
@@ -43,7 +42,6 @@ class OrderDetails extends Model
 
     public function order(): BelongsTo
     {
-
         return $this->belongsTo(Order::class);
     }
 

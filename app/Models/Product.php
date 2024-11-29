@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Enum\Unit;
 use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -36,11 +36,11 @@ use function strlen;
  * @property int $is_active
  * @property Unit|null $unit
  * @property int|null $unit_value
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Brand> $brands
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\Brand,\Illuminate\Database\Eloquent\Relations\Pivot> $brands
  * @property-read int|null $brands_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\Category,\Illuminate\Database\Eloquent\Relations\Pivot> $categories
  * @property-read int|null $categories_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $favouritedByUsers
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\User,\Illuminate\Database\Eloquent\Relations\Pivot> $favouritedByUsers
  * @property-read int|null $favourited_by_users_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
  * @property-read int|null $medially_count
@@ -66,9 +66,9 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class Product extends Model implements Mediable
+class Product extends Eloquent implements Mediable
 {
     protected $guarded = ['id'];
 

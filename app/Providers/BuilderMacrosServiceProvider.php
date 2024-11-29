@@ -22,6 +22,9 @@ class BuilderMacrosServiceProvider extends ServiceProvider
     {
 
         Builder::macro('whereLike', function (string $field, string $searchTerm): Builder {
+
+            /** @var Builder $this */
+
             return $this->where(
                 $field,
                 'LIKE',
@@ -30,6 +33,9 @@ class BuilderMacrosServiceProvider extends ServiceProvider
         });
 
         Builder::macro('whereAnyLike', function (array $fields, string $searchTerm): Builder {
+
+            /** @var Builder $this */
+
             return $this->whereAny(
                 $fields,
                 'LIKE',
@@ -38,6 +44,9 @@ class BuilderMacrosServiceProvider extends ServiceProvider
         });
 
         Builder::macro('orderByDynamic', function (string $sort_field, string $sort_value): Builder {
+
+            /** @var Builder $this */
+
             return $sort_value === 'asc' ?
                 $this->orderBy($sort_field)
                 :

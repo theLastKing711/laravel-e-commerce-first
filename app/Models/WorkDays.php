@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Enum\Day;
+use Eloquent;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * 
@@ -30,8 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereTo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class WorkDays extends Model
+class WorkDays extends Eloquent
 {
     use HasFactory;
 

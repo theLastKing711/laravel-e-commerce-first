@@ -11,9 +11,24 @@
  */
 
 
+namespace App\Data\Shared{
+/**
+ *
+ *
+ * @template Models
+ * @extends Models
+ * @method static \Illuminate\Database\Eloquent\Builder|ModelWithouPivot newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ModelWithouPivot newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ModelWithouPivot query()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperModelWithouPivot {}
+}
+
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property string $id
  * @property string $name
@@ -35,25 +50,27 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Brand extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperBrand {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property string|null $name
- * @property string|null $image
  * @property string|null $hash
  * @property int|null $is_special
- * @property int|null $parent_id
+ * @property string|null $parent_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Collection<int, Category> $children
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $children
  * @property-read int|null $children_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
+ * @property-read int|null $medially_count
  * @property-read Category|null $parent
- * @property-read Collection<int, \App\Models\Product> $products
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\Product,\Illuminate\Database\Eloquent\Relations\Pivot> $products
  * @property-read int|null $products_count
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @method static Builder|Category hasParents(array $ids)
@@ -66,21 +83,19 @@ namespace App\Models{
  * @method static Builder|Category whereCreatedAt($value)
  * @method static Builder|Category whereHash($value)
  * @method static Builder|Category whereId($value)
- * @method static Builder|Category whereImage($value)
  * @method static Builder|Category whereIsSpecial($value)
  * @method static Builder|Category whereName($value)
  * @method static Builder|Category whereParentId($value)
  * @method static Builder|Category whereUpdatedAt($value)
- * @property-read Collection<int, Media> $medially
- * @property-read int|null $medially_count
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
-	class Category extends \Eloquent implements \App\Interfaces\Mediable {}
+	#[\AllowDynamicProperties]
+	class IdeHelperCategory {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -108,12 +123,13 @@ namespace App\Models{
  * @property-read int|null $users_count
  * @mixin \Eloquent
  */
-	class Coupon extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperCoupon {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -131,12 +147,13 @@ namespace App\Models{
  * @method static Builder|Group whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Group extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperGroup {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $medially_type
@@ -163,12 +180,13 @@ namespace App\Models{
  * @property-read Model|\Eloquent $medially
  * @mixin \Eloquent
  */
-	class Media extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperMedia {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property int|null $from_admin
@@ -198,12 +216,13 @@ namespace App\Models{
  * @property-read int|null $users_count
  * @mixin \Eloquent
  */
-	class Notification extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperNotification {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property Carbon|null $created_at
@@ -251,13 +270,15 @@ namespace App\Models{
  * @method static Builder|Order whereUpdatedAt($value)
  * @method static Builder|Order whereUserId($value)
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
-	class Order extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperOrder {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property Carbon|null $created_at
@@ -282,13 +303,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPriceOffer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUpdatedAt($value)
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
-	class OrderDetails extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperOrderDetails {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property string $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -303,11 +326,11 @@ namespace App\Models{
  * @property int $is_active
  * @property Unit|null $unit
  * @property int|null $unit_value
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Brand> $brands
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\Brand,\Illuminate\Database\Eloquent\Relations\Pivot> $brands
  * @property-read int|null $brands_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\Category,\Illuminate\Database\Eloquent\Relations\Pivot> $categories
  * @property-read int|null $categories_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $favouritedByUsers
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\User,\Illuminate\Database\Eloquent\Relations\Pivot> $favouritedByUsers
  * @property-read int|null $favourited_by_users_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
  * @property-read int|null $medially_count
@@ -335,12 +358,13 @@ namespace App\Models{
  * @method static Builder|Product whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Product extends \Eloquent implements \App\Interfaces\Mediable {}
+	#[\AllowDynamicProperties]
+	class IdeHelperProduct {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property string $id
  * @property string $variant_combination_id
@@ -365,12 +389,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantValueId($value)
  * @mixin \Eloquent
  */
-	class SecondVariantCombination extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperSecondVariantCombination {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -402,12 +427,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWorkDays($value)
  * @mixin \Eloquent
  */
-	class Setting extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperSetting {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property int $id
  * @property string|null $name
@@ -477,12 +503,13 @@ namespace App\Models{
  * @method static Builder|User isUser()
  * @mixin \Eloquent
  */
-	class User extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperUser {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property string $id
  * @property string $product_id
@@ -507,12 +534,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Variant extends \Eloquent implements \App\Interfaces\Mediable {}
+	#[\AllowDynamicProperties]
+	class IdeHelperVariant {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property string $id
  * @property string $first_variant_value_id
@@ -522,7 +550,7 @@ namespace App\Models{
  * @property int $available
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read ModelWithPivotCollection<VariantValue, VariantCombination> $combinations
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\VariantValue,\App\Models\SecondVariantCombination> $combinations
  * @property-read int|null $combinations_count
  * @property-read \App\Models\VariantValue|null $first_variant_value
  * @property-read \App\Models\VariantValue|null $second_variant_value
@@ -537,15 +565,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereSecondVariantValueId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VariantValue> $combinations
  * @mixin \Eloquent
  */
-	class VariantCombination extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperVariantCombination {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property string $id
  * @property string $variant_id
@@ -555,11 +583,11 @@ namespace App\Models{
  * @property int $available
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read App\Data\Shared\ModelwithPivotCollection\ModelwithPivotCollection<App\Models\VariantValue,App\Models\VariantCombination> $combinations
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\VariantValue,\App\Models\VariantCombination> $combinations
  * @property-read int|null $combinations_count
- * @property-read App\Data\Shared\ModelwithPivotCollection\ModelwithPivotCollection<App\Models\VariantValue,App\Models\VariantCombination> $combined_by
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\VariantValue,\App\Models\VariantCombination> $combined_by
  * @property-read int|null $combined_by_count
- * @property-read App\Data\Shared\ModelwithPivotCollection\ModelwithPivotCollection<App\Models\VariantCombination,App\Models\SecondVariantCombination> $late_combinations
+ * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\VariantCombination,\App\Models\SecondVariantCombination> $late_combinations
  * @property-read int|null $late_combinations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $medially
  * @property-read int|null $medially_count
@@ -580,13 +608,15 @@ namespace App\Models{
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue wherePrice($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereUpdatedAt($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereVariantId($value)
+ * @mixin \Eloquent
  */
-	class VariantValue extends \Eloquent implements \App\Interfaces\Mediable {}
+	#[\AllowDynamicProperties]
+	class IdeHelperVariantValue {}
 }
 
 namespace App\Models{
 /**
- * 
+ *
  *
  * @property Day $name
  * @method static \Database\Factories\WorkDaysFactory factory($count = null, $state = [])
@@ -609,6 +639,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|WorkDays whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class WorkDays extends \Eloquent {}
+	#[\AllowDynamicProperties]
+	class IdeHelperWorkDays {}
 }
 

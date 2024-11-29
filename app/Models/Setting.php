@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * 
@@ -37,8 +37,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWorkDays($value)
  * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class Setting extends Model
+class Setting extends Eloquent
 {
     use HasFactory;
 }

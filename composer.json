@@ -50,6 +50,9 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
+        "phpstan": "vendor/bin/phpstan analyse",
+        "generate-swagger": "php artisan l5-swagger:generate",
+        "generate-php-docs": "php artisan ide-helper:generate && php artisan ide-helper:models  && php artisan ide-helper:meta",
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],

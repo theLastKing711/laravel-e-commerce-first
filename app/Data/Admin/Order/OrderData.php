@@ -29,8 +29,8 @@ class OrderData extends Data
 
         return new self(
             id: $order->id,
-            customer_name: $order->user?->name,
-            driver_name: $order->driver?->name,
+            customer_name: $order->user->name,
+            driver_name: $order->driver->name,
             total: $order->total,
             status: OrderStatus::from($order->status),
         );

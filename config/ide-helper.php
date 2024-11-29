@@ -168,7 +168,7 @@ return [
 
     'model_hooks' => [
         // App\Support\IdeHelper\MyModelHook::class
-        'App\CustomHook',
+        'App\AddPivotDocHook',
     ],
 
     /*

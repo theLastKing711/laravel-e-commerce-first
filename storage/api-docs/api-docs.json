@@ -823,6 +823,29 @@
                     "userProducts"
                 ],
                 "operationId": "dd9b8ac2ae94b98c5b056b1b0b3142fd",
+                "parameters": [
+                    {
+                        "name": "first_variant_value_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "second_variant_value_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "third_variant_value_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Item fetched successfully",
@@ -2794,7 +2817,6 @@
             "GetProductDetailsData": {
                 "properties": {
                     "id": {
-                        "description": "VariantData>",
                         "type": "string"
                     },
                     "variation": {
@@ -2806,15 +2828,12 @@
                         "nullable": true
                     },
                     "name": {
-                        "description": "VariantData>",
                         "type": "string"
                     },
                     "price": {
-                        "description": "VariantData>",
                         "type": "string"
                     },
                     "is_favourite": {
-                        "description": "VariantData>",
                         "type": "boolean",
                         "nullable": true
                     },
@@ -2822,11 +2841,44 @@
                         "$ref": "#/components/schemas/SingleMedia"
                     },
                     "variants": {
-                        "description": "VariantData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/VariantData"
+                            "$ref": "#/components/schemas/ProductDetailsVariantData"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "GetProductDetailsRequestData": {
+                "properties": {
+                    "first_variant_value_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "second_variant_value_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "third_variant_value_id": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ProductVariantCombinationData": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "available": {
+                        "type": "integer"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/SingleMedia"
                     }
                 },
                 "type": "object"
@@ -2835,6 +2887,9 @@
                 "properties": {
                     "id": {
                         "type": "string"
+                    },
+                    "available": {
+                        "type": "integer"
                     },
                     "price": {
                         "type": "string"
@@ -2852,6 +2907,63 @@
                     },
                     "product": {
                         "type": "App\\Models\\Product"
+                    }
+                },
+                "type": "object"
+            },
+            "GetProductDetailsQueryParameterData": {
+                "properties": {
+                    "first_variant_value_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "second_variant_value_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "third_variant_value_id": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "variantData": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "variant_values": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProuctDetailsVariantValueData"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "variantValueData": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "is_selected": {
+                        "type": "boolean"
+                    },
+                    "is_not_available": {
+                        "type": "boolean"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/SingleMedia"
+                    },
+                    "combinations_ids_with_selected_variant_value": {
+                        "$ref": "#/components/schemas/GetProductDetailsQueryParameterData"
                     }
                 },
                 "type": "object"
@@ -2907,27 +3019,24 @@
                 },
                 "type": "object"
             },
-            "VariantData": {
+            "ProductDetailsVariantData": {
                 "properties": {
                     "id": {
-                        "description": "VaraintValueData>",
                         "type": "string"
                     },
                     "name": {
-                        "description": "VaraintValueData>",
                         "type": "string"
                     },
                     "variant_values": {
-                        "description": "VaraintValueData>",
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/VariantValueData"
+                            "$ref": "#/components/schemas/ProuctDetailsVariantValueData"
                         }
                     }
                 },
                 "type": "object"
             },
-            "VariantValueData": {
+            "ProuctDetailsVariantValueData": {
                 "properties": {
                     "id": {
                         "type": "string"
@@ -3238,7 +3347,6 @@
                     {
                         "properties": {
                             "data": {
-                                "description": "SearchSuggestionData>",
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/components/schemas/ProductSearchSuggestionData"
@@ -3308,6 +3416,23 @@
                     "image_url": {
                         "type": "string",
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ProductVariationSearchData": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "available": {
+                        "type": "integer"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/SingleMedia"
                     }
                 },
                 "type": "object"

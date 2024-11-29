@@ -5,9 +5,9 @@ namespace App\Models;
 use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -51,8 +51,9 @@ use Illuminate\Support\Collection;
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereUpdatedAt($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereVariantId($value)
  * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class VariantValue extends Model implements Mediable
+class VariantValue extends Eloquent implements Mediable
 {
     use EagerLoadPivotTrait, HasFactory, HasUlids, MediaAlly;
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Data\Admin\User\Product\Details\Variant\VariantValueData;
+namespace App\Data\Admin\User\Product\Details\Variant\VariantValue;
 
-use App\Data\Admin\User\Product\Details\GetProductDetailsQueryParameterData;
+use App\Data\Admin\User\Product\Details\QueryParameters\GetProductDetailsQueryParameterData;
 use App\Data\Shared\Media\SingleMedia;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript()]
-#[Oat\Schema()]
+#[Oat\Schema(schema: 'variantValueData')]
 class VariantValueData extends Data
 {
     public function __construct(

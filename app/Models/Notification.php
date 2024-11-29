@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Enum\NotificationType;
+use Eloquent;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -38,8 +38,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class Notification extends Model
+class Notification extends Eloquent
 {
     use HasFactory;
 

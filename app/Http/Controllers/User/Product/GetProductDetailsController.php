@@ -4,11 +4,11 @@ namespace App\Http\Controllers\User\Product;
 
 use App\Data\Admin\User\Product\Details\GetProductDetailsData;
 use App\Data\Admin\User\Product\Details\GetProductDetailsRequestData;
+use App\Data\Admin\User\Product\Details\QueryParameters\GetProductDetailsQueryParameterData;
 use App\Data\Shared\Swagger\Parameter\QueryParameter\QueryParameter;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Variant;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use OpenApi\Attributes as OAT;
 
@@ -35,58 +35,43 @@ class GetProductDetailsController extends Controller
     public function __invoke(GetProductDetailsRequestData $request)
     {
 
-        // return Product::with('variants.variantValues.combinations.combinations')->first();
+        Debugbar::info($request);
+
+        return Product::query()->with([
+            'variants' => [
+                'variantValues' => [
+                    'combinations' => [
+                        'pivot' => [
+                            'first_variant_value',
+                        ],
+                    ],
+                ],
+            ],
+        ])->first();
+
+        $request_variant_value_ids_query_parameters =
+            new GetProductDetailsQueryParameterData(
+                first_variant_value_id: $request->first_variant_value_id,
+                second_variant_value_id: $request->second_variant_value_id,
+                third_variant_value_id: $request->third_variant_value_id
+            );
 
         Debugbar::info($request);
 
         $product_id = $request->id;
 
-        // $product_variants_count = Product::query()
-        //     ->whereId($request->id)
-        //     ->withCount('variants')
-        //     ->variants_count;
-        $product_variants_count = 3;
+        $product_variants_count = Product::query()
+            ->withCount('variants')
+            ->firstWhere('id', $request->id)
+            ->variants_count;
 
-        // $product = Product::query()
-        //     ->join(
-        //         'variants',
-        //         'variants.product_id',
-        //         '=',
-        //         'products.id',
-        //     )
-        //     ->join(
-        //         'variant_values',
-        //         'variant_values.variant_id',
-        //         '=',
-        //         'variants.id',
-        //     )
-        //     ->join(
-        //         'variant_combination',
-        //         'variant_combination.first_variant_value_id',
-        //         '=',
-        //         'variant_values.id',
-        //     )
-        //     ->join(
-        //         'second_variant_combination',
-        //         'second_variant_combination.variant_combination_id',
-        //         '=',
-        //         'variant_combination.id',
-        //     )
-        //     ->select([
-        //         'products.id',
-        //         'products.name',
-        //         'products.price',
-        //     ])
-        //     ->with('variants.variantValues.combinations.combinations')
-        //     ->where('second_variant_combination.id', $product_id)
-        //     ->orWhere('variant_combination.id', $product_id)
-        //     ->orWhere('variant_values.id', $product_id)
-        //     ->first();
+        $product_variants_count = $product_variants_count;
 
         $product_has_one_variant = $product_variants_count == 1;
 
         if ($product_has_one_variant) {
 
+            /** @var Product $one_variant_product */
             $one_variant_product = Product::query()
                 ->join(
                     'variants',
@@ -117,13 +102,15 @@ class GetProductDetailsController extends Controller
                     'products.name',
                     'products.price',
                 ])
-                // ->selectRaw('(select ')
                 ->with('variants.variantValues')
                 ->first();
 
             Debugbar::info('product with one variant');
 
-            return GetProductDetailsData::from($one_variant_product, $product_id);
+            return GetProductDetailsData::fromMultiple(
+                $one_variant_product,
+                $request_variant_value_ids_query_parameters
+            );
         }
 
         $product_has_two_variants =
@@ -131,6 +118,7 @@ class GetProductDetailsController extends Controller
 
         if ($product_has_two_variants) {
 
+            /** @var Product $two_variant_product */
             $two_variant_product = Product::query()
                 ->join(
                     'variants',
@@ -169,7 +157,10 @@ class GetProductDetailsController extends Controller
 
             Debugbar::info('product with two variant');
 
-            return GetProductDetailsData::from($two_variant_product, $product_id);
+            return GetProductDetailsData::fromMultiple(
+                $two_variant_product,
+                $request_variant_value_ids_query_parameters
+            );
         }
 
         $product_has_three_variants =
@@ -177,6 +168,7 @@ class GetProductDetailsController extends Controller
 
         if ($product_has_three_variants) {
 
+            /** @var Product $product */
             $product = Product::query()
                 ->join(
                     'variants',
@@ -213,7 +205,11 @@ class GetProductDetailsController extends Controller
                             'variantValues' => [
                                 'combinations' => [
                                     'pivot' => [
-                                        'combintaions',
+                                        'combintaions' => [
+                                            'pivot' => [
+                                                'variantCombination',
+                                            ],
+                                        ],
                                     ],
                                 ],
                                 'combined_by' => [
@@ -233,7 +229,10 @@ class GetProductDetailsController extends Controller
 
             Debugbar::info('product with three variant');
 
-            return GetProductDetailsData::from($product, $product_id);
+            return GetProductDetailsData::fromMultiple(
+                $product,
+                $request_variant_value_ids_query_parameters
+            );
         }
 
         $three_variant_product = Product::query()
@@ -258,7 +257,11 @@ class GetProductDetailsController extends Controller
             )
             ->first();
 
-        return GetProductDetailsData::from($three_variant_product, $product_id);
+        return GetProductDetailsData::fromMultiple(
+            $three_variant_product,
+            $request
+                ->variant_value_ids_query_paramters
+        );
 
     }
 }

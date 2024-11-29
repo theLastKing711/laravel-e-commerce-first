@@ -2,7 +2,8 @@
 
 namespace App\Data\Admin\User\Product\Details;
 
-use App\Data\Admin\User\Product\Details\Variant\VariantValueData\VariantValueData;
+use App\Data\Admin\User\Product\Details\QueryParameters\GetProductDetailsQueryParameterData;
+use App\Data\Admin\User\Product\Details\Variant\VariantValue\VariantValueData;
 use App\Data\Admin\User\Product\Variant\VariantData;
 use App\Data\Shared\Media\SingleMedia;
 use App\Data\Shared\Swagger\Property\ArrayProperty;
@@ -48,9 +49,11 @@ class GetProductDetailsData
                 ->variants
                 ->count();
 
-        Debugbar::info($product
-            ->variants
-            ->count());
+        Debugbar::info(
+            $product
+                ->variants
+                ->count()
+        );
 
         //i.e small/red/neon or small/blue/mat
         if ($product_variants_count == 3) {

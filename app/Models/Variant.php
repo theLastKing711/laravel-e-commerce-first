@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -36,9 +36,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Variant whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class Variant extends Model implements Mediable
+class Variant extends Eloquent implements Mediable
 {
     use HasFactory, HasUlids, MediaAlly;
 

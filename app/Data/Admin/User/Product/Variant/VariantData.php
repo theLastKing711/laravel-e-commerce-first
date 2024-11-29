@@ -11,16 +11,16 @@ use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript()]
-#[Oat\Schema()]
+#[Oat\Schema(schema: 'ProductDetailsVariantData')]
 class VariantData extends Data
 {
+    /** @param Collection<int, VaraintValueData> $variant_values*/
     public function __construct(
         #[OAT\Property]
         public string $id,
         #[OAT\Property]
         public string $name,
         #[ArrayProperty(VariantValueData::class)]
-        /** @var Collection<int, VaraintValueData> */
         public Collection $variant_values,
     ) {
     }

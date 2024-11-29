@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
+use App\Interfaces\Mediable;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,11 +39,13 @@ use Log;
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereSecondVariantValueId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
+ * @property-read int|null $medially_count
  * @mixin \Eloquent
  */
-class VariantCombination extends Pivot
+class VariantCombination extends Pivot implements Mediable
 {
-    use HasFactory, HasUlids;
+    use EagerLoadPivotTrait,HasFactory, HasUlids, MediaAlly;
 
     /**
      * Get the first_variant_value that owns the VariantCombination

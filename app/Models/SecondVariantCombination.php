@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
+use App\Interfaces\Mediable;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -32,11 +33,13 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantCombinationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantValueId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
+ * @property-read int|null $medially_count
  * @mixin \Eloquent
  */
-class SecondVariantCombination extends Pivot
+class SecondVariantCombination extends Pivot implements Mediable
 {
-    use EagerLoadPivotTrait, HasFactory, HasUlids;
+    use EagerLoadPivotTrait, HasUlids, MediaAlly;
 
     /**
      * Get the combination that owns the SecondVariantCombination
@@ -59,7 +62,9 @@ class SecondVariantCombination extends Pivot
                     'variantValues' => [
                         'variant',
                         'combinations' => [
-                            'combinations',
+                            'pivot' => [
+                                'combinations',
+                            ],
                         ],
                         'late_combinations',
                     ],

@@ -3,21 +3,17 @@
 namespace App;
 
 use App\Data\Shared\ModelwithPivotCollection;
-use App\Models\VariantValue;
 use Barryvdh\LaravelIdeHelper\Console\ModelsCommand;
 use Barryvdh\LaravelIdeHelper\Contracts\ModelHookInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
-use Log;
 use ReflectionClass;
 
-class CustomHook implements ModelHookInterface
+class AddPivotDocHook implements ModelHookInterface
 {
     public function run(ModelsCommand $command, Model $model): void
     {
 
-        // Log::info($model->);
         $x = $model;
 
         $reflection_class = new ReflectionClass($x);
@@ -26,8 +22,6 @@ class CustomHook implements ModelHookInterface
 
         // $doc_comment = $reflection_class->getDocComment();
 
-        // Log::info($doc_comment);
-        // ModelwithPivotCollection<VariantValue, SecondVariantCombination>
         foreach ($methods as $method) {
             $return_type =
                 $method
@@ -46,8 +40,6 @@ class CustomHook implements ModelHookInterface
                     .
                     $method_invocation
                         ->getPivotClass();
-
-                Log::info($pivot_model);
 
                 $related_model =
                     '\\'

@@ -12,11 +12,11 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[Oat\Schema()]
 class CursorPaginatedSearchSuggestionData extends CursorPaginationResultData
 {
+    /** @param Collection<int, ProductSearchSuggestionData> $data*/
     public function __construct(
         int $per_page,
         ?string $next_cursor,
         #[ArrayProperty(ProductSearchSuggestionData::class)]
-        /** @var Collection<int, SearchSuggestionData> */
         public Collection $data,
     ) {
         parent::__construct($per_page, $next_cursor);

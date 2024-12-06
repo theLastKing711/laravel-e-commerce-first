@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\Data\Shared\File\UpdateFileData;
-use App\Interfaces\Mediable;
+use App\Data\Shared\Media\ModelAndMediable;
+use App\Models\Media;
 use Cloudinary;
 use Cloudinary\Api\Exception\ApiError;
 use Illuminate\Database\Eloquent\Model;
@@ -20,22 +21,28 @@ class mediaService
      *
      * @throws ApiError
      */
-    public function updateMediaForModel(Mediable&Model $model, array|Collection $request_files)
+    public function updateMediaForModel(ModelAndMediable $model, array|Collection $request_files)
     {
-
+        /** @var Collection<int, string> $file_to_update_ids */
         $file_to_update_ids = $request_files->pluck('uid');
 
-        $medias_to_delete = $model->medially()
-            ->whereNotIn('id', $file_to_update_ids)
-            ->get();
+        /** @var Collection<int, Media> $medias_to_delete */
+        $medias_to_delete =
+            $model
+                ->medially
+                ->whereNotIn('id', $file_to_update_ids);
 
         Log::info('media ids to delete {ids}', ['ids' => $medias_to_delete]);
 
         $model->detachMedia($medias_to_delete);
 
-        $existing_media_ids = $model->medially()
-            ->pluck('id');
+        /** @var Collection<int, string> $existing_media_ids */
+        $existing_media_ids =
+            $model
+                ->medially
+                ->pluck('id');
 
+        /** @var Collection<int, string> $media_to_add_urls */
         $media_to_add_urls = $request_files->filter(
             fn ($file) => ! $existing_media_ids->contains($file->uid)
         )->pluck('url');
@@ -53,7 +60,7 @@ class mediaService
      *
      * @throws ApiError
      */
-    public function createMediaForModel(Mediable&Model $model, array|Collection $public_ids)
+    public function createMediaForModel(ModelAndMediable $model, array|Collection $public_ids)
     {
 
         foreach ($public_ids as &$public_id) {
@@ -69,7 +76,7 @@ class mediaService
     /**
      * Delete all/one/multiple file(s) associated with a particular Model record
      */
-    public function removeAssociatedMediaForModel(Mediable&Model $model): void
+    public function removeAssociatedMediaForModel(ModelAndMediable $model): void
     {
         Log::info('hello world');
         $model->detachMedia();

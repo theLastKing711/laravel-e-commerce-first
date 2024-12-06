@@ -25,12 +25,10 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $itemCount = 6;
+        $itemCount = 20;
 
-        //generate 10 parent categories
         $this->generateParentCategoriesWithProducts($itemCount);
 
-        //generate 10 child categories
         $this->generateChildCategoriesWithProducts($itemCount);
     }
 
@@ -43,12 +41,12 @@ class CategorySeeder extends Seeder
 
         $seededParentCategories = Category::factory()
             ->parent()
-            ->has(
-                Media::factory()->count($count),
-                'medially'
-                // category is connected to media polymorphiclly through medially
-                //as defined in Category.php
-            )
+            // ->has(
+            //     Media::factory()->count(1),
+            //     'medially'
+            //     // category is connected to media polymorphiclly through medially
+            //     //as defined in Category.php
+            // )
             ->count($count)
             ->create();
 
@@ -62,10 +60,10 @@ class CategorySeeder extends Seeder
 
         $seededChildCategories = Category::factory()
             ->child()
-            ->has(
-                Media::factory()->count($count),
-                'medially'
-            )
+            // ->has(
+            //     Media::factory()->count(1),
+            //     'medially'
+            // )
             ->has(
                 Product::factory()
                     ->state(new Sequence(
@@ -100,7 +98,7 @@ class CategorySeeder extends Seeder
                         $shuffled_variants = fake()->shuffleArray($VARIANTS);
 
                         $variants = Variant::factory()
-                            ->state(new Sequence(// git
+                            ->state(new Sequence(
                                 ['product_id' => $product->id, 'name' => $shuffled_variants[0]],
                                 ['product_id' => $product->id, 'name' => $shuffled_variants[1]],
                                 ['product_id' => $product->id, 'name' => $shuffled_variants[2]],

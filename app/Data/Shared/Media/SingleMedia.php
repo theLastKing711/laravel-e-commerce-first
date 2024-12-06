@@ -15,22 +15,22 @@ class SingleMedia extends Data
 {
     public function __construct(
         #[OAT\Property()]
-        public int $id,
+        public string $id,
         #[OAT\Property()]
         public string $file_url,
     ) {
     }
 
-    public static function fromModel(Mediable $mediable): ?self
+    public static function fromModel(?Mediable $mediable): ?self
     {
-        if ($mediable->medially()->count() == 0) {
+        if ($mediable?->medially->count() == 0) {
 
             return null;
         }
         /** @var Media $first_media */
-        $first_media = $mediable->medially()->first();
+        $first_media = $mediable->medially->first();
 
-        Log::info('media {media}', ['media' => $mediable->medially()->first()]);
+        // Log::info('media {media}', ['media' => $mediable->medially->first()]);
 
         return new self(
             id: $first_media->id,

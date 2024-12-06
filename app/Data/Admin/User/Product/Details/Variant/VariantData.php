@@ -2,7 +2,7 @@
 
 namespace App\Data\Admin\User\Product\Details\Variant;
 
-use App\Data\Admin\User\Product\Variant\VariantValue\VariantValueData;
+use App\Data\Admin\User\Product\Details\Variant\VariantValue\VariantValueData;
 use App\Data\Shared\Swagger\Property\ArrayProperty;
 use App\Models\Variant;
 use Illuminate\Support\Collection;
@@ -14,7 +14,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[Oat\Schema(schema: 'variantData')]
 class VariantData extends Data
 {
-    /** @param Collection<int, VaraintValueData> */
+    /** @param Collection<int, VariantValueData> $variant_values */
     public function __construct(
         #[OAT\Property]
         public string $id,

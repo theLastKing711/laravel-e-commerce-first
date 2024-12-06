@@ -72,39 +72,95 @@ class VariantValueCreationService
         VariantValue $newly_created_variant_value
     ): void {
 
-        $product_other_variants_variant_values_ids =
+        $product_first_variant_id =
             $newly_created_variant_value_product
-                ->getOtherVariantsVariantValueIdsByVariantValueId(
-                    $newly_created_variant_value->id
-                );
+                ->variants
+                ->first()
+                ->id;
 
-        $newly_created_variant_value
-            ->attachCombinationsIds(
-                $product_other_variants_variant_values_ids
-            );
+        $is_newly_created_variant_value_from_first_variant =
+            $newly_created_variant_value
+                ->variant_id
+            ==
+            $product_first_variant_id;
 
-        $newly_created_variant_value
-            ->setCombinationPricesToMaxValue(
+        if ($is_newly_created_variant_value_from_first_variant) {
+
+            $product_second_variant_variant_values_ids =
                 $newly_created_variant_value_product
-            );
-
-        $newly_created_variant_value_product
-            ->refresh();
-
-        $product_has_thumb_variant_combination =
-            $newly_created_variant_value_product
-                ->hasThumbVariantCombination();
-
-        if (! $product_has_thumb_variant_combination) {
-
-            $product_first_other_variants_variant_values_id =
-                $product_other_variants_variant_values_ids
-                    ->first();
+                    ->getSecondVariantVariantValuesByFirstVariantValue(
+                        $newly_created_variant_value
+                    );
 
             $newly_created_variant_value
-                ->setCombinationThumbToTrueById(
-                    $product_first_other_variants_variant_values_id
+                ->attachCombinedByIds(
+                    $product_second_variant_variant_values_ids
                 );
+
+            $newly_created_variant_value
+                ->setCombinedByPricesToMaxValue(
+                    $newly_created_variant_value_product
+                );
+
+            $product_has_thumb_variant_combined_by =
+                $newly_created_variant_value_product
+                    ->hasThumbVariantCombinedBy();
+
+            if (! $product_has_thumb_variant_combined_by) {
+
+                $newly_created_variant_value_product
+                    ->refresh();
+
+                $product_second_variant_first_variant_value_id =
+                        $product_second_variant_variant_values_ids
+                            ->first();
+
+                $newly_created_variant_value
+                    ->setCombinedByThumbToTrueById(
+                        $product_second_variant_first_variant_value_id
+                    );
+            }
+
+        }
+
+        $is_newly_created_variant_value_from_second_variant =
+            ! $is_newly_created_variant_value_from_first_variant;
+
+        if ($is_newly_created_variant_value_from_second_variant) {
+
+            $product_first_variant_variant_values_ids =
+                $newly_created_variant_value_product
+                    ->getFirstVariantVariantValuesIds();
+
+            $newly_created_variant_value
+                ->attachCombinationsIds(
+                    $product_first_variant_variant_values_ids
+                );
+
+            $newly_created_variant_value
+                ->setCombinationPricesToMaxValue(
+                    $newly_created_variant_value_product
+                );
+
+            $product_has_thumb_variant_combination =
+                $newly_created_variant_value_product
+                    ->hasThumbVariantCombination();
+
+            if (! $product_has_thumb_variant_combination) {
+
+                $newly_created_variant_value_product
+                    ->refresh();
+
+                $product_first_variant_variant_value =
+                        $product_first_variant_variant_values_ids
+                            ->first();
+
+                $newly_created_variant_value
+                    ->setCombinationThumbToTrueById(
+                        $product_first_variant_variant_value
+                    );
+            }
+
         }
 
     }

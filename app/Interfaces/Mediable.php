@@ -7,6 +7,7 @@ use CloudinaryLabs\CloudinaryLaravel\Model\Media;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 
+/** @property-read \Illuminate\Database\Eloquent\EloquentCollection<int, \App\Models\Media> $medially */
 interface Mediable
 {
     public function medially(): MorphMany;

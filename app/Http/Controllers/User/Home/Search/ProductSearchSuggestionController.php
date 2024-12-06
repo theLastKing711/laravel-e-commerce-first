@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Log;
 use OpenApi\Attributes as OAT;
 
-class SearchSuggestionController extends Controller
+class ProductSearchSuggestionController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -23,6 +23,7 @@ class SearchSuggestionController extends Controller
     #[SuccessListResponse(CursorPaginatedSearchSuggestionData::class)]
     public function __invoke(Request $request, SearchSuggestionQueryParameterData $queryParameters)
     {
+
         $request_search = $queryParameters->search;
 
         Log::info(
@@ -39,6 +40,7 @@ class SearchSuggestionController extends Controller
             ->whereLike('name', $request_search)
             ->with(
                 [
+                    'medially',
                     'variants' => [
                         'variantValues' => function ($query) {
                             $query
@@ -50,9 +52,19 @@ class SearchSuggestionController extends Controller
                                                 ->with(
                                                     [
                                                         'medially',
-                                                        'combinations' => function ($query) {
-                                                            $query->with('medially');
-                                                        }]
+                                                        'pivot' => [
+                                                            'medially',
+                                                            'first_variant_value',
+                                                            'combinations' => [
+                                                                'pivot' => [
+                                                                    'medially',
+                                                                    'variantCombination' => [
+                                                                        'first_variant_value',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ]
                                                 );
                                         },
                                     ]

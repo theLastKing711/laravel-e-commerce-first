@@ -10,6 +10,7 @@ use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Log;
 use OpenApi\Attributes as OAT;
 
 #[
@@ -35,19 +36,38 @@ class GetProductDetailsController extends Controller
     public function __invoke(GetProductDetailsRequestData $request)
     {
 
-        Debugbar::info($request);
+        /** @var Product $product */
+        $product =
+            Product::query()
+                ->has('variants', 3)
+                ->with(['variants' => [
+                    'product',
+                ]])
+                ->first();
 
-        return Product::query()->with([
-            'variants' => [
-                'variantValues' => [
-                    'combinations' => [
-                        'pivot' => [
-                            'first_variant_value',
-                        ],
-                    ],
-                ],
-            ],
-        ])->first();
+        $product
+            ->variants
+            ->each(function ($variant) {
+
+                Log::info($variant->product);
+
+            });
+
+        return;
+
+        // Debugbar::info($request);
+
+        // return Product::query()->with([
+        //     'variants' => [
+        //         'variantValues' => [
+        //             'combinations' => [
+        //                 'pivot' => [
+        //                     'first_variant_value',
+        //                 ],
+        //             ],
+        //         ],
+        //     ],
+        // ])->first();
 
         $request_variant_value_ids_query_parameters =
             new GetProductDetailsQueryParameterData(
@@ -73,37 +93,32 @@ class GetProductDetailsController extends Controller
 
             /** @var Product $one_variant_product */
             $one_variant_product = Product::query()
-                ->join(
-                    'variants',
-                    'variants.product_id',
-                    '=',
-                    'products.id',
-                )
-                ->join(
-                    'variant_values',
-                    'variant_values.variant_id',
-                    '=',
-                    'variants.id',
-                )
-                ->join(
-                    'variant_combination',
-                    'variant_combination.first_variant_value_id',
-                    '=',
-                    'variant_values.id',
-                )
-                ->join(
-                    'second_variant_combination',
-                    'second_variant_combination.variant_combination_id',
-                    '=',
-                    'variant_combination.id',
-                )
-                ->select([
-                    'products.id',
-                    'products.name',
-                    'products.price',
+                // ->join(
+                //     'variants',
+                //     'products.id',
+                //     '=',
+                //     'variants.product_id',
+                // )
+                // ->join(
+                //     'variant_values',
+                //     'variants.id',
+                //     '=',
+                //     'variant_values.variant_id',
+                // )
+                // ->select([
+                //     'products.id',
+                //     'products.name',
+                //     'products.price',
+                // ])
+                ->with([
+                    'medially',
+                    'variants' => [
+                        'variantValues' => [
+                            'medially',
+                        ],
+                    ],
                 ])
-                ->with('variants.variantValues')
-                ->first();
+                ->firstWhere('products.id', $request->id);
 
             Debugbar::info('product with one variant');
 
@@ -120,42 +135,64 @@ class GetProductDetailsController extends Controller
 
             /** @var Product $two_variant_product */
             $two_variant_product = Product::query()
-                ->join(
-                    'variants',
-                    'variants.product_id',
-                    '=',
-                    'products.id',
-                )
-                ->join(
-                    'variant_values',
-                    'variant_values.variant_id',
-                    '=',
-                    'variants.id',
-                )
-                ->join(
-                    'variant_combination',
-                    'variant_combination.first_variant_value_id',
-                    '=',
-                    'variant_values.id',
-                )
-                ->join(
-                    'second_variant_combination',
-                    'second_variant_combination.variant_combination_id',
-                    '=',
-                    'variant_combination.id',
-                )
-                ->select([
-                    'products.id',
-                    'products.name',
-                    'products.price',
+                // ->join(
+                //     'variants',
+                //     'products.id',
+                //     '=',
+                //     'variants.product_id',
+                // )
+                // ->join(
+                //     'variant_values',
+                //     'variants.id',
+                //     '=',
+                //     'variant_values.variant_id',
+                // )
+                // ->join(
+                //     'variant_combination',
+                //     'variant_values.id',
+                //     '=',
+                //     'variant_combination.first_variant_value_id',
+                // )
+                // ->join(
+                //     'variant_combination as combined_variant_combination',
+                //     'variant_values.id',
+                //     '=',
+                //     'combined_variant_combination.second_variant_value_id',
+                // )
+                // ->select([
+                //     'products.id',
+                //     'products.name',
+                //     'products.price',
+                //     'variants.*',
+                //     'variant_values.*',
+                // ])
+                ->with([
+                    'medially',
+                    'variants' => [
+                        'variantValues' => [
+                            'medially',
+                            'combinations' => [
+                                'medially',
+                                'pivot' => [
+                                    'medially',
+                                ],
+                            ],
+                            'combined_by' => [
+                                'medially',
+                                'pivot' => [
+                                    'medially',
+                                ],
+                            ],
+                        ],
+                    ],
                 ])
-                ->with('variants.variantValues.combinations')
-                ->where('second_variant_combination.id', $product_id)
-                ->orWhere('variant_combination.id', $product_id)
-                ->orWhere('variant_values.id', $product_id)
-                ->first();
+                ->firstWhere('products.id', $request->id);
+
+            // Debugbar::info($two_variant_product->variants);
 
             Debugbar::info('product with two variant');
+
+            DebugBar::info($two_variant_product->variants);
 
             return GetProductDetailsData::fromMultiple(
                 $two_variant_product,
@@ -167,6 +204,8 @@ class GetProductDetailsController extends Controller
             $product_variants_count == 3;
 
         if ($product_has_three_variants) {
+
+            DebugBar::info('product with three variants');
 
             /** @var Product $product */
             $product = Product::query()
@@ -205,7 +244,7 @@ class GetProductDetailsController extends Controller
                             'variantValues' => [
                                 'combinations' => [
                                     'pivot' => [
-                                        'combintaions' => [
+                                        'combinations' => [
                                             'pivot' => [
                                                 'variantCombination',
                                             ],
@@ -214,7 +253,12 @@ class GetProductDetailsController extends Controller
                                 ],
                                 'combined_by' => [
                                     'pivot' => [
-                                        'combinations',
+                                        'combinations' => [
+                                            'pivot' => [
+                                                'medially',
+                                                'variantCombination',
+                                            ],
+                                        ],
                                     ],
                                 ],
                                 'late_combinations',
@@ -222,12 +266,7 @@ class GetProductDetailsController extends Controller
                         ],
                     ]
                 )
-                ->where('second_variant_combination.id', $product_id)
-                ->orWhere('variant_combination.id', $product_id)
-                ->orWhere('variant_values.id', $product_id)
-                ->first();
-
-            Debugbar::info('product with three variant');
+                ->firstWhere('products.id', $request->id);
 
             return GetProductDetailsData::fromMultiple(
                 $product,
@@ -235,32 +274,43 @@ class GetProductDetailsController extends Controller
             );
         }
 
-        $three_variant_product = Product::query()
-            ->select('id', 'name', 'price')
-            ->whereId($product_id)
-            ->selectRaw(
-                '
-            case
-            when (
-            select count(*)
-            from user_favourite_product
-            where exists (
-                    select true
-                    where user_favourite_product.product_id = products.id
-                    and user_favourite_product.user_id = ?
-                )
-            ) >= 1
-            then 1
-            else 0
-            end as is_favourite',
-                [21]
-            )
-            ->first();
+        // $three_variant_product = Product::query()
+        //     ->select('id', 'name', 'price')
+        //     ->whereId($product_id)
+        //     ->selectRaw(
+        //         '
+        //     case
+        //     when (
+        //     select count(*)
+        //     from user_favourite_product
+        //     where exists (
+        //             select true
+        //             where user_favourite_product.product_id = products.id
+        //             and user_favourite_product.user_id = ?
+        //         )
+        //     ) >= 1
+        //     then 1
+        //     else 0
+        //     end as is_favourite',
+        //         [21]
+        //     )
+        //     ->first();
+
+        $no_variation_product =
+            Product::query()
+                ->with([
+                    'medially',
+                    'variants' => [
+                        'variantValues' => [
+                            'medially',
+                        ],
+                    ],
+                ])
+                ->firstWhereId($request->id);
 
         return GetProductDetailsData::fromMultiple(
-            $three_variant_product,
-            $request
-                ->variant_value_ids_query_paramters
+            $no_variation_product,
+            $request_variant_value_ids_query_parameters
         );
 
     }

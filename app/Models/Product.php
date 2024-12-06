@@ -21,8 +21,6 @@ use function str_contains;
 use function strlen;
 
 /**
- * 
- *
  * @property string $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -48,6 +46,7 @@ use function strlen;
  * @property-read int|null $order_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Variant> $variants
  * @property-read int|null $variants_count
+ *
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product hasName(?string $name)
  * @method static Builder|Product newModelQuery()
@@ -66,6 +65,7 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class Product extends Eloquent implements Mediable
@@ -204,6 +204,17 @@ class Product extends Eloquent implements Mediable
 
     }
 
+    public function hasThumbVariantCombinedBy()
+    {
+
+        $product_variant_combined_by =
+            $this->getThumbVariantCombinedBy();
+
+        return $product_variant_combined_by
+            == null ? false : true;
+
+    }
+
     public function getThumbVariantCombination(): ?VariantValue
     {
         return $this
@@ -215,30 +226,50 @@ class Product extends Eloquent implements Mediable
             ->firstWhere('pivot.is_thumb', true);
     }
 
-    /** @return SupportCollection<int>  */
-    public function getOtherVariantsVariantValueIdsByVariantValueId(string $variant_value_id): SupportCollection
+    public function getThumbVariantCombinedBy(): ?VariantValue
     {
-        $variant =
+        return $this
+            ->variants
+            ->pluck('variantValues')
+            ->flatten()
+            ->pluck('combined_by')
+            ->flatten()
+            ->firstWhere('pivot.is_thumb', true);
+    }
+
+    /** @return SupportCollection<int, string>  */
+    public function getSecondVariantVariantValuesByFirstVariantValue(VariantValue $first_variant_value): SupportCollection
+    {
+
+        /** @var SupportCollection<int, string> $product_second_variant_variant_values_ids */
+        $product_second_variant_variant_values_ids =
             $this
                 ->variants
-                ->pluck('variantValues')
-                ->flatten()
-                ->firstWhere('id', $variant_value_id)
-                ->variant;
-
-        $variant_value_variant_ids =
-            $variant
-                ->variantValues()
+                ->whereNot('id', $first_variant_value->variant_id)
+                ->first()
+                ->variantValues
                 ->pluck('id');
 
-        return VariantValue::query()
-            ->whereNotIn('id', $variant_value_variant_ids)
-            ->whereHas('variant', function ($query) {
-                $query->whereHas('product', function ($query) {
-                    $query->id = $this;
-                });
-            })
-            ->pluck('id');
+        return $product_second_variant_variant_values_ids;
+    }
+
+    /** @return SupportCollection<int, string>  */
+    public function getFirstVariantVariantValuesIds(): SupportCollection
+    {
+
+        /** @var Variant $first_variant_variant_values_ids */
+        $product_first_variant =
+            $this
+                ->variants
+                ->first();
+
+        /** @var SupportCollection<int, string> $product_first_variant_variant_values_ids */
+        $product_first_variant_variant_values_ids =
+            $product_first_variant
+                ->variantValues
+                ->pluck('id');
+
+        return $product_first_variant_variant_values_ids;
     }
 
     public function hasThumbSecondVariantCombination(): bool

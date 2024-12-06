@@ -10,6 +10,8 @@ use App\Models\SecondVariantCombination;
 use App\Models\Variant;
 use App\Models\VariantCombination;
 use App\Models\VariantValue;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Log;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 
@@ -57,15 +59,14 @@ class ProductSearchSuggestionData extends Data
                 $product_thumb_third_variant_value_with_second_variant_combination
                     ->pivot;
 
+            // Debugbar::info($product_thumb_second_variant_combination)
+
             $product_variation = new ProductVariationSearchData(
                 id: $product_thumb_second_variant_combination
-                    ->pivot
                     ->id,
                 available: $product_thumb_second_variant_combination
-                        ->pivot
                         ->available,
                 price: $product_thumb_second_variant_combination
-                        ->pivot
                         ->price,
                 image: SingleMedia::fromModel($product_thumb_second_variant_combination)
             );
@@ -76,7 +77,8 @@ class ProductSearchSuggestionData extends Data
 
             $product_thumb_second_variant_value_id =
                 $product_thumb_variant_combination
-                    ->first_variant_value;
+                    ->first_variant_value
+                    ->id;
 
             $product_thumb_first_variant_value_id =
                 $product_thumb_variant_combination
@@ -99,7 +101,7 @@ class ProductSearchSuggestionData extends Data
                 image_url: $product
                     ->medially
                     ->first()
-                    ->file_url,
+                    ?->file_url,
                 product_variation: $product_variation,
                 variant_value_ids_query_parameters: $variant_value_ids_query_parameters
             );
@@ -122,6 +124,8 @@ class ProductSearchSuggestionData extends Data
                 $product_thumb_first_variant_value_with_variant_combination
                     ->pivot;
 
+            Log::info($product_thumb_first_variant_value_with_variant_combination);
+
             $product_variation = new ProductVariationSearchData(
                 id: $product_thumb_variant_combination
                         ->id,
@@ -137,12 +141,12 @@ class ProductSearchSuggestionData extends Data
                     ->first_variant_value;
 
             return new self(
-                id: $product_thumb_variant_combination->id,
+                id: $product->id,
                 name: $product->name,
-                image_url: $product_thumb_variant_combination
+                image_url: $product
                     ->medially
                     ->first()
-                    ->file_url,
+                    ?->file_url,
                 product_variation: $product_variation,
                 variant_value_ids_query_parameters: new GetProductDetailsQueryParameterData(
                     first_variant_value_id: $product_thumb_first_variant_value_with_variant_combination
@@ -167,13 +171,10 @@ class ProductSearchSuggestionData extends Data
 
             $product_variation = new ProductVariationSearchData(
                 id: $product_thumb_variant_value
-                    ->pivot
                     ->id,
                 available: $product_thumb_variant_value
-                        ->pivot
                         ->available,
                 price: $product_thumb_variant_value
-                        ->pivot
                         ->price,
                 image: SingleMedia::fromModel($product_thumb_variant_value)
             );
@@ -195,9 +196,9 @@ class ProductSearchSuggestionData extends Data
             id: $product->id,
             name: $product->name,
             image_url: $product
-                ->medially()
+                ->medially
                 ->first()
-                ->file_url,
+                ?->file_url,
         );
 
     }

@@ -76,7 +76,7 @@ class GroupController extends Controller
     #[SuccessNoContentResponse('Group created successfully')]
     public function store(
         CreateGroupData $createGroupData,
-    ): GroupData {
+    ) {
 
         Log::info('Accessing GroupController store method');
 

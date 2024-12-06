@@ -4,14 +4,12 @@ namespace App\Models;
 
 use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 use App\Interfaces\Mediable;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Log;
 
 /**
  * 
@@ -26,21 +24,21 @@ use Log;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Data\Shared\ModelwithPivotCollection<\App\Models\VariantValue,\App\Models\SecondVariantCombination> $combinations
  * @property-read int|null $combinations_count
- * @property-read \App\Models\VariantValue|null $first_variant_value
- * @property-read \App\Models\VariantValue|null $second_variant_value
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination query()
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereAvailable($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereFirstVariantValueId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereIsThumb($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereSecondVariantValueId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VariantCombination whereUpdatedAt($value)
+ * @property-read \App\Models\VariantValue $first_variant_value
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
  * @property-read int|null $medially_count
+ * @property-read \App\Models\VariantValue $second_variant_value
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination newModelQuery()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination newQuery()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination query()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereAvailable($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereCreatedAt($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereFirstVariantValueId($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereId($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereIsThumb($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination wherePrice($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereSecondVariantValueId($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class VariantCombination extends Pivot implements Mediable
@@ -68,9 +66,6 @@ class VariantCombination extends Pivot implements Mediable
      */
     public function combinations(): BelongsToMany
     {
-        Debugbar::info('combinations');
-
-        Log::info($this);
 
         return $this->belongsToMany(
             VariantValue::class,
@@ -78,7 +73,7 @@ class VariantCombination extends Pivot implements Mediable
             'variant_combination_id',
             'variant_value_id'
         )
-            ->withPivot('id', 'is_thumb')
+            ->withPivot('id', 'is_thumb', 'price', 'available')
             ->using(SecondVariantCombination::class);
     }
 

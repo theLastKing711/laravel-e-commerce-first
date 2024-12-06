@@ -79,7 +79,7 @@ class VariantValue extends Eloquent implements Mediable
                 'first_variant_value_id',
                 'second_variant_value_id'
             )
-            ->withPivot('id', 'is_thumb')
+            ->withPivot('id', 'is_thumb', 'price', 'available')
             ->using(VariantCombination::class);
     }
 
@@ -92,7 +92,7 @@ class VariantValue extends Eloquent implements Mediable
                 'second_variant_value_id',
                 'first_variant_value_id',
             )
-            ->withPivot('id', 'is_thumb')
+            ->withPivot('id', 'is_thumb', 'price', 'available')
             ->using(VariantCombination::class);
     }
 
@@ -106,7 +106,7 @@ class VariantValue extends Eloquent implements Mediable
                     'variant_value_id',
                     'variant_combination_id',
                 )
-                ->withPivot('id', 'is_thumb', 'price')
+                ->withPivot('id', 'is_thumb', 'price', 'available')
                 ->using(SecondVariantCombination::class);
     }
 
@@ -168,6 +168,19 @@ class VariantValue extends Eloquent implements Mediable
             );
     }
 
+    /**
+     * @param  Collection<int,string>  $combinations_ids
+     */
+    public function attachCombinedByIds(Collection $combinations_ids): void
+    {
+        $this
+            ->combined_by()
+            ->attach(
+                $combinations_ids,
+                ['is_thumb' => false, 'available' => 0]
+            );
+    }
+
     /** @param Collection<int, string> $combinations_ids */
     public function attachLateCombinationsIds(Collection $combinations_ids): void
     {
@@ -188,7 +201,42 @@ class VariantValue extends Eloquent implements Mediable
             max($product_price, $this->price);
 
         $this
-            ->combinations()
+            ->combinations
+            ->each(function ($first_variant_value_with_pivot_variant_combination) use ($max_of_product_price_and_main_variant_value_price) {
+
+                $variant_combinations =
+                    $first_variant_value_with_pivot_variant_combination
+                    ->pivot;
+
+                $new_media =
+                    Media::factory(1)
+                        ->makeOne();
+
+                $variant_combinations
+                    ->medially()
+                    ->save($new_media);
+
+                $max_price = max($max_of_product_price_and_main_variant_value_price, $first_variant_value_with_pivot_variant_combination->price);
+
+                VariantCombination::query()
+                    ->firstWhere('id', $first_variant_value_with_pivot_variant_combination->pivot->id)
+                    ->update(['price' => $max_price]);
+
+            });
+
+    }
+
+    public function setCombinedByPricesToMaxValue(Product $product)
+    {
+        $product_price =
+            $product
+                ->price;
+
+        $max_of_product_price_and_main_variant_value_price =
+            max($product_price, $this->price);
+
+        $this
+            ->combined_by()
             ->each(function ($variantValue) use ($max_of_product_price_and_main_variant_value_price) {
 
                 $max_price = max($max_of_product_price_and_main_variant_value_price, $variantValue->price);
@@ -208,13 +256,22 @@ class VariantValue extends Eloquent implements Mediable
         $max_of_product_price_and_main_variant_value_price = max($product_price, $this->price);
 
         $this
-            ->late_combinations()
-            ->each(function ($variantValue) use ($max_of_product_price_and_main_variant_value_price) {
+            ->late_combinations
+            ->each(function ($third_variantValue_with_pivot_second_variant_combination, $index) use ($max_of_product_price_and_main_variant_value_price) {
 
-                $max_price = max($max_of_product_price_and_main_variant_value_price, $variantValue->pivot->price);
+                $second_variant_combination = $third_variantValue_with_pivot_second_variant_combination->pivot;
 
-                SecondVariantCombination::query()
-                    ->firstWhere('id', $variantValue->pivot->id)
+                $max_price = max($max_of_product_price_and_main_variant_value_price, $second_variant_combination->price);
+
+                $new_media =
+                    Media::factory(1)
+                        ->makeOne();
+
+                $second_variant_combination
+                    ->medially()
+                    ->save($new_media);
+
+                $second_variant_combination
                     ->update(['price' => $max_price]);
 
             });
@@ -224,6 +281,16 @@ class VariantValue extends Eloquent implements Mediable
     {
         $this
             ->combinations()
+            ->updateExistingPivot(
+                $variant_value_id,
+                ['is_thumb' => true]
+            );
+    }
+
+    public function setCombinedByThumbToTrueById(string $variant_value_id)
+    {
+        $this
+            ->combined_by()
             ->updateExistingPivot(
                 $variant_value_id,
                 ['is_thumb' => true]

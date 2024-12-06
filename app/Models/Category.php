@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -46,7 +48,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static Builder|Category whereUpdatedAt($value)
  * @mixin Eloquent
  */
-class Category extends Eloquent
+class Category extends Model implements Mediable
 {
     use HasFactory, HasUlids, MediaAlly;
 

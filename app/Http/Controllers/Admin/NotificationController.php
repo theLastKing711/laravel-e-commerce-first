@@ -68,7 +68,7 @@ class NotificationController extends Controller
     #[SuccessNoContentResponse('Notification created successfully')]
     public function store(
         CreateNotificationData $createNotificationData,
-    ): NotificationData {
+    ) {
 
         Log::info('Accessing NotificationController store method');
 

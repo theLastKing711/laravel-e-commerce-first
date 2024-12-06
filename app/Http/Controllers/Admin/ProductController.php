@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Data\Admin\Admin\PathParameters\AdminProductIdPathParameterData;
 use App\Data\Admin\Product\CreateProductData;
 use App\Data\Admin\Product\PaginatedProductData;
-use App\Data\Admin\Product\PathParameters\ProductIdPathParameterData;
 use App\Data\Admin\Product\ProductData;
 use App\Data\Admin\Product\ProductListData;
 use App\Data\Admin\Product\QueryParameters\ProductNameQueryParameterData;
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
     #[OAT\Get(path: '/admin/products/{id}', tags: ['products'])]
     #[SuccessItemResponse(ProductData::class)]
-    public function show(ProductIdPathParameterData $request)
+    public function show(AdminProductIdPathParameterData $request)
     {
 
         $product = Product::with(['categories.parent'])
@@ -90,7 +90,7 @@ class ProductController extends Controller
     #[FormDataRequestBody(UpdateProductData::class)]
     #[SuccessNoContentResponse('Product successfully updated')]
     public function update(
-        ProductIdPathParameterData $request,
+        AdminProductIdPathParameterData $request,
         UpdateProductData $updatedProductData,
     ) {
         $product = Product::find($request->id)
@@ -137,7 +137,7 @@ class ProductController extends Controller
 
     #[OAT\Patch(path: '/admin/products/{id}/activate', tags: ['products'])]
     #[SuccessNoContentResponse('Fetched Product Successfully')]
-    public function activate(ProductIdPathParameterData $request)
+    public function activate(AdminProductIdPathParameterData $request)
     {
         $product = Product::find($request->id);
 
@@ -149,7 +149,7 @@ class ProductController extends Controller
 
     #[OAT\Patch(path: '/admin/products/{id}/deActivate', tags: ['products'])]
     #[SuccessNoContentResponse('Product DeActivated Successfully')]
-    public function deActivate(ProductIdPathParameterData $request)
+    public function deActivate(AdminProductIdPathParameterData $request)
     {
         $product = Product::find($request->id);
 

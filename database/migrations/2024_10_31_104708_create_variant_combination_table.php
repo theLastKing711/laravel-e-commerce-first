@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('variant_combination', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('first_variant_value_id');
-            $table->foreignUlid('second_variant_value_id');
+            $table->foreignUlid('first_variant_value_id')
+                ->constrained('variant_values');
+            $table->foreignUlid('second_variant_value_id')
+                ->constrained('variant_values');
             $table->boolean('is_thumb');
             $table->decimal('price')->nullable();
             $table->integer('available');

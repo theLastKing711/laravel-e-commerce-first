@@ -7,6 +7,7 @@ use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -20,26 +21,31 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property int $available
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\VariantCombination|null $variantCombination
- * @property-read \App\Models\VariantValue|null $variantValue
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination query()
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereAvailable($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereIsThumb($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantCombinationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SecondVariantCombination whereVariantValueId($value)
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \CloudinaryLabs\CloudinaryLaravel\Model\Media> $medially
  * @property-read int|null $medially_count
+ * @property-read \App\Models\VariantCombination $variantCombination
+ * @property-read \App\Models\VariantValue $variantValue
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination newModelQuery()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination newQuery()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination query()
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereAvailable($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereCreatedAt($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereId($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereIsThumb($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination wherePrice($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereUpdatedAt($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereVariantCombinationId($value)
+ * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereVariantValueId($value)
  * @mixin \Eloquent
  */
 class SecondVariantCombination extends Pivot implements Mediable
 {
     use EagerLoadPivotTrait, HasUlids, MediaAlly;
+
+    public function medially(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
 
     /**
      * Get the combination that owns the SecondVariantCombination

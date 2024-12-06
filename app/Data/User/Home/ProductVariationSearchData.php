@@ -19,7 +19,7 @@ class ProductVariationSearchData extends Data
         #[OAT\Property]
         public string $price,
         #[OAT\Property]
-        public SingleMedia $image,
+        public ?SingleMedia $image,
     ) {
     }
 }

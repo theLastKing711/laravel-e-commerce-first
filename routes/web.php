@@ -19,7 +19,7 @@ use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
 use App\Http\Controllers\User\Auth\LogoutController as UserLogoutController;
 use App\Http\Controllers\User\Categories\ParentListController;
 use App\Http\Controllers\User\Home\HomeController;
-use App\Http\Controllers\User\Home\Search\SearchSuggestionController;
+use App\Http\Controllers\User\Home\Search\ProductSearchSuggestionController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
 use App\Http\Controllers\User\Product\FavouriteProductController;
 use App\Http\Controllers\User\Product\GetProductDetailsController;
@@ -202,7 +202,7 @@ Route::prefix('user')
 
                 Route::prefix('home')->group(function () {
                     Route::get('', HomeController::class);
-                    Route::get('search-suggestion-list', SearchSuggestionController::class);
+                    Route::get('search-suggestion-list', ProductSearchSuggestionController::class);
                 });
 
                 Route::prefix('categories')->group(function () {

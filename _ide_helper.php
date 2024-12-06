@@ -19554,6 +19554,29 @@ namespace Illuminate\Support {
         {
                         return \Illuminate\Support\Collection::debug();
         }
+                    /**
+         * 
+         *
+         * @see \App\Providers\BuilderMacrosServiceProvider::boot()
+         * @param string $relation
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */        public static function selectMany($relation)
+        {
+                        return \Illuminate\Support\Collection::selectMany($relation);
+        }
+                    /**
+         * 
+         *
+         * @template TValue
+         * @return \TValue 
+         * @see \App\Providers\BuilderMacrosServiceProvider::boot()
+         * @param int $count
+         * @static 
+         */        public static function at($count)
+        {
+                        return \Illuminate\Support\Collection::at($count);
+        }
             }
     }
 
@@ -21131,6 +21154,17 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->mergeConstraintsFrom($from);
+            }
+                            /**
+             * 
+             *
+             * @see \App\Providers\BuilderMacrosServiceProvider::boot()
+             * @param string|int $id
+             * @return \Illuminate\Database\Eloquent\Model|static|null 
+             * @static 
+             */            public static function firstWhereId($id)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::firstWhereId($id);
             }
                             /**
              * 

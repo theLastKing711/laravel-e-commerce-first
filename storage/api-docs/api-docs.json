@@ -1742,7 +1742,7 @@
                     "userSearch"
                 ],
                 "summary": "Handle the incoming request.",
-                "operationId": "c5347382bb9f5afbc8af3d1f42aeecff",
+                "operationId": "ea81b9d3cf1e4aacba76f5d90c7173cb",
                 "parameters": [
                     {
                         "name": "search",
@@ -2843,7 +2843,7 @@
                     "variants": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ProductDetailsVariantData"
+                            "$ref": "#/components/schemas/variantData"
                         }
                     }
                 },
@@ -3187,7 +3187,7 @@
             "SingleMedia": {
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "file_url": {
                         "type": "string"
@@ -3432,7 +3432,12 @@
                         "type": "string"
                     },
                     "image": {
-                        "$ref": "#/components/schemas/SingleMedia"
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/SingleMedia"
+                            }
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"

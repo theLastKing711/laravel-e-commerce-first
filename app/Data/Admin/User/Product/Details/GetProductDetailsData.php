@@ -3,8 +3,8 @@
 namespace App\Data\Admin\User\Product\Details;
 
 use App\Data\Admin\User\Product\Details\QueryParameters\GetProductDetailsQueryParameterData;
+use App\Data\Admin\User\Product\Details\Variant\VariantData;
 use App\Data\Admin\User\Product\Details\Variant\VariantValue\VariantValueData;
-use App\Data\Admin\User\Product\Variant\VariantData;
 use App\Data\Shared\Media\SingleMedia;
 use App\Data\Shared\Swagger\Property\ArrayProperty;
 use App\Models\Product;
@@ -13,10 +13,12 @@ use App\Models\VariantCombination;
 use App\Models\VariantValue;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
+use Spatie\LaravelData\Data;
 
 #[Oat\Schema()]
-class GetProductDetailsData
+class GetProductDetailsData extends Data
 {
     /** @param Collection<int, VariantData> $variants */
     public function __construct(
@@ -31,7 +33,7 @@ class GetProductDetailsData
         #[OAT\Property]
         public ?bool $is_favourite,
         #[OAT\Property]
-        public SingleMedia $image,
+        public ?SingleMedia $image,
         #[ArrayProperty(VariantData::class)]
         public Collection $variants,
     ) {
@@ -58,15 +60,17 @@ class GetProductDetailsData
         //i.e small/red/neon or small/blue/mat
         if ($product_variants_count == 3) {
 
+            Debugbar::info('product with three variants');
+
+            /** @var Collection<int, VariantData> $product_variants_data */
             $product_variants_data =
                 $product
                     ->variants
-                    ->map(function (Variant $variant, int $variant_index) use ($variant_value_ids_query_parameter) {
-
+                    ->map(function (Variant $variant, int $variant_index) use ($variant_value_ids_query_parameter): VariantData {
                         $variant_values_data =
                             $variant
                                 ->variantValues
-                                ->map(function ($variantValue) use ($variant_index, $variant_value_ids_query_parameter) {
+                                ->map(function ($variantValue) use ($variant_index, $variant_value_ids_query_parameter): VariantValueData {
 
                                     $is_product_first_variant = $variant_index == 0;
 
@@ -74,40 +78,37 @@ class GetProductDetailsData
 
                                         $is_current_variant_value_selected =
                                             $variant_value_ids_query_parameter
-                                                ->first_variant_value_id == $variantValue->id;
+                                                ->first_variant_value_id
+                                            ==
+                                            $variantValue->id;
 
-                                        $first_variant_query_parameter_variant_value_id
-                                            = $variantValue->id;
-
-                                        $current_variant_variant_value_has_combination_with_selected_second_and_third =
+                                        $first_variant_variant_value_has_combination_with_selected_second_and_third =
                                         (bool) $variantValue
-                                            ->combinations
-                                            ->merge($variantValue->combined_by)
-                                            ->contains(function ($variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+                                            ->combined_by
+                                            ->contains(function ($second_variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
 
-                                                $second_variant_value_has_combination_with_current_variant_value =
-                                                    $variant_value_with_pivot_variant_combination
+                                                $first_variant_value_has_combination_with_selected_second_variant_value =
+                                                    $second_variant_value_with_pivot_variant_combination
                                                         ->id
                                                     ==
                                                     $variant_value_ids_query_parameter
                                                         ->second_variant_value_id;
 
-                                                if ($second_variant_value_has_combination_with_current_variant_value) {
-                                                    $current_variant_value_and_second_has_combination_with_third =
-                                                        $variant_value_with_pivot_variant_combination
+                                                if ($first_variant_value_has_combination_with_selected_second_variant_value) {
+                                                    $first_variant_value_and_second_has_combination_with_selected_third =
+                                                        $second_variant_value_with_pivot_variant_combination
                                                             ->pivot
                                                             ->combinations
-                                                            ->contains(function ($variant_value_with_pivot_second_variant_combination) use ($variant_value_ids_query_parameter) {
+                                                            ->contains(function ($third_variant_value_with_pivot_second_variant_combination) use ($variant_value_ids_query_parameter) {
                                                                 return
-                                                                    $variant_value_with_pivot_second_variant_combination
-                                                                        ->pivot
-                                                                        ->variant_value_id
+                                                                    $third_variant_value_with_pivot_second_variant_combination
+                                                                        ->id
                                                                     ==
                                                                     $variant_value_ids_query_parameter
                                                                         ->third_variant_value_id;
                                                             });
 
-                                                    return $current_variant_value_and_second_has_combination_with_third;
+                                                    return $first_variant_value_and_second_has_combination_with_selected_third;
 
                                                 }
 
@@ -115,7 +116,11 @@ class GetProductDetailsData
 
                                             });
 
-                                        if ($current_variant_variant_value_has_combination_with_selected_second_and_third) {
+                                        $first_variant_query_parameter_variant_value_id =
+                                            $variantValue
+                                                ->id;
+
+                                        if ($first_variant_variant_value_has_combination_with_selected_second_and_third) {
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -127,33 +132,41 @@ class GetProductDetailsData
                                                     first_variant_value_id: $first_variant_query_parameter_variant_value_id,
                                                     second_variant_value_id: $variant_value_ids_query_parameter
                                                                                 ->second_variant_value_id,
-                                                    third_variant_value_id: null,
+                                                    third_variant_value_id: $variant_value_ids_query_parameter
+                                                                                ->third_variant_value_id,
                                                 )
                                             );
                                         }
 
-                                        $current_variant_variant_value_first_combination_with_second_and_third =
+                                        $first_variant_variant_value_first_combination_with_second_and_third =
                                             $variantValue
-                                                ->combinations
-                                                ->merge($variantValue->combined_by)
+                                                ->combined_by
                                                 ->first(function ($variant_value_with_pivot_variant_combination) {
 
-                                                    return
+                                                    $variant_combination_has_combination =
                                                         ! $variant_value_with_pivot_variant_combination
                                                             ->pivot
                                                             ->combinations
-                                                            ->ieEmpty();
+                                                            ->isEmpty();
+
+                                                    return $variant_combination_has_combination;
 
                                                 });
 
-                                        $current_variant_variant_value_has_any_combination_with_second_and_third =
-                                        (bool) $current_variant_variant_value_first_combination_with_second_and_third;
+                                        $first_variant_variant_value_has_any_combination_with_second_and_third =
+                                        (bool) $first_variant_variant_value_first_combination_with_second_and_third;
 
-                                        if ($current_variant_variant_value_has_any_combination_with_second_and_third) {
+                                        if ($first_variant_variant_value_has_any_combination_with_second_and_third) {
 
                                             $second_vairant_value_id =
-                                                $current_variant_variant_value_first_combination_with_second_and_third
+                                                $first_variant_variant_value_first_combination_with_second_and_third
                                                     ->variant_id;
+
+                                            $third_variant_value_id =
+                                                $first_variant_variant_value_first_combination_with_second_and_third
+                                                    ->combinations
+                                                    ->first()
+                                                    ->id;
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -164,7 +177,7 @@ class GetProductDetailsData
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $first_variant_query_parameter_variant_value_id,
                                                     second_variant_value_id: $second_vairant_value_id,
-                                                    third_variant_value_id: null,
+                                                    third_variant_value_id: $third_variant_value_id,
                                                 )
                                             );
                                         }
@@ -195,38 +208,31 @@ class GetProductDetailsData
                                                 $variantValue
                                                     ->id;
 
-                                        $second_variant_query_parameter_variant_value_ =
-                                            $variantValue
-                                                ->id;
-
-                                        $current_variant_variant_value_has_combination_with_selected_first_and_third =
+                                        $second_variant_variant_value_has_combination_with_selected_first_and_third =
                                             $variantValue
                                                 ->combinations
-                                                ->merge($variantValue->combined_by)
-                                                ->contains(function ($variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+                                                ->contains(function ($first_variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
 
                                                     $second_variant_value_has_combination_with_first_variant_value =
                                                         $variant_value_ids_query_parameter
                                                             ->first_variant_value_id
                                                         ==
-                                                        $variant_value_with_pivot_variant_combination
-                                                            ->pivot
-                                                            ->first_variant_value_id;
+                                                        $first_variant_value_with_pivot_variant_combination
+                                                            ->id;
 
                                                     if ($second_variant_value_has_combination_with_first_variant_value) {
-                                                        return $variant_value_with_pivot_variant_combination
+                                                        return $first_variant_value_with_pivot_variant_combination
                                                             ->pivot
                                                             ->combinations
-                                                            ->contains(function ($variant_value_with_pivot_second_variant_combination) use ($variant_value_ids_query_parameter) {
-                                                                $first_and_second_variant_values_has_combination_with_third_variant_value =
-                                                                    $variant_value_with_pivot_second_variant_combination
-                                                                        ->pivot
-                                                                        ->variant_value_id
+                                                            ->contains(function ($third_variant_value_with_pivot_second_variant_combination) use ($variant_value_ids_query_parameter) {
+                                                                $second_and_first_variant_values_has_combination_with_third =
+                                                                    $third_variant_value_with_pivot_second_variant_combination
+                                                                        ->id
                                                                         ==
                                                                     $variant_value_ids_query_parameter
                                                                         ->third_variant_value_id;
 
-                                                                return $first_and_second_variant_values_has_combination_with_third_variant_value;
+                                                                return $second_and_first_variant_values_has_combination_with_third;
                                                             });
 
                                                     }
@@ -235,7 +241,7 @@ class GetProductDetailsData
 
                                                 });
 
-                                        if ($current_variant_variant_value_has_combination_with_selected_first_and_third) {
+                                        if ($second_variant_variant_value_has_combination_with_selected_first_and_third) {
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -254,14 +260,13 @@ class GetProductDetailsData
                                             );
                                         }
 
-                                        $current_variant_variant_value_first_combination_with_first_and_third =
+                                        $second_variant_variant_value_first_combination_with_first_and_third =
                                             $variantValue
                                                 ->combinations
-                                                ->merge($variantValue->combined_by)
-                                                ->first(function ($variant_value_with_pivot_variant_combination) {
+                                                ->first(function ($second_variant_value_with_pivot_variant_combination) {
 
                                                     $variant_combination_has_combination =
-                                                        ! $variant_value_with_pivot_variant_combination
+                                                        ! $second_variant_value_with_pivot_variant_combination
                                                             ->pivot
                                                             ->combinations
                                                             ->isEmpty();
@@ -270,15 +275,21 @@ class GetProductDetailsData
 
                                                 });
 
-                                        $current_variant_variant_value_has_any_combination_with_first_and_third =
-                                            (bool) $current_variant_variant_value_first_combination_with_first_and_third;
+                                        $second_variant_variant_value_has_any_combination_with_first_and_third =
+                                            (bool) $second_variant_variant_value_first_combination_with_first_and_third;
 
-                                        if ($current_variant_variant_value_has_any_combination_with_first_and_third) {
+                                        if ($second_variant_variant_value_has_any_combination_with_first_and_third) {
 
                                             $first_vairant_value_id =
-                                                $current_variant_variant_value_first_combination_with_first_and_third
+                                                $second_variant_variant_value_first_combination_with_first_and_third
+                                                    ->id;
+
+                                            $third_variant_value_id =
+                                                $second_variant_variant_value_first_combination_with_first_and_third
                                                     ->pivot
-                                                    ->second_variant_value_id;
+                                                    ->combinations
+                                                    ->first()
+                                                    ->id;
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -290,12 +301,7 @@ class GetProductDetailsData
                                                     first_variant_value_id: $first_vairant_value_id,
                                                     second_variant_value_id: $variant_value_ids_query_parameter
                                                                                 ->second_variant_value_id,
-                                                    third_variant_value_id: $current_variant_variant_value_first_combination_with_first_and_third
-                                                        ->pivot
-                                                        ->combinations
-                                                        ->first()
-                                                        ->pivot
-                                                        ->variant_value_id,
+                                                    third_variant_value_id: $third_variant_value_id
                                                 )
                                             );
                                         }
@@ -399,18 +405,21 @@ class GetProductDetailsData
                                             );
                                         }
 
-                                        return new VariantValueData(
-                                            id: $variantValue->id,
-                                            name: $variantValue->name,
-                                            is_selected: $is_current_variant_value_selected,
-                                            is_not_available: true,
-                                            image: SingleMedia::fromModel($variantValue),
-                                            combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
-                                                first_variant_value_id: null,
-                                                second_variant_value_id: null,
-                                                third_variant_value_id: $third_variant_query_parameter_variant_value_id
-                                            )
-                                        );
+                                        $third_variant_value_with_no_combinations_with_first_and_second =
+                                            new VariantValueData(
+                                                id: $variantValue->id,
+                                                name: $variantValue->name,
+                                                is_selected: $is_current_variant_value_selected,
+                                                is_not_available: true,
+                                                image: SingleMedia::fromModel($variantValue),
+                                                combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
+                                                    first_variant_value_id: null,
+                                                    second_variant_value_id: null,
+                                                    third_variant_value_id: $third_variant_query_parameter_variant_value_id
+                                                )
+                                            );
+
+                                        return $third_variant_value_with_no_combinations_with_first_and_second;
 
                                     }
 
@@ -445,83 +454,89 @@ class GetProductDetailsData
                             $variant_value_ids_query_parameter
                                 ->first_variant_value_id
                         );
-
-                $selected_variant_combination =
+                $selected_second_variant_value_with_pivot_variant_combination =
                     $selected_first_variant_value
-                        ->combinations
-                        ->merge($selected_first_variant_value->combined_by)
-                        ->first(function ($variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+                        ->combined_by
+                        ->first(function ($second_variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
 
-                            $first_vairant_value_combination =
-                                $variant_value_with_pivot_variant_combination
+                            $first_combination =
+                                $second_variant_value_with_pivot_variant_combination
                                     ->id
                                 ==
                                 $variant_value_ids_query_parameter
                                     ->second_variant_value_id;
 
-                            return $first_vairant_value_combination;
+                            return $first_combination;
 
                         });
 
                 $selected_second_variant_combination =
-                    $selected_variant_combination
+                    $selected_second_variant_value_with_pivot_variant_combination
                         ->pivot
                         ->combinations
-                        ->first(function ($variant_combination_with_pivot_second_variant_combination) use ($variant_value_ids_query_parameter) {
+                        ->first(function ($third_variant_value_with_pivot_second_variant_combination) use ($variant_value_ids_query_parameter) {
 
-                            $variant_combination_combination =
-                                $variant_combination_with_pivot_second_variant_combination
-                                    ->pivot
+                            $variant_combination_has_combination_with_selected_third_variant_value =
+                                $third_variant_value_with_pivot_second_variant_combination
                                     ->id
                                 ==
                                 $variant_value_ids_query_parameter
                                     ->third_variant_value_id;
 
-                            return $variant_combination_combination;
+                            return $variant_combination_has_combination_with_selected_third_variant_value;
                         })
                         ->pivot;
 
-                $product_variation = ProductVariationData::from([
-                    'id' => $selected_second_variant_combination->id,
-                    'price' => $selected_second_variant_combination->price,
-                    'image' => SingleMedia::from($selected_second_variant_combination),
+                $product_variation = new ProductVariationData(
+                    id: $selected_second_variant_combination->id,
+                    available: $selected_first_variant_value->available,
+                    price: $selected_second_variant_combination->price,
+                    image: SingleMedia::from($selected_second_variant_combination),
+                );
 
-                ]);
-
-                return new self(
+                $x = new GetProductDetailsData(
                     id: $product->id,
                     variation: $product_variation,
                     name: $product->name,
                     price: $product->price,
-                    is_favourite: $product->is_favourite,
+                    is_favourite: (bool) $product->is_favourite,
                     image: SingleMedia::fromModel($product),
                     variants: $product_variants_data
                 );
+
+                return $x;
             }
 
-            return new self(
+            $product_with_no_variation = new self(
                 id: $product->id,
                 variation: null,
                 name: $product->name,
                 price: $product->price,
-                is_favourite: $product->is_favourite,
+                is_favourite: (bool) $product->is_favourite,
                 image: SingleMedia::fromModel($product),
                 variants: $product_variants_data
             );
+
+            Log::info('product with no variation {product}', ['product' => $product_with_no_variation]);
+
+            return $product_with_no_variation;
         }
 
         //i.e small/red
         if ($product_variants_count == 2) {
 
+            Log::info('product with two variants');
+
+            /** @var Collection<int, VariantData> $product_variants_data */
             $product_variants_data =
                 $product
                     ->variants
-                    ->map(function (Variant $variant, int $variant_index) use ($variant_value_ids_query_parameter) {
+                    ->map(function (Variant $variant, int $variant_index) use ($variant_value_ids_query_parameter): VariantData {
 
                         $variant_values_data =
                             $variant
                                 ->variantValues
-                                ->map(function (VariantValue $variantValue) use ($variant_index, $variant_value_ids_query_parameter) {
+                                ->map(function (VariantValue $variantValue) use ($variant_index, $variant_value_ids_query_parameter): VariantValueData {
 
                                     $is_product_first_variant = $variant_index == 0;
 
@@ -531,29 +546,30 @@ class GetProductDetailsData
                                             $variant_value_ids_query_parameter
                                                 ->first_variant_value_id
                                                 ==
-                                            $variantValue->id;
+                                            $variantValue
+                                                ->id;
 
-                                        $first_variant_query_parameter_variant_value_id
-                                            = $variantValue->id;
+                                        $first_variant_query_parameter_variant_value_id =
+                                            $variantValue
+                                                ->id;
 
-                                        $current_variant_variant_value_has_combination_with_selected_second =
+                                        $first_variant_variant_value_has_combination_with_selected_second =
                                         (bool) $variantValue
-                                            ->combinations
-                                            ->merge($variantValue->combined_by)
-                                            ->first(function ($variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+                                            ->combined_by
+                                            ->first(function ($second_variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
 
-                                                $current_variant_variant_value_has_combination_with_selected_second_variant_value =
-                                                    $variant_value_with_pivot_variant_combination
-                                                        ->variant_id
+                                                $first_variant_variant_value_has_combination_with_selected_second_variant_value =
+                                                    $second_variant_value_with_pivot_variant_combination
+                                                        ->id
                                                         ==
                                                     $variant_value_ids_query_parameter
                                                         ->second_variant_value_id;
 
-                                                return $current_variant_variant_value_has_combination_with_selected_second_variant_value;
+                                                return $first_variant_variant_value_has_combination_with_selected_second_variant_value;
 
                                             });
 
-                                        if ($current_variant_variant_value_has_combination_with_selected_second) {
+                                        if ($first_variant_variant_value_has_combination_with_selected_second) {
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -570,20 +586,19 @@ class GetProductDetailsData
                                             );
                                         }
 
-                                        $current_variant_variant_value_first_combination_with_second
-                                            = $variantValue
-                                                ->combinations
-                                                ->merge($variantValue->combined_by)
+                                        $first_variant_variant_value_first_combination_with_second =
+                                            $variantValue
+                                                ->combined_by
                                                 ->first();
 
-                                        $current_variant_variant_value_has_any_combination_with_second =
-                                        (bool) $current_variant_variant_value_first_combination_with_second;
+                                        $first_variant_variant_value_has_any_combination_with_second =
+                                        (bool) $first_variant_variant_value_first_combination_with_second;
 
-                                        if ($current_variant_variant_value_has_any_combination_with_second) {
+                                        if ($first_variant_variant_value_has_any_combination_with_second) {
 
                                             $second_vairant_value_id =
-                                                $current_variant_variant_value_first_combination_with_second
-                                                    ->variant_id;
+                                                $first_variant_variant_value_first_combination_with_second
+                                                    ->id;
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -622,29 +637,30 @@ class GetProductDetailsData
                                             $variant_value_ids_query_parameter
                                                 ->second_variant_value_id
                                                 ==
-                                                $variantValue->id;
+                                            $variantValue
+                                                ->id;
 
                                         $second_variant_query_parameter_variant_value_id =
-                                            $variantValue->id;
+                                            $variantValue
+                                                ->id;
 
-                                        $current_variant_variant_value_has_combination_with_selected_first =
+                                        $second_variant_variant_value_has_combination_with_selected_first =
                                         (bool) $variantValue
                                             ->combinations
-                                            ->merge($variantValue->combined_by)
-                                            ->first(function ($variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+                                            ->first(function ($first_variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
 
-                                                $current_variant_variant_value_has_combination_with_selected_first_variant_value =
-                                                    $variant_value_with_pivot_variant_combination
-                                                        ->variant_id
+                                                $second_variant_variant_value_has_combination_with_selected_first_variant_value =
+                                                    $first_variant_value_with_pivot_variant_combination
+                                                        ->id
                                                         ==
                                                     $variant_value_ids_query_parameter
                                                         ->first_variant_value_id;
 
-                                                return $current_variant_variant_value_has_combination_with_selected_first_variant_value;
+                                                return $second_variant_variant_value_has_combination_with_selected_first_variant_value;
 
                                             });
 
-                                        if ($current_variant_variant_value_has_combination_with_selected_first) {
+                                        if ($second_variant_variant_value_has_combination_with_selected_first) {
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -661,20 +677,19 @@ class GetProductDetailsData
                                             );
                                         }
 
-                                        $current_variant_variant_value_first_combination_with_first =
+                                        $second_variant_variant_value_first_combination_with_first =
                                             $variantValue
                                                 ->combinations
-                                                ->merge($variantValue->combined_by)
                                                 ->first();
 
                                         $current_variant_variant_value_has_any_combination_with_first =
-                                        (bool) $current_variant_variant_value_first_combination_with_first;
+                                        (bool) $second_variant_variant_value_first_combination_with_first;
 
                                         if ($current_variant_variant_value_has_any_combination_with_first) {
 
                                             $first_vairant_value_id =
-                                                $current_variant_variant_value_first_combination_with_first
-                                                    ->variant_id;
+                                                $second_variant_variant_value_first_combination_with_first
+                                                    ->id;
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -721,6 +736,11 @@ class GetProductDetailsData
                 $variant_value_ids_query_parameter
                     ->second_variant_value_id;
 
+            Log::info('all query parameters available');
+
+            Log::info($variant_value_ids_query_parameter
+            ->second_variant_value_id);
+
             if ($all_query_paramaeter_variant_values_are_available) {
 
                 $selected_first_variant_value =
@@ -734,64 +754,80 @@ class GetProductDetailsData
                                 ->first_variant_value_id
                         );
 
-                $selected_variant_combination =
-                    $selected_first_variant_value
-                        ->combinations
-                        ->merge($selected_first_variant_value->combined_by)
-                        ->first(function ($variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+                Log::info('selected first variant value {selected_first_variant_value}', ['selected_first_variant_value' => $selected_first_variant_value]);
 
-                            $first_vairant_value_combination =
-                                $variant_value_with_pivot_variant_combination
+                $selected_second_variant_value_with_pivot_variant_combination =
+                    $selected_first_variant_value
+                        ->combined_by
+                        ->first(function ($second_variant_value_with_pivot_variant_combination) use ($variant_value_ids_query_parameter) {
+
+                            $selected_first_vairant_value_combination =
+                                $second_variant_value_with_pivot_variant_combination
                                     ->id
                                 ==
                                 $variant_value_ids_query_parameter
                                     ->second_variant_value_id;
 
-                            return $first_vairant_value_combination;
+                            return $selected_first_vairant_value_combination;
 
                         });
 
-                $product_variation = ProductVariationData::from([
-                    'id' => $selected_variant_combination->pivot->id,
-                    'price' => $selected_variant_combination->pivot->price,
-                    'image' => SingleMedia::from($selected_variant_combination->pivot),
+                $selected_variant_combination =
+                    $selected_second_variant_value_with_pivot_variant_combination
+                        ->pivot;
 
-                ]);
+                $product_variation = new ProductVariationData(
+                    id: $selected_variant_combination
+                            ->id,
+                    available: $selected_variant_combination
+                            ->available,
+                    price: $selected_variant_combination
+                        ->price,
+                    image: SingleMedia::from($selected_variant_combination),
+                );
+
+                Log::info('product variation {product}', ['product' => $product_variants_data]);
 
                 return new self(
                     id: $product->id,
                     variation: $product_variation,
                     name: $product->name,
                     price: $product->price,
-                    is_favourite: $product->is_favourite,
+                    is_favourite: (bool) $product->is_favourite,
                     image: SingleMedia::fromModel($product),
                     variants: $product_variants_data
                 );
             }
 
-            return new self(
+            $product_with_no_variation = new self(
                 id: $product->id,
                 variation: null,
                 name: $product->name,
                 price: $product->price,
-                is_favourite: $product->is_favourite,
+                is_favourite: (bool) $product->is_favourite,
                 image: SingleMedia::from($product),
                 variants: $product_variants_data
             );
+
+            return $product_with_no_variation;
         }
 
         //i.e small, medium etc.
         if ($product_variants_count == 1) {
 
+            Log::info('product with one variant');
+
+            /** @var Collection<int, VariantData> $product_variants_data */
             $product_variants_data =
                 $product
                     ->variants
-                    ->map(function (Variant $variant, int $variant_index) use ($variant_value_ids_query_parameter) {
+                    ->map(function (Variant $variant) use ($variant_value_ids_query_parameter): VariantData {
 
+                        /** @var Collection<int, VariantValueData> $variant_values_data */
                         $variant_values_data =
                             $variant
                                 ->variantValues
-                                ->map(function ($variantValue) use ($variant_value_ids_query_parameter) {
+                                ->map(function ($variantValue) use ($variant_value_ids_query_parameter): VariantValueData {
 
                                     $is_current_variant_value_selected =
                                         $variant_value_ids_query_parameter
@@ -799,6 +835,11 @@ class GetProductDetailsData
                                         ==
                                         $variantValue
                                             ->id;
+
+                                    if ($is_current_variant_value_selected) {
+                                        Log::info('selected {selected}', ['selected' => $is_current_variant_value_selected]);
+
+                                    }
 
                                     return new VariantValueData(
                                         id: $variantValue->id,
@@ -833,20 +874,32 @@ class GetProductDetailsData
                             ->first_variant_value_id
                     );
 
-            $product_variation = ProductVariationData::from([
-                'id' => $seleted_variant_value->id,
-                'price' => $seleted_variant_value->price,
-                'image' => SingleMedia::from($seleted_variant_value),
+            $product_variation = new ProductVariationData(
+                id: $seleted_variant_value->id,
+                available: $seleted_variant_value->available,
+                price: $seleted_variant_value->price,
+                image: SingleMedia::from($seleted_variant_value),
+            );
 
-            ]);
+            return new self(
+                id: $product->id,
+                variation: $product_variation,
+                name: $product->name,
+                price: $product->price,
+                is_favourite: (bool) $product->is_favourite,
+                image: SingleMedia::from($product),
+                variants: $product_variants_data,
+            );
         }
+
+        Log::info('product with no variation');
 
         return new self(
             id: $product->id,
             variation: null,
             name: $product->name,
             price: $product->price,
-            is_favourite: $product->is_favourite,
+            is_favourite: (bool) $product->is_favourite,
             image: SingleMedia::from($product),
             variants: collect([]),
         );

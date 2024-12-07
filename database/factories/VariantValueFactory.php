@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Variant;
+use App\Models\Media;
+use App\Models\VariantValue;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,12 +26,17 @@ class VariantValueFactory extends Factory
         ];
     }
 
-    // public function genereateValueCombinations(): static
-    // {
-    //     return $this->afterCreating(function (Variant $variant) {
+    public function withImage(): static
+    {
+        return $this->afterCreating(function (VariantValue $variant) {
 
-    //         $variant->generateValuesCombinations();
+            $media = Media::factory(1)
+                ->makeOne();
 
-    //     });
-    // }
+            $variant
+                ->medially()
+                ->saveMany([$media]);
+
+        });
+    }
 }

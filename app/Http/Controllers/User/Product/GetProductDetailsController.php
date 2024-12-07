@@ -36,24 +36,28 @@ class GetProductDetailsController extends Controller
     public function __invoke(GetProductDetailsRequestData $request)
     {
 
-        /** @var Product $product */
-        $product =
-            Product::query()
-                ->has('variants', 3)
-                ->with(['variants' => [
-                    'product',
-                ]])
-                ->first();
+        // /** @var Product $product */
+        // $product =
+        //     Product::query()
+        //         ->has('variants', 3)
+        //         ->with(
+        //             ['variants' => fn ($query) => $query
+        //                 ->with('variantValues', fn ($query) => $query->chaperone())
+        //                 ->chaperone(),
+        //             ]
+        //         )
+        //         ->first();
 
-        $product
-            ->variants
-            ->each(function ($variant) {
+        // $product
+        //     ->variants
+        //     ->each(function ($variant) {
 
-                Log::info($variant->product);
+        //         Log::info($variant->product);
+        //         Log::info($variant->variantValues->first()->variant);
 
-            });
+        //     });
 
-        return;
+        // return $product->variants->first()->product;
 
         // Debugbar::info($request);
 

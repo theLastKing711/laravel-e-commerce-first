@@ -36,8 +36,7 @@ class GetProductDetailsData extends Data
         public ?SingleMedia $image,
         #[ArrayProperty(VariantData::class)]
         public Collection $variants,
-    ) {
-    }
+    ) {}
 
     //code be named anything other than fromMultiple
     //used with from(option1, option2), not from([]) form;
@@ -131,9 +130,9 @@ class GetProductDetailsData extends Data
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $first_variant_query_parameter_variant_value_id,
                                                     second_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->second_variant_value_id,
+                                                        ->second_variant_value_id,
                                                     third_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->third_variant_value_id,
+                                                        ->third_variant_value_id,
                                                 )
                                             );
                                         }
@@ -253,9 +252,9 @@ class GetProductDetailsData extends Data
                                                     first_variant_value_id: $variant_value_ids_query_parameter
                                                         ->first_variant_value_id,
                                                     second_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->second_variant_value_id,
+                                                        ->second_variant_value_id,
                                                     third_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->third_variant_value_id
+                                                        ->third_variant_value_id
                                                 )
                                             );
                                         }
@@ -300,7 +299,7 @@ class GetProductDetailsData extends Data
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $first_vairant_value_id,
                                                     second_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->second_variant_value_id,
+                                                        ->second_variant_value_id,
                                                     third_variant_value_id: $third_variant_value_id
                                                 )
                                             );
@@ -315,7 +314,7 @@ class GetProductDetailsData extends Data
                                             combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                 first_variant_value_id: null,
                                                 second_variant_value_id: $variant_value_ids_query_parameter
-                                                                            ->second_variant_value_id,
+                                                    ->second_variant_value_id,
                                                 third_variant_value_id: null,
                                             )
                                         );
@@ -372,9 +371,9 @@ class GetProductDetailsData extends Data
                                                 image: SingleMedia::fromModel($variantValue),
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $third_variant_variant_value_first_combination_with_selected_first_and_second
-                                                            ->second_variant_value_id,
+                                                        ->second_variant_value_id,
                                                     second_variant_value_id: $third_variant_variant_value_first_combination_with_selected_first_and_second
-                                                            ->first_variant_value_id,
+                                                        ->first_variant_value_id,
                                                     third_variant_value_id: $third_variant_query_parameter_variant_value_id
                                                 )
                                             );
@@ -397,9 +396,9 @@ class GetProductDetailsData extends Data
                                                 image: SingleMedia::fromModel($variantValue),
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $third_variant_variant_value_first_combination_with_first_and_second
-                                                            ->second_variant_value_id,
+                                                        ->second_variant_value_id,
                                                     second_variant_value_id: $third_variant_variant_value_first_combination_with_selected_first_and_second
-                                                            ->first_variant_value_id,
+                                                        ->first_variant_value_id,
                                                     third_variant_value_id: $third_variant_query_parameter_variant_value_id
                                                 )
                                             );
@@ -580,7 +579,7 @@ class GetProductDetailsData extends Data
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $first_variant_query_parameter_variant_value_id,
                                                     second_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->second_variant_value_id,
+                                                        ->second_variant_value_id,
                                                     third_variant_value_id: null
                                                 )
                                             );
@@ -670,7 +669,7 @@ class GetProductDetailsData extends Data
                                                 image: SingleMedia::fromModel($variantValue),
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $variant_value_ids_query_parameter
-                                                                                ->first_variant_value_id,
+                                                        ->first_variant_value_id,
                                                     second_variant_value_id: $second_variant_query_parameter_variant_value_id,
                                                     third_variant_value_id: null
                                                 )
@@ -739,7 +738,7 @@ class GetProductDetailsData extends Data
             Log::info('all query parameters available');
 
             Log::info($variant_value_ids_query_parameter
-            ->second_variant_value_id);
+                ->second_variant_value_id);
 
             if ($all_query_paramaeter_variant_values_are_available) {
 
@@ -778,9 +777,9 @@ class GetProductDetailsData extends Data
 
                 $product_variation = new ProductVariationData(
                     id: $selected_variant_combination
-                            ->id,
+                        ->id,
                     available: $selected_variant_combination
-                            ->available,
+                        ->available,
                     price: $selected_variant_combination
                         ->price,
                     image: SingleMedia::from($selected_variant_combination),
@@ -798,6 +797,8 @@ class GetProductDetailsData extends Data
                     variants: $product_variants_data
                 );
             }
+
+            Log::info('product with two variants and no variation');
 
             $product_with_no_variation = new self(
                 id: $product->id,
@@ -835,11 +836,6 @@ class GetProductDetailsData extends Data
                                         ==
                                         $variantValue
                                             ->id;
-
-                                    if ($is_current_variant_value_selected) {
-                                        Log::info('selected {selected}', ['selected' => $is_current_variant_value_selected]);
-
-                                    }
 
                                     return new VariantValueData(
                                         id: $variantValue->id,
@@ -894,14 +890,17 @@ class GetProductDetailsData extends Data
 
         Log::info('product with no variation');
 
-        return new self(
-            id: $product->id,
-            variation: null,
-            name: $product->name,
-            price: $product->price,
-            is_favourite: (bool) $product->is_favourite,
-            image: SingleMedia::from($product),
-            variants: collect([]),
-        );
+        $product_with_no_variation =
+            new self(
+                id: $product->id,
+                variation: null,
+                name: $product->name,
+                price: $product->price,
+                is_favourite: (bool) $product->is_favourite,
+                image: SingleMedia::from($product),
+                variants: collect([]),
+            );
+
+        return $product_with_no_variation;
     }
 }

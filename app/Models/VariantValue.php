@@ -51,6 +51,7 @@ use Illuminate\Support\Collection;
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereUpdatedAt($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereVariantId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\SecondVariantCombination|\App\Models\VariantCombination|null $pivot
  * @mixin Eloquent
  */
 class VariantValue extends Eloquent implements Mediable

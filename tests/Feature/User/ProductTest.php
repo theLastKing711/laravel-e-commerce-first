@@ -4,12 +4,12 @@ namespace Tests\Feature\User;
 
 use App\Data\Admin\User\Product\Details\GetProductDetailsData;
 use App\Models\Category;
+use App\Models\Media;
 use App\Models\Product;
 use App\Models\SecondVariantCombination;
 use App\Models\Variant;
 use App\Models\VariantCombination;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Testing\Fluent\AssertableJson;
+use App\Models\VariantValue;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\User\Abstractions\UserTestCase;
 
@@ -17,15 +17,64 @@ class ProductTest extends UserTestCase
 {
     private string $main_route = '/user/products';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-
         parent::setUp();
     }
 
-    /**
-     * A basic feature test example.
-     */
+    #[Test]
+    public function index_product_with_no_variant_returns_no_variation_or_variants(): void
+    {
+
+        /** @var Product $request_product_with_one_variant */
+        $request_product_with_one_variant =
+            Product::query()
+                ->has('variants', 0)
+                ->first();
+
+        $show_route =
+            $this
+                ->main_route.
+                '/'.
+                $request_product_with_one_variant->id;
+
+        $response = $this->get($show_route);
+
+        $response->assertStatus(200);
+
+        $products_response_data =
+            $response
+                ->json();
+
+        $product_response_data =
+            GetProductDetailsData::from($products_response_data);
+
+        $response_product_id_is_same_as_request_route_parameter =
+            $request_product_with_one_variant
+                ->id
+            ==
+            $product_response_data
+                ->id;
+
+        $this->assertTrue($response_product_id_is_same_as_request_route_parameter);
+
+        $response_product_data_has_no_variants =
+            $product_response_data
+                ->variants
+                ->isEmpty();
+
+        $this->assertTrue($response_product_data_has_no_variants);
+
+        $response_product_data_has_no_variation =
+            $product_response_data
+                ->variation
+                ==
+                null;
+
+        $this->assertTrue($response_product_data_has_no_variation);
+
+    }
+
     #[Test]
     public function index_product_with_one_variant_returns_correct_response_data(): void
     {
@@ -106,60 +155,8 @@ class ProductTest extends UserTestCase
 
         $this->assertTrue($repsone_product_has_only_one_variant_value_selected_from_first_variant);
 
-        //     $response
-        //         ->assertJson(
-        //             fn (AssertableJson $json) =>
-        // //                        ->tap(fn (AssertableJson $json) => Log::info($json))
-        //                 $json
-        //                     ->where('id', $first_db_parent_category->id)
-        //                     ->where('name', $first_db_parent_category->name)
-        //                     ->where('parent_id', $first_db_parent_category->parent_id)
-        //                     ->where('parent_name', $first_db_parent_category->parent?->name)
-        //                     ->etc() // means don't need to specify all properties in json('data') here
-        //         );
-
-        // Log::info($products_response_data);
-
-        //         $product_with_three_variants_id =
-        //             Product::query()
-        //                 ->has('variants', 3);
-
-        //         $product_details_route =
-        //             $this->main_route. '/'
-
-        //         $response = $this->get($this->main_route);
-
-        //         $response->assertStatus(200);
-
-        //         $categories_response_data = $response->json()['data'];
-
-        //         $this->assertIsArray($categories_response_data);
-
-        //         $first_db_parent_category = Category::query()
-        //             ->with('parent')
-        //             ->first();
-
-        //         $response
-        //             ->assertJson(
-        //                 fn (AssertableJson $json) => $json->has(
-        //                     'data',
-        //                     10,
-        //                     fn (AssertableJson $json) => $json // runs one first item of json('data')
-        // //                        ->tap(fn (AssertableJson $json) => Log::info($json))
-        //                         ->where('id', $first_db_parent_category->id)
-        //                         ->where('name', $first_db_parent_category->name)
-        //                         ->where('parent_id', $first_db_parent_category->parent_id)
-        //                         ->where('parent_name', $first_db_parent_category->parent?->name)
-        //                         ->etc() // means don't need to specify all properties in json('data') here
-        //                 )
-        //                     ->etc()// means don't need to specify all properties in json here
-        //             );
-
     }
 
-    /**
-     * A basic feature test example.
-     */
     #[Test]
     public function index_product_with_two_variant_returns_correct_response_data(): void
     {
@@ -197,7 +194,7 @@ class ProductTest extends UserTestCase
 
         $product_second_variant_value =
             $request_product_variant_combination
-                        ->first_variant_value;
+                ->first_variant_value;
 
         $show_route =
             $this
@@ -348,15 +345,15 @@ class ProductTest extends UserTestCase
 
         $request_product_first_variant_value =
             $request_product_variant_combination
-                    ->second_variant_value;
+                ->second_variant_value;
 
         $request_product_second_variant_value =
             $request_product_variant_combination
-                        ->first_variant_value;
+                ->first_variant_value;
 
         $request_product_third_variant_value =
             $request_product_second_variant_combination
-                        ->variantValue;
+                ->variantValue;
 
         $show_route =
             $this
@@ -467,6 +464,188 @@ class ProductTest extends UserTestCase
         $this->assertTrue($repsone_product_has_only_one_variant_value_selected_from_second_variant);
 
         $this->assertTrue($repsone_product_has_only_one_variant_value_selected_from_third_variant);
+
+    }
+
+    #[Test]
+    public function index_product_with_two_variants_and_second_variant_and_variant_value_that_has_no_combination_at_all_should_return_product_with_no_variation_and_no_combinations_for_that_second_variant_value_but_other_variant_values_with_combinatios_should_link_to_them_in_combinations(): void
+    {
+        $product =
+            Product::factory()->withImage()->createOne();
+
+        $category =
+            Category::factory()->createOne();
+
+        $category->products()->save($product);
+
+        $variants =
+            Variant::factory(2)->make();
+
+        $product->variants()->saveMany($variants);
+
+        $first_variant_variant_values =
+            VariantValue::factory(2)
+                ->withImage()
+                ->make();
+
+        $first_variant = $variants->first();
+
+        $first_variant_variant_values =
+        VariantValue::factory(2)
+            ->withImage()
+            ->create(['variant_id' => $first_variant->id]);
+
+        /** @var VariantValue $first_variant_first_variant_value */
+        $first_variant_first_variant_value = $first_variant_variant_values->first();
+
+        $second_variant = $variants->skip(1)->first();
+        $second_variant_variant_values =
+            VariantValue::factory(2)
+                ->withImage()
+                ->create(['variant_id' => $second_variant->id]);
+
+        /** @var VariantValue $second_variant_first_variant_value */
+        $second_variant_first_variant_value = $second_variant_variant_values->first();
+        $second_variant_first_variant_value
+            ->combinations()
+            ->save($first_variant_first_variant_value, ['is_thumb' => true, 'price' => 25, 'available' => 0]);
+
+        /** @var VariantValue $second_variant_second_variant_value */
+        $second_variant_second_variant_value = $second_variant_variant_values->skip(1)->first();
+
+        $variant_combinations_media = Media::factory(2)->make();
+
+        /** @var VariantCombination $first_variant_combination */
+        $first_variant_combination = VariantCombination::query()
+            ->where('first_variant_value_id', $second_variant_first_variant_value->id)
+            ->where('second_variant_value_id', $first_variant_first_variant_value->id)
+            ->first();
+
+        /** @var Media $first_combianation_media */
+        $first_combianation_media = $variant_combinations_media->first();
+
+        $first_variant_combination
+            ->medially()
+            ->save($first_combianation_media);
+
+        /** @var Media $second_combianation_media */
+        $second_combianation_media = $variant_combinations_media->skip(1)->first();
+
+        $first_variant_combination
+            ->medially()
+            ->save($second_combianation_media);
+
+        /** @var Product $request_product_with_two_variant */
+        $request_product_with_two_variant =
+            Product::query()
+                ->whereRelation('variants.variantValues', 'variant_values.id', '=', $second_variant_second_variant_value->id)
+                ->with([
+                    'medially',
+                    'variants' => [
+                        'variantValues' => [
+                            'medially',
+                            'combinations' => [
+                                'pivot',
+                            ],
+                        ],
+                    ],
+                ])
+                ->first();
+
+        $show_route =
+            $this
+                ->main_route.
+                '/'.
+                $request_product_with_two_variant->id.
+                '?second_variant_value_id='.
+                $second_variant_second_variant_value->id;
+
+        $response = $this->get($show_route);
+
+        $response->assertStatus(200);
+
+        $products_response_data =
+            $response
+                ->json();
+
+        $product_response_data =
+            GetProductDetailsData::from($products_response_data);
+
+        $response_product_id_is_same_as_request_route_parameter =
+            $request_product_with_two_variant
+                ->id
+            ==
+            $product_response_data
+                ->id;
+
+        $this->assertTrue($response_product_id_is_same_as_request_route_parameter);
+
+        $response_product_data_has_no_variation =
+            $product_response_data
+                ->variation
+                ==
+                null;
+
+        $this->assertTrue(
+            $response_product_data_has_no_variation
+        );
+
+        $product_response_data_first_variant_and_variant_value =
+            $product_response_data
+                ->variants
+                ->first()
+                ->variant_values
+                ->first();
+
+        $product_response_data_second_variant_first_variant_value =
+            $product_response_data
+                ->variants
+                ->skip(1)
+                ->first()
+                ->variant_values
+                ->first();
+
+        $response_product_data_first_variant_and_variant_value_has_combination_with_second_variant_first_variant_value =
+            $product_response_data_first_variant_and_variant_value
+                ->id
+            ==
+            $product_response_data_first_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->first_variant_value_id
+            &&
+            $product_response_data_second_variant_first_variant_value
+                ->id
+            ==
+            $product_response_data_first_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->second_variant_value_id;
+
+        $this->assertTrue($response_product_data_first_variant_and_variant_value_has_combination_with_second_variant_first_variant_value);
+
+        $product_response_data_second_variant_and_variant_value =
+        $product_response_data
+            ->variants
+            ->skip(1)
+            ->first()
+            ->variant_values
+            ->skip(1)
+            ->first();
+
+        $response_product_data_second_variant__second_variant_value_has_no_combinations =
+            $product_response_data_second_variant_and_variant_value
+                ->id
+            ==
+            $product_response_data_second_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->second_variant_value_id
+            &&
+            $product_response_data_second_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->first_variant_value_id
+            ==
+            null;
+
+        $this->assertTrue($response_product_data_second_variant__second_variant_value_has_no_combinations);
 
     }
 }

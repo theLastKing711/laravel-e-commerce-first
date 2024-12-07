@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -39,11 +40,17 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination wherePrice($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereSecondVariantValueId($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereUpdatedAt($value)
+ * @property-read \App\Models\SecondVariantCombination|null $pivot
  * @mixin \Eloquent
  */
 class VariantCombination extends Pivot implements Mediable
 {
     use EagerLoadPivotTrait,HasFactory, HasUlids, MediaAlly;
+
+    public function medially(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
 
     /**
      * Get the first_variant_value that owns the VariantCombination

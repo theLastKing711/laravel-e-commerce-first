@@ -16,14 +16,14 @@ class UserTestCase extends TestCase
 
     public User $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         //        parent::withHeader('Accept', 'application/json');
 
         $this->seed(RolesAndPermissionsSeeder::class);
-        $this->seed(CategorySeeder::class);
+        // $this->seed(CategorySeeder::class);
 
         $this->createUser();
 

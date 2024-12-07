@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Enum\Unit;
+use App\Models\Media;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,5 +29,17 @@ class ProductFactory extends Factory
             'unit' => $this->faker->randomElement(Unit::cases()),
             'unit_value' => $this->faker->randomFloat(2, 0, 100),
         ];
+    }
+
+    public function withImage(): static
+    {
+        return $this->afterCreating(function (Product $product) {
+            $media = Media::factory(1)
+                ->makeOne();
+
+            $product
+                ->medially()
+                ->saveMany([$media]);
+        });
     }
 }

@@ -159,13 +159,15 @@ class GetProductDetailsData extends Data
 
                                             $second_vairant_value_id =
                                                 $first_variant_variant_value_first_combination_with_second_and_third
-                                                    ->variant_id;
+                                                    ->id;
 
                                             $third_variant_value_id =
                                                 $first_variant_variant_value_first_combination_with_second_and_third
+                                                    ->pivot
                                                     ->combinations
                                                     ->first()
-                                                    ->id;
+                                                    ->pivot
+                                                    ->variant_value_id;
 
                                             return new VariantValueData(
                                                 id: $variantValue->id,
@@ -278,6 +280,11 @@ class GetProductDetailsData extends Data
                                             (bool) $second_variant_variant_value_first_combination_with_first_and_third;
 
                                         if ($second_variant_variant_value_has_any_combination_with_first_and_third) {
+
+                                            Log::info('correct');
+
+                                            Log::info($variant_value_ids_query_parameter
+                                                ->second_variant_value_id);
 
                                             $first_vairant_value_id =
                                                 $second_variant_variant_value_first_combination_with_first_and_third
@@ -396,9 +403,9 @@ class GetProductDetailsData extends Data
                                                 image: SingleMedia::fromModel($variantValue),
                                                 combinations_ids_with_selected_variant_value: new GetProductDetailsQueryParameterData(
                                                     first_variant_value_id: $third_variant_variant_value_first_combination_with_first_and_second
-                                                        ->second_variant_value_id,
-                                                    second_variant_value_id: $third_variant_variant_value_first_combination_with_selected_first_and_second
-                                                        ->first_variant_value_id,
+                                                        ->first_variant_value,
+                                                    second_variant_value_id: $third_variant_variant_value_first_combination_with_first_and_second
+                                                        ->second_variant_value,
                                                     third_variant_value_id: $third_variant_query_parameter_variant_value_id
                                                 )
                                             );

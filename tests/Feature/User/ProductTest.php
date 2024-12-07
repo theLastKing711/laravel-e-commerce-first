@@ -468,7 +468,7 @@ class ProductTest extends UserTestCase
     }
 
     #[Test]
-    public function index_product_with_two_variants_and_second_variant_and_variant_value_that_has_no_combination_at_all_should_return_product_with_no_variation_and_no_combinations_for_that_second_variant_value_but_other_variant_values_with_combinatios_should_link_to_them_in_combinations(): void
+    public function index_product_with_two_variants_and_second_variant_and_variant_value_that_has_no_combination_at_all_should_return_product_with_no_variation_and_no_combinations_for_that_second_variant_value_but_other_variant_values_with_combinations_should_link_to_them_in_combinations(): void
     {
         $product =
             Product::factory()->withImage()->createOne();
@@ -631,7 +631,7 @@ class ProductTest extends UserTestCase
             ->skip(1)
             ->first();
 
-        $response_product_data_second_variant__second_variant_value_has_no_combinations =
+        $response_product_data_second_variant_second_variant_value_has_no_combinations =
             $product_response_data_second_variant_and_variant_value
                 ->id
             ==
@@ -645,7 +645,210 @@ class ProductTest extends UserTestCase
             ==
             null;
 
-        $this->assertTrue($response_product_data_second_variant__second_variant_value_has_no_combinations);
+        $this->assertTrue(
+            $response_product_data_second_variant_second_variant_value_has_no_combinations
+        );
+
+    }
+
+    #[Test]
+    public function index_product_with_three_variants_and_third_variant_second_variant_value_that_has_no_combination_at_all_should_return_product_with_no_variation_and_no_combinations_for_that_variant_value_but_other_variant_values_with_combinations_should_link_to_them_in_combinations(): void
+    {
+        $request_product_with_three_variant =
+            Product::factory()->withImage()->createOne();
+
+        $category =
+            Category::factory()->createOne();
+
+        $category->products()->save($request_product_with_three_variant);
+
+        $variants =
+            Variant::factory(3)->make();
+
+        $request_product_with_three_variant->variants()->saveMany($variants);
+
+        $first_variant_first_variant_value =
+        VariantValue::factory(1)
+            ->withImage()
+            ->createOne(['variant_id' => $variants->first()->id]);
+
+        $second_variant_first_variant_value =
+            VariantValue::factory(1)
+                ->withImage()
+                ->createOne(['variant_id' => $variants->skip(1)->first()->id]);
+
+        $second_variant_first_variant_value
+            ->combinations()
+            ->save($first_variant_first_variant_value, ['is_thumb' => true, 'price' => 25, 'available' => 0]);
+
+        $variant_combinations_media = Media::factory(1)->make();
+
+        /** @var VariantCombination $first_variant_combination */
+        $first_variant_combination = VariantCombination::query()
+            ->where('first_variant_value_id', $second_variant_first_variant_value->id)
+            ->where('second_variant_value_id', $first_variant_first_variant_value->id)
+            ->first();
+
+        /** @var Media $first_combianation_media */
+        $first_combianation_media = $variant_combinations_media->first();
+
+        $first_variant_combination
+            ->medially()
+            ->save($first_combianation_media);
+
+        $third_variant_first_variant_value =
+            VariantValue::factory(1)
+                ->withImage()
+                ->createOne(['variant_id' => $variants->skip(2)->first()]);
+
+        $third_variant_first_variant_value
+            ->late_combinations()
+            ->save($first_variant_combination, ['is_thumb' => true, 'price' => 25, 'available' => 0]);
+
+        /** @var Media $second_variant_combianation_media */
+        $second_variant_combianation_media = Media::factory(1)->makeOne();
+
+        /** @var SecondVariantCombination $second_variant_combination */
+        $second_variant_combination =
+            SecondVariantCombination::query()
+                ->firstWhere('variant_value_id', $third_variant_first_variant_value->id);
+
+        $second_variant_combination
+            ->medially()
+            ->save($second_variant_combianation_media);
+
+        $third_variant_second_variant_value =
+            VariantValue::factory(1)
+                ->withImage()
+                ->createOne(['variant_id' => $variants->skip(2)->first()]);
+
+        $show_route =
+            $this
+                ->main_route.
+                '/'.
+                $request_product_with_three_variant->id.
+                '?third_variant_value_id='.
+                $third_variant_second_variant_value->id;
+
+        $response = $this->get($show_route);
+
+        $response->assertStatus(200);
+
+        $products_response_data =
+            $response
+                ->json();
+
+        $product_response_data =
+            GetProductDetailsData::from($products_response_data);
+
+        $response_product_id_is_same_as_request_route_parameter =
+            $request_product_with_three_variant
+                ->id
+            ==
+            $product_response_data
+                ->id;
+
+        $this->assertTrue($response_product_id_is_same_as_request_route_parameter);
+
+        $response_product_data_has_no_variation =
+            $product_response_data
+                ->variation
+                ==
+                null;
+
+        $this->assertTrue(
+            $response_product_data_has_no_variation
+        );
+
+        $product_response_data_first_variant_and_variant_value =
+            $product_response_data
+                ->variants
+                ->first()
+                ->variant_values
+                ->first();
+
+        $product_response_data_second_variant_first_variant_value =
+            $product_response_data
+                ->variants
+                ->skip(1)
+                ->first()
+                ->variant_values
+                ->first();
+
+        $product_response_data_third_variant_first_variant_value =
+            $product_response_data
+                ->variants
+                ->skip(2)
+                ->first()
+                ->variant_values
+                ->first();
+
+        $product_response_data_third_variant_second_variant_value =
+            $product_response_data
+                ->variants
+                ->skip(2)
+                ->first()
+                ->variant_values
+                ->skip(1)
+                ->first();
+
+        $response_product_data_first_variant_and_variant_value_has_combination_with_second_variant_first_variant_value_and_thrid_variant_first_variant_value =
+            $product_response_data_first_variant_and_variant_value
+                ->id
+            ==
+            $product_response_data_first_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->first_variant_value_id
+            // ==
+            // $second_variant_first_variant_value->id
+            &&
+            $product_response_data_second_variant_first_variant_value
+                ->id
+            ==
+            $product_response_data_first_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->second_variant_value_id
+            // ==
+            // $first_variant_first_variant_value->id
+            &&
+            $product_response_data_third_variant_first_variant_value
+                ->id
+            ==
+            $product_response_data_first_variant_and_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->third_variant_value_id;
+        // ==
+        // $third_variant_first_variant_value;
+
+        $this->assertTrue($response_product_data_first_variant_and_variant_value_has_combination_with_second_variant_first_variant_value_and_thrid_variant_first_variant_value);
+
+        $response_product_data_third_variant_second_variant_value_has_no_combinations =
+            $product_response_data_third_variant_second_variant_value
+                ->id
+            ==
+            $product_response_data_third_variant_second_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->third_variant_value_id
+            &&
+            $product_response_data_third_variant_second_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->first_variant_value_id
+            ==
+            null
+            &&
+            $product_response_data_third_variant_second_variant_value
+                ->combinations_ids_with_selected_variant_value
+                ->second_variant_value_id
+            ==
+            null;
+
+        $this->assertTrue($response_product_data_third_variant_second_variant_value_has_no_combinations);
+
+        $product_response_data_third_variant_and_second_variant_value_is_selected =
+        $product_response_data_third_variant_second_variant_value
+            ->is_selected == true;
+
+        $this->assertTrue($product_response_data_third_variant_and_second_variant_value_is_selected);
 
     }
 }

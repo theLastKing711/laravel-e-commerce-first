@@ -1674,6 +1674,36 @@
                 }
             }
         },
+        "/user/auth/signup": {
+            "post": {
+                "tags": [
+                    "userAuth"
+                ],
+                "operationId": "2829d47a715771846cc79d246cae4875",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestSignUpData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Item fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginSuccessResponseData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/categories/parent-list": {
             "get": {
                 "tags": [
@@ -1959,16 +1989,13 @@
             "CategoryShowData": {
                 "properties": {
                     "id": {
-                        "description": "<int, ShowFileData>",
                         "type": "integer"
                     },
                     "parent_id": {
-                        "description": "<int, ShowFileData>",
                         "type": "integer",
                         "nullable": true
                     },
                     "name": {
-                        "description": "<int, ShowFileData>",
                         "type": "string"
                     },
                     "images": {
@@ -1981,7 +2008,6 @@
                     },
                     "created_at": {
                         "schema": "string",
-                        "description": "<int, ShowFileData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -1994,11 +2020,9 @@
             "CreateCategoryData": {
                 "properties": {
                     "name": {
-                        "description": "CreateFilePathData>",
                         "type": "string"
                     },
                     "parent_id": {
-                        "description": "CreateFilePathData>",
                         "type": "integer",
                         "nullable": true
                     },
@@ -2075,11 +2099,9 @@
             "UpdateCategoryData": {
                 "properties": {
                     "name": {
-                        "description": "UpdateFileData>",
                         "type": "string"
                     },
                     "parent_id": {
-                        "description": "UpdateFileData>",
                         "type": "integer",
                         "nullable": true
                     },
@@ -2096,30 +2118,24 @@
             "CouponData": {
                 "properties": {
                     "id": {
-                        "description": "CouponUserData>",
                         "type": "integer"
                     },
                     "name": {
-                        "description": "CouponUserData>",
                         "type": "string"
                     },
                     "code": {
-                        "description": "CouponUserData>",
                         "type": "string"
                     },
                     "percent": {
-                        "description": "CouponUserData>",
                         "type": "string",
                         "nullable": true
                     },
                     "value": {
-                        "description": "CouponUserData>",
                         "type": "string",
                         "nullable": true
                     },
                     "start_at": {
                         "schema": "string",
-                        "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-08-02 18:31:45",
@@ -2128,7 +2144,6 @@
                     },
                     "end_at": {
                         "schema": "string",
-                        "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -2137,7 +2152,6 @@
                     },
                     "created_at": {
                         "schema": "string",
-                        "description": "CouponUserData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -2171,26 +2185,21 @@
             "CreateCouponData": {
                 "properties": {
                     "name": {
-                        "description": "int>",
                         "type": "string"
                     },
                     "code": {
-                        "description": "int>",
                         "type": "string"
                     },
                     "percent": {
-                        "description": "int>",
                         "type": "string",
                         "nullable": true
                     },
                     "value": {
-                        "description": "int>",
                         "type": "integer",
                         "nullable": true
                     },
                     "start_at": {
                         "schema": "string",
-                        "description": "int>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-08-02 18:31:45",
@@ -2199,7 +2208,6 @@
                     },
                     "end_at": {
                         "schema": "string",
-                        "description": "int>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -2227,26 +2235,21 @@
             "UpdateCouponData": {
                 "properties": {
                     "name": {
-                        "description": "int>",
                         "type": "string"
                     },
                     "code": {
-                        "description": "int>",
                         "type": "string"
                     },
                     "percent": {
-                        "description": "int>",
                         "type": "string",
                         "nullable": true
                     },
                     "value": {
-                        "description": "int>",
                         "type": "integer",
                         "nullable": true
                     },
                     "start_at": {
                         "schema": "string",
-                        "description": "int>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-08-02 18:31:45",
@@ -2255,7 +2258,6 @@
                     },
                     "end_at": {
                         "schema": "string",
-                        "description": "int>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -2440,32 +2442,26 @@
             "adminUpdateNotification": {
                 "properties": {
                     "name": {
-                        "description": "int>",
                         "type": "string"
                     },
                     "code": {
-                        "description": "int>",
                         "type": "string"
                     },
                     "percent": {
-                        "description": "int>",
                         "type": "string",
                         "nullable": true
                     },
                     "value": {
-                        "description": "int>",
                         "type": "integer",
                         "nullable": true
                     },
                     "start_at": {
-                        "description": "int>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-08-02 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "end_at": {
-                        "description": "int>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -2531,15 +2527,12 @@
             "adminOrderShow": {
                 "properties": {
                     "id": {
-                        "description": "OrderDetailsData>",
                         "type": "integer"
                     },
                     "total": {
-                        "description": "OrderDetailsData>",
                         "type": "string"
                     },
                     "required_time": {
-                        "description": "OrderDetailsData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2017-02-02 18:31:45",
@@ -2549,19 +2542,15 @@
                         "$ref": "#/components/schemas/OrderStatus"
                     },
                     "lat": {
-                        "description": "OrderDetailsData>",
                         "type": "string"
                     },
                     "lon": {
-                        "description": "OrderDetailsData>",
                         "type": "string"
                     },
                     "delivery_price": {
-                        "description": "OrderDetailsData>",
                         "type": "string"
                     },
                     "created_at": {
-                        "description": "OrderDetailsData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2017-02-02 18:31:45",
@@ -2629,32 +2618,25 @@
             "adminProduct": {
                 "properties": {
                     "id": {
-                        "description": "CategoryData>",
                         "type": "string"
                     },
                     "name": {
-                        "description": "CategoryData>",
                         "type": "string"
                     },
                     "price": {
-                        "description": "CategoryData>",
                         "type": "string"
                     },
                     "description": {
-                        "description": "CategoryData>",
                         "type": "string"
                     },
                     "price_offer": {
-                        "description": "CategoryData>",
                         "type": "string",
                         "nullable": true
                     },
                     "is_most_buy": {
-                        "description": "CategoryData>",
                         "type": "boolean"
                     },
                     "is_active": {
-                        "description": "CategoryData>",
                         "type": "boolean"
                     },
                     "unit": {
@@ -2666,18 +2648,15 @@
                         "nullable": true
                     },
                     "unit_value": {
-                        "description": "CategoryData>",
                         "type": "integer",
                         "nullable": true
                     },
                     "image": {
-                        "description": "CategoryData>",
                         "type": "string",
                         "nullable": true
                     },
                     "created_at": {
                         "schema": "string",
-                        "description": "CategoryData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -2838,7 +2817,12 @@
                         "nullable": true
                     },
                     "image": {
-                        "$ref": "#/components/schemas/SingleMedia"
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/SingleMedia"
+                            }
+                        ],
+                        "nullable": true
                     },
                     "variants": {
                         "type": "array",
@@ -2852,16 +2836,13 @@
             "GetProductDetailsRequestData": {
                 "properties": {
                     "first_variant_value_id": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                     },
                     "second_variant_value_id": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                     },
                     "third_variant_value_id": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -2939,7 +2920,7 @@
                     "variant_values": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ProuctDetailsVariantValueData"
+                            "$ref": "#/components/schemas/variantValueData"
                         }
                     }
                 },
@@ -3284,6 +3265,19 @@
                 },
                 "type": "object"
             },
+            "RequestSignUpData": {
+                "properties": {
+                    "dial_code": {
+                        "type": "string",
+                        "default": "963"
+                    },
+                    "number": {
+                        "type": "string",
+                        "default": "0968259851"
+                    }
+                },
+                "type": "object"
+            },
             "CursorPaginatedListData": {
                 "type": "object",
                 "allOf": [
@@ -3367,7 +3361,7 @@
                         }
                     },
                     "categories": {
-                        "description": "HomeProductListData>",
+                        "description": "AllCategoriesData>",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/AllCategoriesData"
@@ -3445,19 +3439,16 @@
             "CreateOrderData": {
                 "properties": {
                     "notice": {
-                        "description": "CreateOrderDetailsData>",
                         "type": "string",
                         "nullable": true
                     },
                     "required_time": {
-                        "description": "CreateOrderDetailsData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-11 18:31:45",
                         "pattern": "YYYY-MM-DD"
                     },
                     "code": {
-                        "description": "CreateOrderDetailsData>",
                         "type": "string",
                         "default": "123456"
                     },
@@ -3532,12 +3523,10 @@
             "OrderShowData": {
                 "properties": {
                     "id": {
-                        "description": "OrderShowItemData>",
                         "type": "integer"
                     },
                     "required_time": {
                         "schema": "string",
-                        "description": "OrderShowItemData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -3545,30 +3534,24 @@
                         "example": "2024-09-02 18:31:45"
                     },
                     "receiver_name": {
-                        "description": "OrderShowItemData>",
                         "type": "string"
                     },
                     "total": {
-                        "description": "OrderShowItemData>",
                         "type": "number",
                         "format": "float"
                     },
                     "discount": {
-                        "description": "OrderShowItemData>",
                         "type": "number",
                         "format": "float"
                     },
                     "delivery_price": {
-                        "description": "OrderShowItemData>",
                         "type": "number",
                         "format": "float"
                     },
                     "driver_lat": {
-                        "description": "OrderShowItemData>",
                         "type": "string"
                     },
                     "driver_lon": {
-                        "description": "OrderShowItemData>",
                         "type": "string"
                     },
                     "items": {
@@ -3580,7 +3563,6 @@
                     },
                     "created_at": {
                         "schema": "string",
-                        "description": "OrderShowItemData>",
                         "type": "string",
                         "format": "datetime",
                         "default": "2024-09-02 18:31:45",
@@ -3797,6 +3779,86 @@
     "tags": [
         {
             "name": "auth"
+        },
+        {
+            "name": "admin",
+            "description": "admin"
+        },
+        {
+            "name": "sanctum",
+            "description": "sanctum"
+        },
+        {
+            "name": "categories",
+            "description": "categories"
+        },
+        {
+            "name": "coupons",
+            "description": "coupons"
+        },
+        {
+            "name": "drivers",
+            "description": "drivers"
+        },
+        {
+            "name": "groups",
+            "description": "groups"
+        },
+        {
+            "name": "notifications",
+            "description": "notifications"
+        },
+        {
+            "name": "orders",
+            "description": "orders"
+        },
+        {
+            "name": "products",
+            "description": "products"
+        },
+        {
+            "name": "stats",
+            "description": "stats"
+        },
+        {
+            "name": "users",
+            "description": "users"
+        },
+        {
+            "name": "files",
+            "description": "files"
+        },
+        {
+            "name": "storeAuth",
+            "description": "storeAuth"
+        },
+        {
+            "name": "storeOrders",
+            "description": "storeOrders"
+        },
+        {
+            "name": "userAuth",
+            "description": "userAuth"
+        },
+        {
+            "name": "userCategories",
+            "description": "userCategories"
+        },
+        {
+            "name": "userHome",
+            "description": "userHome"
+        },
+        {
+            "name": "userSearch",
+            "description": "userSearch"
+        },
+        {
+            "name": "userOrders",
+            "description": "userOrders"
+        },
+        {
+            "name": "userProducts",
+            "description": "userProducts"
         }
     ]
 }

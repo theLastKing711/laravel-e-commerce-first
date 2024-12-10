@@ -21882,6 +21882,17 @@ namespace  {
              * 
              *
              * @see \App\Providers\BuilderMacrosServiceProvider::boot()
+             * @param \Illuminate\Support\Collection $ids
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */            public static function whereIdIn($ids)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::whereIdIn($ids);
+            }
+                            /**
+             * 
+             *
+             * @see \App\Providers\BuilderMacrosServiceProvider::boot()
              * @param string $sort_field
              * @param string $sort_value
              * @return \Illuminate\Database\Eloquent\Builder|static 

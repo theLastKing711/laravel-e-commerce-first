@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
@@ -68,7 +69,6 @@ class OrderController extends Controller
         Log::info('accessing User OrderController index method');
 
         $authenticatedUser = auth()->user();
-
         $request_has_order_processed_filter = $query_param->is_order_processed;
 
         $orders = Order::query()
@@ -77,6 +77,7 @@ class OrderController extends Controller
             ->addSelect(
                 [
                     'total' => OrderDetails::query()
+
                         ->whereColumn('order_id', 'order_details.id')
                         ->join('products', 'order_details.product_id', 'products.id')
                         ->selectRaw('SUM(
@@ -126,24 +127,30 @@ class OrderController extends Controller
 
         Log::info('Accessing User OrderController store method');
 
-        $applied_coupon_id = Coupon::query()
-            ->where('code', $request_create_order_data->code)
-            ->first()
-            ->id;
+        /** @var string $applied_coupon_id */
+        $applied_coupon_id =
+            Coupon::query()
+                ->firstWhere('code', $request_create_order_data->code)
+                ->id;
 
-        $request_order_details_unique_product_ids = $request_create_order_data
-            ->order_details
-            ->pluck('product_id')
-            ->unique();
+        /** @var Collection<int, string> $request_order_details_unique_product_ids */
+        $request_order_details_unique_product_ids =
+            $request_create_order_data
+                ->order_details
+                ->pluck('product_id')
+                ->unique();
 
-        $order_products = Product::whereIn(
-            'id',
-            $request_order_details_unique_product_ids
-        )
-            ->get();
+        /** @var EloquentCollection<int, Product> $order_products */
+        $order_products =
+            Product::query()
+                ->whereIdIn(
+                    $request_order_details_unique_product_ids
+                )
+                ->get();
 
-        $request_order_details = $request_create_order_data
-            ->order_details;
+        $request_order_details =
+            $request_create_order_data
+                ->order_details;
 
         $order_details =
             $request_order_details
@@ -153,10 +160,10 @@ class OrderController extends Controller
                         Collection $product_grouping,
                         string $key
                     ) use ($order_products) {
-
-                        $product = $order_products
-                            ->where('id', $key)
-                            ->first();
+                        /** @var Collection<int, Product> $product_grouping */
+                        $product =
+                            $order_products
+                                ->firstWhere('id', $key);
 
                         return new OrderDetails([
                             'product_id' => $key,
@@ -167,25 +174,31 @@ class OrderController extends Controller
                     }
                 );
 
-        $order_total = $order_details
-            ->sum(function (OrderDetails $item) {
+        /** @var float $order_total */
+        $order_total =
+            $order_details
+                ->sum(function (OrderDetails $item) {
 
-                $price = $item->unit_price ?? $item->unit_price_offer;
+                    $price = $item->unit_price ?? $item->unit_price_offer;
 
-                return $price * $item->quantity;
-            });
+                    return $price * $item->quantity;
+                });
 
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'coupon_id' => $applied_coupon_id,
-            'notice' => $request_create_order_data->notice,
-            'required_time' => $request_create_order_data->required_time,
-            'total' => $order_total,
-            'status' => OrderStatus::Pending,
-            'lat' => 0,
-            'lon' => 0,
-            'delivery_price' => 200,
-        ]);
+        /** @var int $autheticated_user_id */
+        $autheticated_user_id = auth()->id();
+
+        $order = Order::query()
+            ->create([
+                'user_id' => $autheticated_user_id,
+                'coupon_id' => $applied_coupon_id,
+                'notice' => $request_create_order_data->notice,
+                'required_time' => $request_create_order_data->required_time,
+                'total' => $order_total,
+                'status' => OrderStatus::Pending,
+                'lat' => 0,
+                'lon' => 0,
+                'delivery_price' => 200,
+            ]);
 
         $order->orderDetails()->saveMany($order_details);
 

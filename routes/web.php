@@ -17,6 +17,7 @@ use App\Http\Controllers\Store\AuthController as StoreAuthController;
 use App\Http\Controllers\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
 use App\Http\Controllers\User\Auth\LogoutController as UserLogoutController;
+use App\Http\Controllers\User\Auth\SignUpController;
 use App\Http\Controllers\User\Categories\ParentListController;
 use App\Http\Controllers\User\Home\HomeController;
 use App\Http\Controllers\User\Home\Search\ProductSearchSuggestionController;
@@ -188,6 +189,7 @@ Route::prefix('user')
     ->group(function () {
 
         Route::prefix('auth')->group(function () {
+            Route::post('signup', SignUpController::class);
             Route::post('login', UserLoginController::class);
             Route::post('logout', UserLogoutController::class);
         });

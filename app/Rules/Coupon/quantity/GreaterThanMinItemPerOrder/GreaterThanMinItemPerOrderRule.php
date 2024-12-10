@@ -20,7 +20,7 @@ class GreaterThanMinItemPerOrderRule implements ValidationRule
             ->order_delivery_min_item_per_order;
 
         if ($ordered_items < $settings_min_item_per_order) {
-            $fail(':attribute is invalid,must order at least '.$settings_min_item_per_order.' items.');
+            $fail(':attribute is invalid,order must at least have '.$settings_min_item_per_order.' items.');
         }
 
     }

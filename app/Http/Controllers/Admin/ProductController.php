@@ -73,9 +73,10 @@ class ProductController extends Controller
     public function show(AdminProductIdPathParameterData $request)
     {
 
-        $product = Product::with(['categories.parent'])
-            ->where('id', $request->id)
-            ->first();
+        $product =
+            Product::with(['categories.parent'])
+                ->where('id', $request->id)
+                ->first();
 
         return PaginatedProductData::from(
             $product

@@ -56,6 +56,16 @@ class BuilderMacrosServiceProvider extends ServiceProvider
             );
         });
 
+        Builder::macro('whereIdIn', function (Collection|array $ids): Builder {
+
+            /** @var Builder $this */
+
+            return $this->whereIn(
+                'id',
+                $ids
+            );
+        });
+
         Builder::macro('orderByDynamic', function (string $sort_field, string $sort_value): Builder {
 
             /** @var Builder $this */
@@ -75,17 +85,10 @@ class BuilderMacrosServiceProvider extends ServiceProvider
 
         // Collection::macro(
         //     'at',
-        //     /**
-        //      * @template TValue
-        //      *
-        //      * @return Collection<int, static>
-        //      **/
-        //     function (int $count): static {
+        //     function (int $index) {
 
-        //         /** @var Collection<int, TValue> $this */
-
-        //         /** @var TValue|null $x */
-        //         $x = $this->where($count)->first();
+        //         /** @var Collection<int, static> $this */
+        //         $x = $this->where($index)->first();
 
         //         return $x;
         //     }

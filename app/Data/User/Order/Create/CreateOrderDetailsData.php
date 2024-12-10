@@ -41,7 +41,8 @@ class CreateOrderDetailsData extends Data
             Exists('products', 'id'),
             ActiveProduct
         ]
-        public int $product_id,
-    ) {
-    }
+        public string $product_id,
+        #[OAT\Property()]
+        public ?string $product_variation_id,
+    ) {}
 }

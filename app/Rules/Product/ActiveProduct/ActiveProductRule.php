@@ -19,8 +19,7 @@ class ActiveProductRule implements ValidationRule
 
         $isProductActive =
             Product::query()
-                ->where('id', $id)
-                ->first()
+                ->firstWhereId($id)
                 ->is_active;
 
         if (! $isProductActive) {

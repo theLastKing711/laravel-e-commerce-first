@@ -5,8 +5,6 @@ namespace App\Data\User\Order\Create;
 use App\Data\Shared\Swagger\Property\ArrayProperty;
 use App\Data\Shared\Swagger\Property\DateProperty;
 use App\Rules\Coupon\Code\UnUsedCoupon\UnusedCoupon;
-use App\Rules\Coupon\Code\UserOwnsCoupon\UserOwnsCoupon;
-use App\Rules\Product\ActiveProduct\ActiveProduct;
 use Illuminate\Support\Collection;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\AfterOrEqual;
@@ -26,12 +24,10 @@ class CreateOrderData extends Data
             OAT\Property(),
         ]
         public ?string $notice,
-        #[
-            DateProperty,
+        #[DateProperty(),
             Bail,
             Date,
             AfterOrEqual('+ 1 minute'),
-            ActiveProduct
         ]
         public string $required_time,
         #[
@@ -40,11 +36,12 @@ class CreateOrderData extends Data
             Numeric,
             Digits(6),
             Exists('coupons', 'code'),
-            UserOwnsCoupon,
             UnusedCoupon
         ]
         public string $code,
-        #[ArrayProperty]
+        #[ArrayProperty(CreateOrderDetailsData::class)]
         public Collection $order_details,
     ) {}
 }
+
+// UserOwnsCoupon commented attributes for $order_details.

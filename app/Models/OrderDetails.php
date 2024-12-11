@@ -32,6 +32,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUnitPriceOffer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDetails whereUpdatedAt($value)
+ * @property string|null $variant_value_id
+ * @property string|null $variant_combination_id
+ * @property string|null $second_variant_combination_id
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderDetails whereSecondVariantCombinationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderDetails whereVariantCombinationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderDetails whereVariantValueId($value)
  * @mixin Eloquent
  */
 class OrderDetails extends Eloquent

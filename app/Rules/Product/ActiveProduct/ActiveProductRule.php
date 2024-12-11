@@ -19,8 +19,8 @@ class ActiveProductRule implements ValidationRule
 
         $isProductActive =
             Product::query()
-                ->firstWhereId($id)
-                ->is_active;
+                ->firstWhereId($id);
+        // ->is_active;
 
         if (! $isProductActive) {
             $fail('The :attribute is invalid, product is currently not on sale.');

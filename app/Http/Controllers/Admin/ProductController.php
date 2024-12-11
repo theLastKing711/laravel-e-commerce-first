@@ -99,10 +99,6 @@ class ProductController extends Controller
 
         $is_product_updated = $product->update($request->all());
 
-        // if ($is_product_updated) {
-        //     FileService::delete('product', $product->first()->image);
-        // }
-
     }
 
     #[OAT\Get(path: '/admin/products/getProductsByName', tags: ['products'])]

@@ -20239,6 +20239,28 @@ namespace Illuminate\Support {
          * 
          *
          * @see \App\Providers\BuilderMacrosServiceProvider::boot()
+         * @param string|int $id
+         * @return \Illuminate\Database\Eloquent\Model|static|null 
+         * @static 
+         */        public static function firstWhereId($id)
+        {
+                        return \Illuminate\Support\Collection::firstWhereId($id);
+        }
+                    /**
+         * 
+         *
+         * @see \App\Providers\BuilderMacrosServiceProvider::boot()
+         * @param \Illuminate\Support\Collection|array $ids
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */        public static function whereIdIn($ids)
+        {
+                        return \Illuminate\Support\Collection::whereIdIn($ids);
+        }
+                    /**
+         * 
+         *
+         * @see \App\Providers\BuilderMacrosServiceProvider::boot()
          * @param string $relation
          * @return \Illuminate\Support\Collection 
          * @static 
@@ -21882,7 +21904,7 @@ namespace  {
              * 
              *
              * @see \App\Providers\BuilderMacrosServiceProvider::boot()
-             * @param \Illuminate\Support\Collection $ids
+             * @param \Illuminate\Support\Collection|array $ids
              * @return \Illuminate\Database\Eloquent\Builder|static 
              * @static 
              */            public static function whereIdIn($ids)

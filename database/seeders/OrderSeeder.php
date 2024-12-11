@@ -16,9 +16,24 @@ class OrderSeeder extends Seeder
         $orders = Order::factory()
             ->has(
                 OrderDetails::factory()
-                    ->count(10)
+                    ->count(3)
             )
-            ->count(10)
+            ->has(
+                OrderDetails::factory()
+                    ->oneVariantProduct()
+                    ->count(2)
+            )
+            ->has(
+                OrderDetails::factory()
+                    ->twoVariantsProduct()
+                    ->count(2)
+            )
+            ->has(
+                OrderDetails::factory()
+                    ->threeVariantProduct()
+                    ->count(1)
+            )
+            ->count(5)
             ->updateTotalUsingItems()
             ->create();
     }

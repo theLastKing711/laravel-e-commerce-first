@@ -34,6 +34,16 @@ class BuilderMacrosServiceProvider extends ServiceProvider
             );
         });
 
+        Collection::macro('firstWhereId', function (string|int $id): Model|static|null {
+
+            /** @var Collection $this */
+
+            return $this->firstWhere(
+                'id',
+                $id
+            );
+        });
+
         Builder::macro('whereLike', function (string $field, string $searchTerm): Builder {
 
             /** @var Builder $this */
@@ -59,6 +69,16 @@ class BuilderMacrosServiceProvider extends ServiceProvider
         Builder::macro('whereIdIn', function (Collection|array $ids): Builder {
 
             /** @var Builder $this */
+
+            return $this->whereIn(
+                'id',
+                $ids
+            );
+        });
+
+        Collection::macro('whereIdIn', function (Collection|array $ids): Collection {
+
+            /** @var Collection $this */
 
             return $this->whereIn(
                 'id',

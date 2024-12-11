@@ -16,6 +16,15 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('order_id')->constrained();
             $table->foreignUlid('product_id')->constrained();
+            $table->foreignUlid('variant_value_id')
+                ->nullable()
+                ->constrained('variant_values');
+            $table->foreignUlid('variant_combination_id')
+                ->nullable()
+                ->constrained('variant_combination');
+            $table->foreignUlid('second_variant_combination_id')
+                ->nullable()
+                ->constrained('second_variant_combination');
             $table->decimal('unit_price')->nullable();
             $table->decimal('unit_price_offer')->nullable();
             $table->integer('quantity');

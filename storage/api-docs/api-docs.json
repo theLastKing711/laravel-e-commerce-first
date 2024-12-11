@@ -3453,10 +3453,9 @@
                         "default": "123456"
                     },
                     "order_details": {
-                        "description": "CreateOrderDetailsData>",
                         "type": "array",
                         "items": {
-                            "type": "integer"
+                            "$ref": "#/components/schemas/CreateOrderDetailsData"
                         }
                     }
                 },
@@ -3479,8 +3478,12 @@
                         "nullable": true
                     },
                     "product_id": {
-                        "type": "integer",
+                        "type": "string",
                         "default": 1
+                    },
+                    "product_variation_id": {
+                        "type": "string",
+                        "nullable": true
                     }
                 },
                 "type": "object"

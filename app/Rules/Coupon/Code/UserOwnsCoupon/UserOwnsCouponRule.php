@@ -18,7 +18,8 @@ class UserOwnsCouponRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         /** @var User $authenticatedUser */
-        $authenticatedUser = auth()->user();
+        $authenticatedUser = User::query()->firstWhereId(21);
+        // $authenticatedUser = auth()->user();
 
         $coupon =
             Coupon::query()

@@ -7,6 +7,7 @@ use App\Data\Shared\Swagger\Request\JsonRequestBody;
 use App\Data\Shared\Swagger\Response\SuccessItemResponse;
 use App\Data\Shared\Swagger\Response\SuccessListResponse;
 use App\Data\User\Order\Create\CreateOrderData;
+use App\Data\User\Order\Create\CreateOrderDetailsData;
 use App\Data\User\Order\Index\OrderData;
 use App\Data\User\Order\QueryParameters\OrderProcessedQueryParameterData;
 use App\Data\User\Order\Show\OrderShowData;
@@ -16,6 +17,9 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Product;
+use App\Models\SecondVariantCombination;
+use App\Models\VariantCombination;
+use App\Models\VariantValue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
@@ -146,31 +150,126 @@ class OrderController extends Controller
                 ->whereIdIn(
                     $request_order_details_unique_product_ids
                 )
+                ->withCount('variants')
                 ->get();
 
         $request_order_details =
             $request_create_order_data
                 ->order_details;
 
+        /** @var Collection<int, string> $reqeust_product_variation_ids */
+        $request_product_variation_ids =
+            $request_create_order_data
+                ->order_details
+                ->pluck('product_variation_id');
+
+        /** @var Collection<int, VariantValue> $one_variant_products */
+        $one_variant_products =
+            VariantValue::query()
+                ->whereIdIn($request_product_variation_ids)
+                ->get();
+
+        /** @var Collection<int, VariantCombination> $two_variant_products */
+        $two_variant_products =
+            VariantCombination::query()
+                ->whereIdIn($request_product_variation_ids)
+                ->get();
+
+        /** @var Collection<int, SecondVariantCombination> $three_variant_products */
+        $three_variant_products =
+            SecondVariantCombination::query()
+                ->whereIdIn($request_product_variation_ids)
+                ->get();
+
         $order_details =
             $request_order_details
-                ->groupBy('product_id')
+                ->groupBy('product_variation_id')
                 ->map(
                     function (
                         Collection $product_grouping,
                         string $key
-                    ) use ($order_products) {
-                        /** @var Collection<int, Product> $product_grouping */
+                    ) use ($order_products, $one_variant_products, $two_variant_products, $three_variant_products) {
+                        /** @var Collection<int, CreateOrderDetailsData> $product_grouping */
+
+                        /** @var CreateOrderDetailsData $request_order_detail */
+                        $request_order_detail =
+                            $product_grouping
+                                ->first();
+
+                        /** @var Product $product */
                         $product =
                             $order_products
-                                ->firstWhere('id', $key);
+                                ->firstWhereId($request_order_detail->product_id);
 
-                        return new OrderDetails([
-                            'product_id' => $key,
-                            'unit_price' => $product->price,
-                            'unit_price_offer' => $product->price_offer,
-                            'quantity' => $product_grouping->sum('quantity'),
-                        ]);
+                        $product_variants_count = $product->variants_count;
+
+                        $product_has_no_variation = $product_variants_count == 0;
+
+                        if ($product_has_no_variation) {
+
+                            return new OrderDetails([
+                                'product_id' => $product->id,
+                                'unit_price' => $product->price,
+                                'unit_price_offer' => $product->price_offer,
+                                'quantity' => $product_grouping->sum('quantity'),
+                            ]);
+                        }
+
+                        $product_has_one_variant = $product_variants_count == 1;
+
+                        if ($product_has_one_variant) {
+
+                            /** @var VariantValue $product_variant_value */
+                            $product_variant_value =
+                                $one_variant_products
+                                    ->firstWhereId($key);
+
+                            return new OrderDetails([
+                                'product_id' => $product->id,
+                                'variant_value_id' => $product_variant_value->id,
+                                'unit_price' => $product_variant_value->price,
+                                'unit_price_offer' => null,
+                                'quantity' => $product_grouping->sum('quantity'),
+                            ]);
+                        }
+
+                        $product_has_two_variants = $product_variants_count == 2;
+
+                        if ($product_has_two_variants) {
+
+                            /** @var VariantCombination $product_variant_combination */
+                            $product_variant_combination =
+                                $two_variant_products
+                                    ->firstWhereId($key);
+
+                            return new OrderDetails([
+                                'product_id' => $product->id,
+                                'variant_combination_id' => $product_variant_combination->id,
+                                'unit_price' => $product_variant_combination->price,
+                                'unit_price_offer' => null,
+                                'quantity' => $product_grouping->sum('quantity'),
+                            ]);
+                        }
+
+                        $product_has_three_variants = $product_variants_count == 3;
+
+                        if ($product_has_three_variants) {
+
+                            /** @var SecondVariantCombination $product_second_variant_combination */
+                            $product_second_variant_combination =
+                                $three_variant_products
+                                    ->firstWhereId($key);
+
+                            Log::info($product_second_variant_combination);
+
+                            return new OrderDetails([
+                                'product_id' => $product->id,
+                                'second_variant_combination_id' => $product_second_variant_combination->id,
+                                'unit_price' => $product_second_variant_combination->price,
+                                'unit_price_offer' => null,
+                                'quantity' => $product_grouping->sum('quantity'),
+                            ]);
+                        }
                     }
                 );
 
@@ -189,7 +288,7 @@ class OrderController extends Controller
 
         $order = Order::query()
             ->create([
-                'user_id' => $autheticated_user_id,
+                'user_id' => 30,
                 'coupon_id' => $applied_coupon_id,
                 'notice' => $request_create_order_data->notice,
                 'required_time' => $request_create_order_data->required_time,

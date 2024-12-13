@@ -7,6 +7,7 @@ use App\Interfaces\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -36,6 +37,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereUpdatedAt($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereVariantCombinationId($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|SecondVariantCombination whereVariantValueId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
+ * @property-read int|null $order_details_count
  * @mixin \Eloquent
  */
 class SecondVariantCombination extends Pivot implements Mediable
@@ -58,6 +61,14 @@ class SecondVariantCombination extends Pivot implements Mediable
     public function variantValue(): BelongsTo
     {
         return $this->belongsTo(VariantValue::class, 'variant_value_id');
+    }
+
+    /**
+     * Get all of the orderDetails for the SecondVariantCombination
+     */
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(OrderDetails::class);
     }
 
     public function getProduct(): Product

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
@@ -52,6 +53,8 @@ use Illuminate\Support\Collection;
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantValue whereVariantId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\SecondVariantCombination|\App\Models\VariantCombination|null $pivot
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
+ * @property-read int|null $order_details_count
  * @mixin Eloquent
  */
 class VariantValue extends Eloquent implements Mediable
@@ -82,6 +85,14 @@ class VariantValue extends Eloquent implements Mediable
             )
             ->withPivot('id', 'is_thumb', 'price', 'available')
             ->using(VariantCombination::class);
+    }
+
+    /**
+     * Get all of the orderDetails for the VariantValue
+     */
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(OrderDetails::class);
     }
 
     public function combined_by(): BelongsToMany
@@ -196,7 +207,7 @@ class VariantValue extends Eloquent implements Mediable
     public function setCombinationPricesToMaxValue(Product $product)
     {
         $product_price = $product
-                            ->price;
+            ->price;
 
         $max_of_product_price_and_main_variant_value_price =
             max($product_price, $this->price);
@@ -207,7 +218,7 @@ class VariantValue extends Eloquent implements Mediable
 
                 $variant_combinations =
                     $first_variant_value_with_pivot_variant_combination
-                    ->pivot;
+                        ->pivot;
 
                 $new_media =
                     Media::factory(1)

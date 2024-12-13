@@ -220,8 +220,8 @@ Route::prefix('user')
 
                 Route::prefix('orders')->group(function () {
                     Route::get('', [UserOrderController::class, 'index']);
-                    Route::get('{order}', [UserOrderController::class, 'show'])
-                        ->can('show', 'order');
+                    Route::get('{order}', [UserOrderController::class, 'show']);
+                    // ->can('show', 'order');
 
                     Route::post('', [UserOrderController::class, 'store']);
                 });

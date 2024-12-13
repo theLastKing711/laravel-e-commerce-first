@@ -21,7 +21,7 @@ class Locale
 
         App::setLocale($locale);
 
-        Log::info('local value from query string is {value}', ['value' => App::getLocale()]);
+        // Log::info('local value from query string is {value}', ['value' => App::getLocale()]);
 
         return $next($request);
     }

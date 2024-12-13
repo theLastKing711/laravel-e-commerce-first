@@ -4,7 +4,6 @@ namespace App\Data\Shared\Media;
 
 use App\Interfaces\Mediable;
 use App\Models\Media;
-use Log;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -18,19 +17,13 @@ class SingleMedia extends Data
         public string $id,
         #[OAT\Property()]
         public string $file_url,
-    ) {
-    }
+    ) {}
 
-    public static function fromModel(?Mediable $mediable): ?self
+    public static function fromModel(?Mediable $mediable): self
     {
-        if ($mediable?->medially->count() == 0) {
 
-            return null;
-        }
         /** @var Media $first_media */
         $first_media = $mediable->medially->first();
-
-        // Log::info('media {media}', ['media' => $mediable->medially->first()]);
 
         return new self(
             id: $first_media->id,

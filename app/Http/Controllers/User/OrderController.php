@@ -18,6 +18,7 @@ use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Product;
 use App\Models\SecondVariantCombination;
+use App\Models\User;
 use App\Models\VariantCombination;
 use App\Models\VariantValue;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,17 +50,28 @@ class OrderController extends Controller
         );
 
         $order = Order::query()
-            ->where('id', $order->id)
             ->with([
+                'coupon',
                 'orderDetails' => [
-                    'product',
+                    'product' => [
+                        'medially',
+                    ],
+                    'variantValue' => [
+                        'medially',
+                    ],
+                    'variantCombination' => [
+                        'medially',
+                    ],
+                    'secondVariantCombination' => [
+                        'medially',
+                    ],
                 ],
                 'driver',
                 'user',
             ])
-            ->get();
+            ->firstWhereId($order->id);
 
-        return OrderShowData::collect($order);
+        return OrderShowData::from($order);
     }
 
     /**
@@ -72,27 +84,44 @@ class OrderController extends Controller
     {
         Log::info('accessing User OrderController index method');
 
+        /** @var User $authenticatedUser */
         $authenticatedUser = auth()->user();
+
         $request_has_order_processed_filter = $query_param->is_order_processed;
 
         $orders = Order::query()
             ->select(['id', 'status as order_status', 'required_time', 'created_at'])
-            ->whereUserId($authenticatedUser->id)
+            ->whereUserId(30)
             ->addSelect(
                 [
                     'total' => OrderDetails::query()
-
-                        ->whereColumn('order_id', 'order_details.id')
+                        ->whereColumn('order_id', 'orders.id')
                         ->join('products', 'order_details.product_id', 'products.id')
-                        ->selectRaw('SUM(
-                                    COALESCE(products.price, products.price_offer) * order_details.quantity
-                                )'),
-                    //                    'order_details_sum_quantity' => OrderDetails::query()
-                    //                        ->whereColumn('order_id', 'order_details.id')
-                    //                        ->join('products', 'order_details.product_id', 'products.id')
-                    //                        ->selectRaw('SUM(
-                    //                                    order_details.quantity
-                    //                                )'),
+                        ->leftJoin('coupons', 'orders.coupon_id', 'coupons.id')
+                        ->leftJoin('variant_values', 'order_details.variant_value_id', 'variant_values.id')
+                        ->leftJoin('variant_combination', 'order_details.variant_combination_id', 'variant_combination.id')
+                        ->leftJoin('second_variant_combination', 'order_details.second_variant_combination_id', 'second_variant_combination.id')
+                        ->selectRaw('
+                            SUM(
+                                COALESCE
+                                (
+                                    second_variant_combination.price,
+                                    variant_combination.price,
+                                    variant_values.price,
+                                    products.price_offer,
+                                    order_details.unit_price
+                                )
+                                *
+                                order_details.quantity
+                            )
+                            +
+                            orders.delivery_price
+                            -
+                            COALESCE(
+                                coupons.value,
+                                0
+                            )
+                        '),
                 ]
             )
             ->withSum('orderDetails as items_count', 'quantity')
@@ -131,7 +160,7 @@ class OrderController extends Controller
 
         Log::info('Accessing User OrderController store method');
 
-        /** @var string $applied_coupon_id */
+        /** @var int $applied_coupon_id */
         $applied_coupon_id =
             Coupon::query()
                 ->firstWhere('code', $request_create_order_data->code)
@@ -181,6 +210,7 @@ class OrderController extends Controller
                 ->whereIdIn($request_product_variation_ids)
                 ->get();
 
+        /** @var Collection<int, OrderDetails> $order_details */
         $order_details =
             $request_order_details
                 ->groupBy('product_variation_id')
@@ -188,7 +218,7 @@ class OrderController extends Controller
                     function (
                         Collection $product_grouping,
                         string $key
-                    ) use ($order_products, $one_variant_products, $two_variant_products, $three_variant_products) {
+                    ) use ($order_products, $one_variant_products, $two_variant_products, $three_variant_products): OrderDetails {
                         /** @var Collection<int, CreateOrderDetailsData> $product_grouping */
 
                         /** @var CreateOrderDetailsData $request_order_detail */
@@ -260,8 +290,6 @@ class OrderController extends Controller
                                 $three_variant_products
                                     ->firstWhereId($key);
 
-                            Log::info($product_second_variant_combination);
-
                             return new OrderDetails([
                                 'product_id' => $product->id,
                                 'second_variant_combination_id' => $product_second_variant_combination->id,
@@ -299,7 +327,9 @@ class OrderController extends Controller
                 'delivery_price' => 200,
             ]);
 
-        $order->orderDetails()->saveMany($order_details);
+        $order
+            ->orderDetails()
+            ->saveMany($order_details);
 
         return true;
 

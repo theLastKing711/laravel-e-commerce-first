@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -41,6 +42,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereSecondVariantValueId($value)
  * @method static \AjCastro\EagerLoadPivotRelations\EagerLoadPivotBuilder|VariantCombination whereUpdatedAt($value)
  * @property-read \App\Models\SecondVariantCombination|null $pivot
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDetails> $orderDetails
+ * @property-read int|null $order_details_count
  * @mixin \Eloquent
  */
 class VariantCombination extends Pivot implements Mediable
@@ -66,6 +69,14 @@ class VariantCombination extends Pivot implements Mediable
     public function second_variant_value(): BelongsTo
     {
         return $this->belongsTo(VariantValue::class, 'second_variant_value_id');
+    }
+
+    /**
+     * Get all of the orderDetails for the VariantCombination
+     */
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(OrderDetails::class);
     }
 
     /**

@@ -24,6 +24,7 @@ use App\Models\VariantValue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OAT;
 
@@ -314,22 +315,26 @@ class OrderController extends Controller
         /** @var int $autheticated_user_id */
         $autheticated_user_id = auth()->id();
 
-        $order = Order::query()
-            ->create([
-                'user_id' => 30,
-                'coupon_id' => $applied_coupon_id,
-                'notice' => $request_create_order_data->notice,
-                'required_time' => $request_create_order_data->required_time,
-                'total' => $order_total,
-                'status' => OrderStatus::Pending,
-                'lat' => 0,
-                'lon' => 0,
-                'delivery_price' => 200,
-            ]);
+        DB::transaction(function () use ($applied_coupon_id, $request_create_order_data, $order_total, $order_details) {
 
-        $order
-            ->orderDetails()
-            ->saveMany($order_details);
+            $order = Order::query()
+                ->create([
+                    'user_id' => 30,
+                    'coupon_id' => $applied_coupon_id,
+                    'notice' => $request_create_order_data->notice,
+                    'required_time' => $request_create_order_data->required_time,
+                    'total' => $order_total,
+                    'status' => OrderStatus::Pending,
+                    'lat' => 0,
+                    'lon' => 0,
+                    'delivery_price' => 200,
+                ]);
+
+            $order
+                ->orderDetails()
+                ->saveMany($order_details);
+
+        });
 
         return true;
 

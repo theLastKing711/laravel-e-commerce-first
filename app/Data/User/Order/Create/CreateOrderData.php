@@ -4,8 +4,11 @@ namespace App\Data\User\Order\Create;
 
 use App\Data\Shared\Swagger\Property\ArrayProperty;
 use App\Data\Shared\Swagger\Property\DateProperty;
+use App\Models\Product;
+use App\Models\Setting;
 use App\Rules\Coupon\Code\UnUsedCoupon\UnusedCoupon;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\AfterOrEqual;
 use Spatie\LaravelData\Attributes\Validation\Bail;
@@ -20,11 +23,10 @@ class CreateOrderData extends Data
 {
     /** @param Collection<int, CreateOrderDetailsData> $order_details*/
     public function __construct(
-        #[
-            OAT\Property(),
-        ]
+        #[OAT\Property]
         public ?string $notice,
-        #[DateProperty(),
+        #[
+            DateProperty,
             Bail,
             Date,
             AfterOrEqual('+ 1 minute'),
@@ -42,6 +44,37 @@ class CreateOrderData extends Data
         #[ArrayProperty(CreateOrderDetailsData::class)]
         public Collection $order_details,
     ) {}
+
+    public static function rules()
+    {
+
+        /** @var Setting $setting */
+        $setting = Setting::first();
+
+        $settings_min_item_per_order =
+            $setting
+                ->order_delivery_min_item_per_order;
+
+        /** @var Collection<int, string> $active_products_Id */
+        $active_products_Ids =
+            Product::query()
+                ->whereIsActive(true)
+                ->get()
+                ->pluck('id');
+
+        return [
+            'order_details' => ['array', 'required'],
+            'order_details.*.quantity' => 'min:'.$settings_min_item_per_order,
+            'order_details.*.product_id' => Rule::in($active_products_Ids),
+        ];
+    }
+
+    public static function messages()
+    {
+        return [
+            'order_details.*.product_id.in' => 'product_is not active',
+        ];
+    }
 }
 
 // UserOwnsCoupon commented attributes for $order_details.

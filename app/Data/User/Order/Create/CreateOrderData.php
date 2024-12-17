@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Setting;
 use App\Rules\Coupon\Code\UnUsedCoupon\UnusedCoupon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OAT;
 use Spatie\LaravelData\Attributes\Validation\AfterOrEqual;
@@ -47,6 +48,7 @@ class CreateOrderData extends Data
 
     public static function rules()
     {
+        // App::setLocale('ar');
 
         /** @var Setting $setting */
         $setting = Setting::first();
@@ -55,7 +57,7 @@ class CreateOrderData extends Data
             $setting
                 ->order_delivery_min_item_per_order;
 
-        /** @var Collection<int, string> $active_products_Id */
+        /** @var Collection<int, string> $active_products_Ids */
         $active_products_Ids =
             Product::query()
                 ->whereIsActive(true)
@@ -72,7 +74,7 @@ class CreateOrderData extends Data
     public static function messages()
     {
         return [
-            'order_details.*.product_id.in' => 'product_is not active',
+            'order_details.*.product_id.in' => __('validation.user.product.quantity.out_of_stock'),
         ];
     }
 }

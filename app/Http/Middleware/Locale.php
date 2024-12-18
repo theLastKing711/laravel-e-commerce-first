@@ -23,6 +23,8 @@ class Locale
 
         Log::info('local value from query string is {value}', ['value' => App::getLocale()]);
 
+        Log::info(config('database.default'));
+
         return $next($request);
     }
 }

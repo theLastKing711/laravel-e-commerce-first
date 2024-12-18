@@ -25,6 +25,8 @@ class Locale
 
         Log::info(config('database.default'));
 
+        Log::info(config('session.driver'));
+
         return $next($request);
     }
 }

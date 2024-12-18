@@ -21,8 +21,6 @@ use function str_contains;
 use function strlen;
 
 /**
- * 
- *
  * @property string $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -48,6 +46,7 @@ use function strlen;
  * @property-read int|null $order_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Variant> $variants
  * @property-read int|null $variants_count
+ *
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product hasName(?string $name)
  * @method static Builder|Product newModelQuery()
@@ -66,6 +65,7 @@ use function strlen;
  * @method static Builder|Product whereUnit($value)
  * @method static Builder|Product whereUnitValue($value)
  * @method static Builder|Product whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class Product extends Eloquent implements Mediable
@@ -257,7 +257,7 @@ class Product extends Eloquent implements Mediable
     public function getFirstVariantVariantValuesIds(): SupportCollection
     {
 
-        /** @var Variant $first_variant_variant_values_ids */
+        /** @var Variant $product_first_variant */
         $product_first_variant =
             $this
                 ->variants

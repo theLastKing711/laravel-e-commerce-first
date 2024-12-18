@@ -41,6 +41,7 @@ class UserFactory extends Factory
             $user->assignRole(RolesEnum::ADMIN);
         });
     }
+
     public function adminWithAdminCredentials(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -62,6 +63,7 @@ class UserFactory extends Factory
                 $user->assignRole(RolesEnum::STORE);
             });
     }
+
     public function storeUserWithStoreCredentials(): static
     {
 
@@ -89,6 +91,7 @@ class UserFactory extends Factory
                 $user->assignRole(RolesEnum::USER);
             });
     }
+
     public function userWithUserCredentials(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -113,6 +116,7 @@ class UserFactory extends Factory
                 $driver->assignRole(RolesEnum::DRIVER);
             });
     }
+
     public function driverWithDriverCredentials(): static
     {
         return $this->state(fn (array $attributes) => [
